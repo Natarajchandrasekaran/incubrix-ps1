@@ -125,6 +125,14 @@ def run_batch(
                                 f.write(audio_response.content)
                     except Exception:
                         pass
+                if status_data.get("manifest_url"):
+                    try:
+                        manifest_response = client.get(status_data["manifest_url"])
+                        if manifest_response.status_code == 200:
+                            with open(test_output_dir / "music_manifest.json", "wb") as f:
+                                f.write(manifest_response.content)
+                    except Exception:
+                        pass
             else:
                 print(f"  ❌ {status}: {status_data.get('error', 'Unknown error')}")
 
