@@ -255,8 +255,9 @@ def _process_music_job_impl(job_id: str):
             stem_type_map = {
                 "drums": StemType.DRUMS,
                 "bass": StemType.BASS,
+                "melody": StemType.MELODY,
+                "harmony": StemType.HARMONY,
                 "other": StemType.OTHER,
-                "melody": StemType.OTHER,
             }
 
             if stem.path:

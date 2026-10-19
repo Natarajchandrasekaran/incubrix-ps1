@@ -894,11 +894,11 @@
             <label class="field-label">Describe the music style you want</label>
             <textarea id="promptInput" rows="3" placeholder="e.g. Upbeat corporate showcase with acoustic guitar and warm synth pads">upbeat corporate showcase with energetic acoustic guitar and warm synth pads</textarea>
             <div class="presets">
-              <span class="preset" onclick="setPrompt('Corporate product demo with acoustic guitars and light drums')">Corporate</span>
-              <span class="preset" onclick="setPrompt('Cinematic dramatic strings building to an inspiring climax')">Cinematic</span>
-              <span class="preset" onclick="setPrompt('Chill lo-fi study beat with mellow piano and soft vinyl crackle')">Lo-Fi</span>
-              <span class="preset" onclick="setPrompt('High energy tech promo with fast electronic synths and driving beat')">Tech</span>
-              <span class="preset" onclick="setPrompt('Warm podcast intro with acoustic piano and mellow bassline')">Podcast</span>
+              <span class="preset" onclick="applyPreset('Upbeat corporate showcase with energetic acoustic guitar and light drums', 120, 15)">Corporate</span>
+              <span class="preset" onclick="applyPreset('Cinematic dramatic strings building to an inspiring climax with orchestral brass', 84, 20)">Cinematic</span>
+              <span class="preset" onclick="applyPreset('Chill lo-fi study beat with mellow electric piano and soft vinyl crackle', 78, 20)">Lo-Fi</span>
+              <span class="preset" onclick="applyPreset('High energy tech promo with fast electronic synths and driving beat', 126, 15)">Tech</span>
+              <span class="preset" onclick="applyPreset('Warm podcast intro with acoustic piano and mellow bassline bed', 94, 15)">Podcast</span>
             </div>
           </div>
 
@@ -1196,8 +1196,30 @@
       box.scrollTop = box.scrollHeight;
     }
 
+    function resetAllAudio() {
+      stopPlayback();
+      STEMS.forEach(s => {
+        if (stemAudio[s]) {
+          try {
+            stemAudio[s].pause();
+            stemAudio[s].currentTime = 0;
+            stemAudio[s].src = "";
+          } catch(e) {}
+        }
+      });
+      stemsReady = false;
+      referenceStem = null;
+      document.getElementById('scrubFill').style.width = '0%';
+      document.getElementById('timecode').innerText = '00:00.0';
+      document.getElementById('exportSection').style.display = 'none';
+      clearVU();
+    }
+
     // ── Mode Switching ──
     function switchMode(mode) {
+      if (activeMode !== mode) {
+        resetAllAudio();
+      }
       activeMode = mode;
       document.getElementById('tabCreate').classList.toggle('active', mode === 'create');
       document.getElementById('tabUpload').classList.toggle('active', mode === 'upload');
@@ -1207,6 +1229,18 @@
     }
 
     function setPrompt(text) { document.getElementById('promptInput').value = text; }
+    function applyPreset(text, bpm, dur) {
+      document.getElementById('promptInput').value = text;
+      if (bpm) {
+        document.getElementById('bpmSlider').value = bpm;
+        updateBpm(bpm);
+      }
+      if (dur) {
+        document.getElementById('durationSlider').value = dur;
+        updateDuration(dur);
+      }
+      logActivity('Preset applied: ' + text.split(' ')[0] + ' (' + bpm + ' BPM, ' + dur + 's)');
+    }
     function updateDuration(v) { document.getElementById('durationDisplay').innerText = v + ' seconds'; }
     function updateBpm(v) { document.getElementById('bpmDisplay').innerText = v + ' BPM'; }
 
@@ -1310,30 +1344,43 @@
 
     // ── Results Handlers ──
     function onJobDone(d) {
+      resetAllAudio();
       totalDuration = d.actual_duration_seconds || 15;
       showMetrics(d.actual_loudness_lufs || -16, -1, totalDuration, -48);
       document.getElementById('exportSection').style.display = 'flex';
-      document.getElementById('btnDownloadMix').href = d.output_url;
+      const bust = '?t=' + Date.now();
+      document.getElementById('btnDownloadMix').href = d.output_url + bust;
       document.getElementById('btnDownloadMix').style.display = 'inline-flex';
       const manifest = d.manifest_url || '/output/' + d.job_id + '/music_manifest.json';
-      document.getElementById('btnDownloadManifest').href = manifest;
+      document.getElementById('btnDownloadManifest').href = manifest + bust;
       document.getElementById('btnDownloadManifest').style.display = 'inline-flex';
       if (d.stems && Array.isArray(d.stems)) {
-        d.stems.forEach(s => loadStem(s.stem_type.toLowerCase(), s.url));
+        d.stems.forEach(s => {
+          let type = (s.stem_type || '').toLowerCase();
+          if (type === 'harmony') type = 'other';
+          loadStem(type, s.url + bust);
+        });
       }
       stemsReady = true;
       togglePlayback();
     }
 
     function onAnalysisDone(d) {
+      resetAllAudio();
       totalDuration = d.duration_seconds;
       const diff = d.stem_verification ? d.stem_verification.difference_db : null;
       showMetrics(d.loudness_lufs, d.true_peak_dbtp, d.duration_seconds, diff);
       document.getElementById('exportSection').style.display = 'flex';
-      document.getElementById('btnDownloadMix').href = d.master_url;
+      const bust = '?t=' + Date.now();
+      document.getElementById('btnDownloadMix').href = d.master_url + bust;
       document.getElementById('btnDownloadMix').style.display = 'inline-flex';
       if (d.stems) {
-        for (const [name, url] of Object.entries(d.stems)) loadStem(name, url);
+        for (const [name, url] of Object.entries(d.stems)) {
+          let type = name.toLowerCase();
+          if (type === 'vocals') type = 'melody';
+          if (type === 'harmony') type = 'other';
+          loadStem(type, url + bust);
+        }
       }
       stemsReady = true;
       togglePlayback();

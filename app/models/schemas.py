@@ -60,6 +60,8 @@ class StemType(str, enum.Enum):
     """Audio stem types from source separation."""
     DRUMS = "drums"
     BASS = "bass"
+    MELODY = "melody"
+    HARMONY = "harmony"
     VOCALS = "vocals"
     OTHER = "other"
     FULL_MIX = "full_mix"
