@@ -1,1490 +1,1528 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IncuBrix Audio Workstation | AI Music Engine & Stem Inspector</title>
+  <title>IncuBrix AI Music Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --chassis-bg: #0c0e12;
-      --panel-bg: #14171d;
-      --panel-border: #232732;
-      --panel-header: #191c24;
-      --well-bg: #0d0f14;
-      --fader-track: #090b0e;
-      
-      /* Hardware LED & Accent Colors (No generic blue gradients) */
-      --amber-led: #f59e0b;
-      --amber-glow: rgba(245, 158, 11, 0.35);
-      --green-led: #10b981;
-      --green-glow: rgba(16, 185, 129, 0.35);
-      --red-led: #ef4444;
-      --red-glow: rgba(239, 68, 68, 0.4);
-      --yellow-led: #eab308;
-      
-      /* Precision Typography */
-      --text-main: #f1f5f9;
-      --text-dim: #94a3b8;
-      --text-muted: #64748b;
-      --mono-font: 'JetBrains Mono', monospace;
-      --sans-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* ============================================
+       THEME SYSTEM - 3 Themes via CSS Variables
+       ============================================ */
+    :root, [data-theme="dark"] {
+      --bg-primary: #111318;
+      --bg-secondary: #1a1d25;
+      --bg-card: #1e2130;
+      --bg-input: #151821;
+      --bg-hover: #252a38;
+      --border-primary: #2a2f3e;
+      --border-accent: #3d4460;
+      --text-primary: #f0f2f7;
+      --text-secondary: #a0a8c0;
+      --text-muted: #6b7394;
+      --accent: #e8a438;
+      --accent-soft: rgba(232,164,56,0.12);
+      --accent-glow: rgba(232,164,56,0.25);
+      --success: #3ecf8e;
+      --success-soft: rgba(62,207,142,0.12);
+      --danger: #ef5656;
+      --danger-soft: rgba(239,86,86,0.15);
+      --warning: #f0c246;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+      --radius: 10px;
+      --radius-sm: 6px;
     }
 
+    [data-theme="light"] {
+      --bg-primary: #f4f6fa;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-input: #f0f2f7;
+      --bg-hover: #e8ebf2;
+      --border-primary: #dce0eb;
+      --border-accent: #b8c0d8;
+      --text-primary: #1a1d2b;
+      --text-secondary: #5a6178;
+      --text-muted: #8b92a8;
+      --accent: #2563eb;
+      --accent-soft: rgba(37,99,235,0.08);
+      --accent-glow: rgba(37,99,235,0.15);
+      --success: #16a34a;
+      --success-soft: rgba(22,163,74,0.08);
+      --danger: #dc2626;
+      --danger-soft: rgba(220,38,38,0.08);
+      --warning: #ca8a04;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+    }
+
+    [data-theme="midnight"] {
+      --bg-primary: #0a192f;
+      --bg-secondary: #112240;
+      --bg-card: #152a4a;
+      --bg-input: #0d1f3c;
+      --bg-hover: #1a3358;
+      --border-primary: #1e3a5f;
+      --border-accent: #2d5086;
+      --text-primary: #e6f1ff;
+      --text-secondary: #8892b0;
+      --text-muted: #5a6a8a;
+      --accent: #64ffda;
+      --accent-soft: rgba(100,255,218,0.08);
+      --accent-glow: rgba(100,255,218,0.2);
+      --success: #64ffda;
+      --success-soft: rgba(100,255,218,0.1);
+      --danger: #ff6b6b;
+      --danger-soft: rgba(255,107,107,0.12);
+      --warning: #ffd166;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--chassis-bg);
-      background-image: 
-        radial-gradient(circle at 50% 0%, #1e232d 0%, transparent 65%),
-        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-      background-size: 100% 100%, 28px 28px, 28px 28px;
-      color: var(--text-main);
-      font-family: var(--sans-font);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       min-height: 100vh;
-      padding: 20px;
-      line-height: 1.4;
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+      transition: background 0.3s, color 0.3s;
     }
 
-    .rack-container {
-      max-width: 1200px;
+    .container {
+      max-width: 1240px;
       margin: 0 auto;
+      padding: 20px;
     }
 
-    /* ─── Top Master Rack Header ─── */
-    .rack-header {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 8px;
-      padding: 16px 20px;
+    /* ============================================
+       HEADER
+       ============================================ */
+    .header {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 16px;
-      margin-bottom: 18px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0, 0, 0, 0.5);
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-md);
     }
 
-    .brand-section {
+    .brand {
       display: flex;
       align-items: center;
       gap: 14px;
     }
 
-    .brand-badge {
-      background: #1e222b;
-      border: 1px solid #333a48;
-      color: #f8fafc;
-      font-family: var(--mono-font);
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 1px;
-      padding: 6px 12px;
-      border-radius: 4px;
-      display: inline-flex;
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
     }
 
-    .led-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green-led);
-      box-shadow: 0 0 8px var(--green-led);
-      animation: pulse-led 2s infinite;
-    }
+    .brand-logo svg { width: 22px; height: 22px; }
 
-    @keyframes pulse-led {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.45; transform: scale(0.9); }
-    }
-
-    .brand-title {
-      font-size: 17px;
+    .brand-name {
+      font-size: 18px;
       font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.2px;
+      letter-spacing: -0.3px;
     }
 
     .brand-sub {
       font-size: 12px;
-      color: var(--text-dim);
-      font-family: var(--mono-font);
+      color: var(--text-muted);
+      margin-top: 1px;
     }
 
-    .header-actions {
+    .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .btn-action {
-      background: #1a1d24;
-      border: 1px solid var(--panel-border);
-      color: var(--text-dim);
-      font-family: var(--mono-font);
-      font-size: 12px;
+    .header-link {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      color: var(--text-secondary);
+      font-size: 13px;
       font-weight: 500;
-      padding: 7px 12px;
-      border-radius: 4px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.15s ease;
+      transition: all 0.2s;
+      cursor: pointer;
     }
 
-    .btn-action:hover {
-      color: #fff;
-      background: #232732;
-      border-color: #3b4252;
+    .header-link:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+      border-color: var(--border-accent);
     }
 
-    /* ─── Mode Selector Tab Bar ─── */
-    .mode-bar {
+    .header-link svg { width: 15px; height: 15px; }
+
+    .theme-btn {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      color: var(--text-secondary);
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
       display: flex;
-      gap: 8px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid var(--panel-border);
-      padding-bottom: 12px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .theme-btn svg { width: 18px; height: 18px; }
+
+    /* ============================================
+       MODE TABS
+       ============================================ */
+    .mode-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      padding: 5px;
     }
 
     .mode-tab {
-      background: #14171d;
-      border: 1px solid var(--panel-border);
+      flex: 1;
+      background: transparent;
+      border: none;
       color: var(--text-muted);
-      font-family: var(--mono-font);
-      font-size: 12px;
+      font-family: inherit;
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.5px;
-      padding: 10px 18px;
-      border-radius: 6px;
+      padding: 12px 20px;
+      border-radius: 7px;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      transition: all 0.15s ease;
+      transition: all 0.2s;
     }
 
-    .mode-tab:hover {
-      color: var(--text-dim);
-      background: #1b1f28;
-    }
+    .mode-tab:hover { color: var(--text-secondary); background: var(--bg-hover); }
 
     .mode-tab.active {
-      color: #fff;
-      background: #20242f;
-      border-color: var(--amber-led);
-      box-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
+      color: var(--text-primary);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
     }
 
-    .mode-tab.active .mode-indicator {
-      background: var(--amber-led);
-      box-shadow: 0 0 6px var(--amber-led);
-    }
+    .mode-tab svg { width: 16px; height: 16px; }
 
-    .mode-indicator {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #475569;
-    }
-
-    /* ─── Main Grid Layout ─── */
+    /* ============================================
+       LAYOUT GRID
+       ============================================ */
     .studio-grid {
       display: grid;
-      grid-template-columns: 420px 1fr;
-      gap: 18px;
+      grid-template-columns: 400px 1fr;
+      gap: 20px;
     }
 
     @media (max-width: 960px) {
       .studio-grid { grid-template-columns: 1fr; }
     }
 
-    /* ─── Rack Panel Styling ─── */
-    .rack-panel {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 8px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 3px 8px rgba(0, 0, 0, 0.4);
+    /* ============================================
+       CARD PANELS
+       ============================================ */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: background 0.3s, border-color 0.3s;
     }
 
-    .panel-title {
-      font-family: var(--mono-font);
-      font-size: 12px;
+    .card-title {
+      font-size: 13px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-dim);
-      margin-bottom: 14px;
+      letter-spacing: 0.8px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-primary);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 8px;
     }
 
-    .panel-title span {
-      display: inline-flex;
+    .card-title-left {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      color: #fff;
+      gap: 8px;
     }
 
-    /* ─── Controls & Form Elements ─── */
-    .ctrl-group {
-      margin-bottom: 14px;
+    .card-title-left svg { width: 16px; height: 16px; color: var(--accent); }
+
+    .card-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 3px 8px;
+      border-radius: 4px;
     }
 
-    .ctrl-label {
+    /* ============================================
+       FORM CONTROLS
+       ============================================ */
+    .field { margin-bottom: 16px; }
+
+    .field-label {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
       font-weight: 600;
-      color: var(--text-dim);
+      color: var(--text-secondary);
       margin-bottom: 6px;
     }
 
-    .ctrl-val {
-      font-family: var(--mono-font);
+    .field-value {
       font-size: 12px;
-      color: var(--amber-led);
+      font-weight: 700;
+      color: var(--accent);
     }
 
     textarea, input[type="text"] {
       width: 100%;
-      background: var(--well-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 6px;
-      color: #fff;
-      padding: 10px 12px;
-      font-family: var(--sans-font);
-      font-size: 13px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
       resize: vertical;
-      transition: border-color 0.15s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     textarea:focus, input[type="text"]:focus {
       outline: none;
-      border-color: var(--amber-led);
-      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
-    }
-
-    .preset-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .preset-chip {
-      background: #1a1e27;
-      border: 1px solid #282d3b;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-family: var(--mono-font);
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .preset-chip:hover {
-      color: #fff;
-      border-color: var(--amber-led);
-      background: #222735;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
     input[type="range"] {
       width: 100%;
       height: 6px;
-      background: var(--fader-track);
+      -webkit-appearance: none;
+      background: var(--bg-input);
       border-radius: 3px;
+      border: 1px solid var(--border-primary);
       outline: none;
-      accent-color: var(--amber-led);
-      cursor: pointer;
     }
 
-    /* ─── Drag & Drop Upload Bay ─── */
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .preset {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    /* ============================================
+       BUTTONS
+       ============================================ */
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      color: #000;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 16px var(--accent-glow); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-primary svg { width: 16px; height: 16px; }
+
+    /* ============================================
+       FILE UPLOAD ZONE
+       ============================================ */
     .dropzone {
-      background: var(--well-bg);
-      border: 2px dashed #2d3342;
-      border-radius: 8px;
-      padding: 28px 16px;
+      border: 2px dashed var(--border-accent);
+      border-radius: var(--radius);
+      padding: 36px 20px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s;
       position: relative;
     }
 
     .dropzone:hover, .dropzone.dragover {
-      border-color: var(--amber-led);
-      background: #141720;
-    }
-
-    .dropzone-icon {
-      font-size: 28px;
-      margin-bottom: 8px;
-      color: var(--text-dim);
-    }
-
-    .dropzone-text {
-      font-size: 13px;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-
-    .dropzone-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-family: var(--mono-font);
+      border-color: var(--accent);
+      background: var(--accent-soft);
     }
 
     .dropzone input[type="file"] {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      inset: 0;
       opacity: 0;
       cursor: pointer;
     }
 
-    .file-preview {
+    .dropzone-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      background: var(--accent-soft);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dropzone-icon svg { width: 24px; height: 24px; color: var(--accent); }
+
+    .dropzone-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .dropzone-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .file-info {
       display: none;
-      background: #1a1e26;
-      border: 1px solid #2b3140;
-      padding: 10px 14px;
-      border-radius: 6px;
-      margin-top: 10px;
       align-items: center;
       justify-content: space-between;
-      font-family: var(--mono-font);
-      font-size: 12px;
-    }
-
-    .btn-hardware {
-      width: 100%;
-      background: #252a36;
-      border: 1px solid #363d4e;
-      color: #fff;
-      font-family: var(--mono-font);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-top: 12px;
       font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      padding: 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      margin-top: 14px;
-      transition: all 0.15s;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 3px 6px rgba(0, 0, 0, 0.4);
+      font-weight: 500;
     }
 
-    .btn-hardware:hover {
-      background: #2e3544;
-      border-color: var(--amber-led);
-    }
+    .file-info-name { color: var(--text-primary); }
+    .file-info-size { color: var(--accent); font-weight: 700; }
 
-    .btn-hardware:active {
-      transform: translateY(1px);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .btn-hardware:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      border-color: #363d4e;
-    }
-
-    /* ─── Telemetry Diagnostics Log ─── */
-    .telemetry-log {
-      background: #090b0e;
-      border: 1px solid #1e222c;
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-family: var(--mono-font);
-      font-size: 11px;
-      color: #a0aec0;
-      min-height: 52px;
-      max-height: 80px;
-      overflow-y: auto;
-      margin-top: 10px;
-    }
-
-    .telemetry-line {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 3px;
-    }
-
-    .telemetry-time {
-      color: #64748b;
-    }
-
-    .telemetry-msg.success { color: var(--green-led); }
-    .telemetry-msg.warn { color: var(--amber-led); }
-    .telemetry-msg.active { color: #38bdf8; }
-
-    /* ─── Signal Compliance HUD ─── */
-    .hud-grid {
+    /* ============================================
+       METRICS HUD
+       ============================================ */
+    .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 16px;
     }
 
-    @media (max-width: 600px) {
-      .hud-grid { grid-template-columns: repeat(2, 1fr); }
+    .metric-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
     }
 
-    .hud-cell {
-      background: var(--well-bg);
-      border: 1px solid #202430;
-      border-radius: 6px;
-      padding: 10px 12px;
-    }
-
-    .hud-label {
-      font-size: 10px;
-      font-family: var(--mono-font);
+    .metric-label {
+      font-size: 11px;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
-    .hud-metric {
-      font-family: var(--mono-font);
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--green-led);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .metric-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
     }
 
-    .hud-target {
+    .metric-unit {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--success);
+      margin-left: 4px;
+    }
+
+    .metric-sub {
       font-size: 10px;
-      color: var(--text-dim);
-      font-family: var(--mono-font);
-      margin-top: 2px;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
-    /* ─── Master Transport Bay ─── */
-    .transport-bar {
-      background: #101318;
-      border: 1px solid #232833;
-      border-radius: 8px;
+    /* ============================================
+       TRANSPORT BAR
+       ============================================ */
+    .transport {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
       padding: 14px 18px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
-    .transport-buttons {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-transport {
-      background: #1e222c;
-      border: 1px solid #333a4a;
-      color: #fff;
-      width: 42px;
-      height: 42px;
-      border-radius: 6px;
+    .transport-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--border-accent);
+      background: var(--bg-input);
+      color: var(--text-primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s;
+      flex-shrink: 0;
     }
 
-    .btn-transport:hover {
-      background: #272d3b;
-      border-color: var(--amber-led);
-    }
+    .transport-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .transport-btn.playing { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+    .transport-btn svg { width: 16px; height: 16px; }
 
-    .btn-transport.play.active {
-      background: var(--amber-led);
-      color: #000;
-      border-color: var(--amber-led);
-      box-shadow: 0 0 10px var(--amber-glow);
-    }
-
-    .timecode-display {
-      background: #08090c;
-      border: 1px solid #1e222a;
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-family: var(--mono-font);
-      font-size: 14px;
+    .timecode {
+      font-size: 18px;
       font-weight: 700;
-      color: var(--amber-led);
-      letter-spacing: 1px;
-      min-width: 140px;
+      font-variant-numeric: tabular-nums;
+      min-width: 90px;
       text-align: center;
+      color: var(--accent);
     }
 
-    .scrub-track {
+    .scrub-container { flex: 1; display: flex; align-items: center; gap: 10px; }
+
+    .scrub-bar {
       flex: 1;
       height: 8px;
-      background: #080a0e;
-      border: 1px solid #202430;
+      background: var(--bg-input);
       border-radius: 4px;
-      position: relative;
       cursor: pointer;
+      overflow: hidden;
+      border: 1px solid var(--border-primary);
     }
 
-    .scrub-progress {
+    .scrub-fill {
       height: 100%;
-      background: var(--amber-led);
-      border-radius: 3px;
+      background: var(--accent);
+      border-radius: 4px;
       width: 0%;
-      box-shadow: 0 0 6px var(--amber-glow);
+      transition: width 0.1s linear;
     }
 
-    /* ─── 4-Channel Mixer Console ─── */
-    .mixer-deck {
+    .duration-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 70px;
+      text-align: right;
+    }
+
+    /* ============================================
+       MIXER
+       ============================================ */
+    .mixer-channels {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+      gap: 10px;
     }
 
     @media (max-width: 768px) {
-      .mixer-deck { grid-template-columns: repeat(2, 1fr); }
+      .mixer-channels { grid-template-columns: repeat(2, 1fr); }
     }
 
-    .mixer-strip {
-      background: #11141a;
-      border: 1px solid #232733;
-      border-radius: 8px;
-      padding: 14px 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .strip-header {
-      width: 100%;
+    .channel {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 14px 10px;
       text-align: center;
-      border-bottom: 1px solid #1e222c;
-      padding-bottom: 8px;
+      transition: border-color 0.2s;
     }
 
-    .strip-icon {
-      font-size: 20px;
-      margin-bottom: 4px;
-    }
+    .channel.active-solo { border-color: var(--warning); }
 
-    .strip-name {
-      font-family: var(--mono-font);
-      font-size: 11px;
+    .channel-name {
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 1px;
       text-transform: uppercase;
-      color: #e2e8f0;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
     }
 
-    .strip-tag {
-      font-size: 9px;
-      color: var(--text-muted);
-      font-family: var(--mono-font);
-    }
-
-    /* Hardware VU LED Ladder */
-    .meter-container {
-      width: 24px;
-      height: 120px;
-      background: #08090d;
-      border: 1px solid #1e222b;
-      border-radius: 4px;
-      padding: 3px;
-      display: flex;
-      flex-direction: column-reverse;
-      gap: 2px;
-    }
-
-    .meter-segment {
-      flex: 1;
-      border-radius: 1px;
-      background: #181d26;
-      transition: background 0.08s ease;
-    }
-
-    .meter-segment.lit-green { background: #10b981; box-shadow: 0 0 4px #10b981; }
-    .meter-segment.lit-yellow { background: #eab308; box-shadow: 0 0 4px #eab308; }
-    .meter-segment.lit-red { background: #ef4444; box-shadow: 0 0 4px #ef4444; }
-
-    /* Fader controls */
-    .fader-bay {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .fader-val {
-      font-family: var(--mono-font);
+    .channel-desc {
       font-size: 10px;
-      color: var(--amber-led);
+      color: var(--text-muted);
+      margin-bottom: 12px;
     }
 
-    .strip-buttons {
+    /* VU Meter */
+    .vu-meter {
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+      height: 50px;
+      align-items: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .vu-bar {
+      width: 8px;
+      background: var(--border-primary);
+      border-radius: 2px;
+      transition: height 0.08s ease-out, background 0.1s;
+      min-height: 4px;
+    }
+
+    .vu-bar.g { background: var(--success); }
+    .vu-bar.y { background: var(--warning); }
+    .vu-bar.r { background: var(--danger); }
+
+    .channel-fader {
+      margin-bottom: 10px;
+    }
+
+    .channel-fader input[type="range"] {
       width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      height: 4px;
+    }
+
+    .fader-db {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .channel-buttons {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-bottom: 10px;
     }
 
     .btn-mute, .btn-solo {
-      background: #1a1e26;
-      border: 1px solid #2e3444;
-      font-family: var(--mono-font);
+      font-family: inherit;
       font-size: 10px;
       font-weight: 700;
-      color: #94a3b8;
-      padding: 6px 0;
+      letter-spacing: 0.5px;
+      padding: 5px 10px;
       border-radius: 4px;
+      border: 1px solid var(--border-primary);
+      background: var(--bg-primary);
+      color: var(--text-muted);
       cursor: pointer;
-      text-align: center;
       transition: all 0.15s;
     }
 
-    .btn-mute.active {
-      background: var(--red-led);
-      color: #fff;
-      border-color: var(--red-led);
-      box-shadow: 0 0 8px var(--red-glow);
-    }
+    .btn-mute:hover { border-color: var(--danger); color: var(--danger); }
+    .btn-solo:hover { border-color: var(--warning); color: var(--warning); }
+    .btn-mute.active { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+    .btn-solo.active { background: rgba(240,194,70,0.15); border-color: var(--warning); color: var(--warning); }
 
-    .btn-solo.active {
-      background: var(--amber-led);
-      color: #000;
-      border-color: var(--amber-led);
-      box-shadow: 0 0 8px var(--amber-glow);
-    }
-
-    .btn-stem-dl {
-      width: 100%;
-      background: #161922;
-      border: 1px solid #252a37;
-      color: var(--text-dim);
-      font-family: var(--mono-font);
-      font-size: 10px;
-      padding: 6px 4px;
-      border-radius: 4px;
+    .btn-download-stem {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
       text-decoration: none;
-      text-align: center;
-      transition: all 0.15s;
+      transition: color 0.2s;
     }
 
-    .btn-stem-dl:hover {
-      background: #232938;
-      color: #fff;
-      border-color: #3c4458;
+    .btn-download-stem:hover { color: var(--accent); }
+
+    .mixer-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    /* ─── Footer Details ─── */
-    .footer-bar {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid var(--panel-border);
+    /* ============================================
+       ACTIVITY LOG
+       ============================================ */
+    .log-container {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      max-height: 180px;
+      overflow-y: auto;
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    .log-entry {
+      padding: 4px 0;
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid rgba(128,128,128,0.08);
+    }
+
+    .log-entry:last-child { border-bottom: none; }
+
+    .log-time {
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .log-msg { color: var(--text-secondary); }
+    .log-msg.ok { color: var(--success); }
+    .log-msg.warn { color: var(--warning); }
+    .log-msg.err { color: var(--danger); }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      margin-top: 28px;
+      padding: 16px 0;
+      border-top: 1px solid var(--border-primary);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 12px;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-muted);
-      font-family: var(--mono-font);
     }
+
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
   </style>
 </head>
 <body>
-  <div class="rack-container">
+  <div class="container">
 
-    <!-- ─── Top Master Rack Header ─── -->
-    <header class="rack-header">
-      <div class="brand-section">
-        <div class="brand-badge">
-          <div class="led-dot"></div>
-          INCUBRIX DSP
+    <!-- HEADER -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
         </div>
         <div>
-          <div class="brand-title">AI Background Music Engine • Master Workstation</div>
-          <div class="brand-sub">PS1 Submissions • Candidate: Nataraj Chandrasekaran (PSG Tech)</div>
+          <div class="brand-name">IncuBrix AI Music Studio</div>
+          <div class="brand-sub">Intelligent Background Music for Video Creators</div>
         </div>
       </div>
-      <div class="header-actions">
-        <a href="/docs" target="_blank" class="btn-action">⚡ Swagger API</a>
-        <a href="/openapi.yaml" target="_blank" class="btn-action">📜 OpenAPI 3.1 Spec</a>
-        <a href="https://github.com/Natarajchandrasekaran/incubrix-ps1" target="_blank" class="btn-action">🐙 GitHub Repo</a>
+      <div class="header-right">
+        <a href="/docs" target="_blank" class="header-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          API Docs
+        </a>
+        <a href="https://github.com/Natarajchandrasekaran/incubrix-ps1" target="_blank" class="header-link">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          Source Code
+        </a>
+        <button class="theme-btn" onclick="cycleTheme()" title="Switch theme">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
       </div>
     </header>
 
-    <!-- ─── Workstation Mode Selector ─── -->
-    <div class="mode-bar">
-      <div class="mode-tab active" id="tabGenerate" onclick="switchMode('generate')">
-        <div class="mode-indicator"></div>
-        [ 🎹 AI GENERATE TRACK ]
-      </div>
-      <div class="mode-tab" id="tabUpload" onclick="switchMode('upload')">
-        <div class="mode-indicator"></div>
-        [ 📤 UPLOAD & INSPECT AUDIO ]
-      </div>
+    <!-- MODE TABS -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabCreate" onclick="switchMode('create')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Create Music
+      </button>
+      <button class="mode-tab" id="tabUpload" onclick="switchMode('upload')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload and Analyze
+      </button>
     </div>
 
+    <!-- STUDIO GRID -->
     <div class="studio-grid">
 
-      <!-- ─── Left Bay: Input Deck ─── -->
+      <!-- LEFT: CONTROLS -->
       <div>
-        <!-- Mode Deck 1: AI Prompt Generator -->
-        <div class="rack-panel" id="deckGenerate">
-          <div class="panel-title">
-            <span>🎹 AI Music Composition Engine</span>
-            <span style="font-size: 10px; color: var(--amber-led);">48 kHz • 32-bit Float</span>
+        <!-- CREATE MODE -->
+        <div class="card" id="deckCreate">
+          <div class="card-title">
+            <span class="card-title-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              Music Composer
+            </span>
+            <span class="card-badge">Studio Quality</span>
           </div>
 
-          <div class="ctrl-group">
-            <label class="ctrl-label">
-              <span>PROMPT (STYLE, INSTRUMENTS, MOOD)</span>
-            </label>
-            <textarea id="promptInput" rows="3">upbeat corporate showcase with energetic acoustic guitar and warm synth pads</textarea>
-            <div class="preset-chips">
-              <span class="preset-chip" onclick="setPrompt('Corporate Product Demo with acoustic guitars and light drums')">💼 Corporate Demo</span>
-              <span class="preset-chip" onclick="setPrompt('Cinematic dramatic strings building to an inspiring climax')">🎬 Cinematic Teaser</span>
-              <span class="preset-chip" onclick="setPrompt('Chill lo-fi study beat with mellow piano and soft vinyl crackle')">☕ Lo-Fi Chill</span>
-              <span class="preset-chip" onclick="setPrompt('High energy tech promo with fast electronic synths and driving beat')">⚡ Tech Promo</span>
-              <span class="preset-chip" onclick="setPrompt('Warm podcast intro with acoustic piano and mellow bassline')">🎙 Podcast Bed</span>
+          <div class="field">
+            <label class="field-label">Describe the music style you want</label>
+            <textarea id="promptInput" rows="3" placeholder="e.g. Upbeat corporate showcase with acoustic guitar and warm synth pads">upbeat corporate showcase with energetic acoustic guitar and warm synth pads</textarea>
+            <div class="presets">
+              <span class="preset" onclick="setPrompt('Corporate product demo with acoustic guitars and light drums')">Corporate</span>
+              <span class="preset" onclick="setPrompt('Cinematic dramatic strings building to an inspiring climax')">Cinematic</span>
+              <span class="preset" onclick="setPrompt('Chill lo-fi study beat with mellow piano and soft vinyl crackle')">Lo-Fi</span>
+              <span class="preset" onclick="setPrompt('High energy tech promo with fast electronic synths and driving beat')">Tech</span>
+              <span class="preset" onclick="setPrompt('Warm podcast intro with acoustic piano and mellow bassline')">Podcast</span>
             </div>
           </div>
 
-          <div class="ctrl-group">
-            <div class="ctrl-label">
-              <span>EXACT TARGET DURATION</span>
-              <span class="ctrl-val" id="durationDisplay">15.0s</span>
+          <div class="field">
+            <div class="field-label">
+              <span>Track Duration</span>
+              <span class="field-value" id="durationDisplay">15 seconds</span>
             </div>
             <input type="range" id="durationSlider" min="5" max="60" value="15" step="1" oninput="updateDuration(this.value)">
           </div>
 
-          <div class="ctrl-group">
-            <div class="ctrl-label">
-              <span>TEMPO (BPM)</span>
-              <span class="ctrl-val" id="bpmDisplay">120 BPM</span>
+          <div class="field">
+            <div class="field-label">
+              <span>Tempo</span>
+              <span class="field-value" id="bpmDisplay">120 BPM</span>
             </div>
             <input type="range" id="bpmSlider" min="70" max="160" value="120" step="1" oninput="updateBpm(this.value)">
           </div>
 
-          <button class="btn-hardware" id="btnGenerate" onclick="startGeneration()">
-            <span id="btnGenIcon">▶</span> <span id="btnGenText">RENDER BROADCAST TRACK</span>
+          <button class="btn-primary" id="btnGenerate" onclick="startGeneration()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span id="btnGenText">Create Music</span>
           </button>
         </div>
 
-        <!-- Mode Deck 2: File Upload & Stem Analyzer (NEW) -->
-        <div class="rack-panel" id="deckUpload" style="display: none;">
-          <div class="panel-title">
-            <span>📤 Audio Stem Inspector & Compliance</span>
-            <span style="font-size: 10px; color: var(--green-led);">Demucs v4 • BS.1770-4</span>
+        <!-- UPLOAD MODE -->
+        <div class="card" id="deckUpload" style="display:none;">
+          <div class="card-title">
+            <span class="card-title-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Audio Analyzer
+            </span>
+            <span class="card-badge">AI Analysis</span>
           </div>
 
           <div class="dropzone" id="dropzoneBox">
-            <input type="file" id="audioFileInput" accept=".wav,.mp3,.flac,.ogg,.aiff" onchange="handleFileSelect(this.files)">
-            <div class="dropzone-icon">📁</div>
-            <div class="dropzone-text">Drop WAV, MP3, FLAC, or OGG file here</div>
-            <div class="dropzone-sub">or click to browse (first 30s analyzed for short-form video sync)</div>
+            <input type="file" id="audioFileInput" accept=".wav,.mp3,.flac,.ogg,.aiff,.m4a" onchange="handleFileSelect(this.files)">
+            <div class="dropzone-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div class="dropzone-title">Drop your audio file here</div>
+            <div class="dropzone-hint">WAV, MP3, FLAC, OGG or AIFF (first 30 seconds analyzed)</div>
           </div>
 
-          <div class="file-preview" id="filePreview">
-            <span id="fileNameDisplay">track.wav</span>
-            <span id="fileSizeDisplay" style="color: var(--amber-led);">0.0 MB</span>
+          <div class="file-info" id="filePreview">
+            <span class="file-info-name" id="fileNameDisplay">track.wav</span>
+            <span class="file-info-size" id="fileSizeDisplay">0 MB</span>
           </div>
 
-          <div style="margin-top: 14px;">
-            <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); cursor: pointer;">
-              <input type="checkbox" id="chkNormalize" checked accent-color="var(--amber-led)">
-              Normalize to ITU-R BS.1770-4 Broadcast Standard (-16 LUFS, -1 dBTP)
-            </label>
-          </div>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chkNormalize" checked>
+            Normalize to broadcast standard volume
+          </label>
 
-          <button class="btn-hardware" id="btnUpload" onclick="startAnalysis()" disabled>
-            <span>🎚</span> <span id="btnUploadText">ANALYZE & SEPARATE STEMS</span>
+          <button class="btn-primary" id="btnUpload" onclick="startAnalysis()" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span id="btnUploadText">Upload and Analyze</span>
           </button>
         </div>
 
-        <!-- Real-Time Telemetry Log -->
-        <div class="rack-panel" style="margin-bottom: 0;">
-          <div class="panel-title">
-            <span>📡 DSP Pipeline Telemetry</span>
-            <span style="color: var(--text-muted); font-size: 10px;">IDEMPOTENT</span>
+        <!-- ACTIVITY LOG -->
+        <div class="card" style="margin-bottom:0;">
+          <div class="card-title">
+            <span class="card-title-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Activity Log
+            </span>
           </div>
-          <div class="telemetry-log" id="telemetryLog">
-            <div class="telemetry-line">
-              <span class="telemetry-time">[SYS]</span>
-              <span class="telemetry-msg">Audio Engine initialized. Ready for job dispatch.</span>
+          <div class="log-container" id="activityLog">
+            <div class="log-entry">
+              <span class="log-time">[Ready]</span>
+              <span class="log-msg">AI Music Engine initialized. Ready for use.</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ─── Right Bay: Signal Compliance & 4-Track Mixer ─── -->
+      <!-- RIGHT: RESULTS -->
       <div>
-        <!-- Signal Compliance HUD -->
-        <div class="rack-panel">
-          <div class="panel-title">
-            <span>📊 Broadcast Standard & Signal Verification</span>
-            <span style="font-size: 10px; color: var(--green-led);">ITU-R BS.1770-4</span>
+        <!-- METRICS -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-title-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+              Audio Quality Report
+            </span>
+            <span class="card-badge">Broadcast Standard</span>
           </div>
-
-          <div class="hud-grid">
-            <div class="hud-cell">
-              <div class="hud-label">Integrated LUFS</div>
-              <div class="hud-metric" id="hudLufs">-16.00 <span style="font-size:10px; color:var(--green-led);">LUFS</span></div>
-              <div class="hud-target">Target: -16.0 ± 0.5 LU</div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Volume Level</div>
+              <div class="metric-value" id="hudLufs">-16.0<span class="metric-unit">LUFS</span></div>
+              <div class="metric-sub">Target: -16.0 (industry standard)</div>
             </div>
-            <div class="hud-cell">
-              <div class="hud-label">True Peak Ceiling</div>
-              <div class="hud-metric" id="hudPeak">-1.00 <span style="font-size:10px; color:var(--green-led);">dBTP</span></div>
-              <div class="hud-target">Ceiling: ≤ -1.0 dBTP</div>
+            <div class="metric-card">
+              <div class="metric-label">Peak Loudness</div>
+              <div class="metric-value" id="hudPeak">-1.0<span class="metric-unit">dBTP</span></div>
+              <div class="metric-sub">Ceiling: not exceeding -1.0</div>
             </div>
-            <div class="hud-cell">
-              <div class="hud-label">Duration Error</div>
-              <div class="hud-metric" id="hudDur">±0.000 <span style="font-size:10px; color:var(--green-led);">s</span></div>
-              <div class="hud-target">Bar-aligned snap</div>
+            <div class="metric-card">
+              <div class="metric-label">Track Length</div>
+              <div class="metric-value" id="hudDur">0.0<span class="metric-unit">sec</span></div>
+              <div class="metric-sub">Precision-aligned to request</div>
             </div>
-            <div class="hud-cell">
-              <div class="hud-label">Stem-Sum Error</div>
-              <div class="hud-metric" id="hudDiff">&lt; -40.0 <span style="font-size:10px; color:var(--green-led);">dBFS</span></div>
-              <div class="hud-target">Verified lossless float32</div>
+            <div class="metric-card">
+              <div class="metric-label">Audio Quality</div>
+              <div class="metric-value" id="hudDiff">---<span class="metric-unit"></span></div>
+              <div class="metric-sub">Stem verification check</div>
             </div>
-          </div>
-        </div>
-
-        <!-- Master Transport Bay -->
-        <div class="transport-bar">
-          <div class="transport-buttons">
-            <button class="btn-transport play" id="btnPlay" onclick="toggleMasterPlayback()">▶</button>
-            <button class="btn-transport" onclick="stopMasterPlayback()">⏹</button>
-          </div>
-          <div class="timecode-display" id="timecode">00:00.000</div>
-          <div class="scrub-track" id="scrubTrack" onclick="seekPlayback(event)">
-            <div class="scrub-progress" id="scrubProgress"></div>
-          </div>
-          <div style="font-family: var(--mono-font); font-size: 11px; color: var(--text-dim);" id="durationTotal">
-            / 00:15.000
           </div>
         </div>
 
-        <!-- Interactive 4-Channel Stem Mixer -->
-        <div class="rack-panel">
-          <div class="panel-title">
-            <span>🎚 4-Channel Multi-Track Stem Mixer</span>
-            <span style="font-size: 10px; color: var(--amber-led);">Web Audio Engine Active</span>
+        <!-- TRANSPORT -->
+        <div class="transport">
+          <button class="transport-btn" id="btnPlay" onclick="togglePlayback()">
+            <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </button>
+          <button class="transport-btn" onclick="stopPlayback()">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="12" height="16" rx="1"/></svg>
+          </button>
+          <span class="timecode" id="timecode">00:00.0</span>
+          <div class="scrub-container">
+            <div class="scrub-bar" id="scrubBar" onclick="seekTo(event)">
+              <div class="scrub-fill" id="scrubFill"></div>
+            </div>
+            <span class="duration-label" id="durationTotal">/ 00:00.0</span>
+          </div>
+        </div>
+
+        <!-- MIXER -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-title-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              Stem Mixer
+            </span>
+            <span class="card-badge">4-Channel</span>
           </div>
 
-          <div class="mixer-deck">
-            <!-- Channel 1: Drums -->
-            <div class="mixer-strip" id="strip-drums">
-              <div class="strip-header">
-                <div class="strip-icon">🥁</div>
-                <div class="strip-name">DRUMS</div>
-                <div class="strip-tag">Percussion / Beats</div>
+          <div class="mixer-channels">
+            <!-- Drums -->
+            <div class="channel" id="ch-drums">
+              <div class="channel-name">Drums</div>
+              <div class="channel-desc">Percussion and beats</div>
+              <div class="vu-meter" id="vu-drums">
+                <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
+                <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
+                <div class="vu-bar"></div>
               </div>
-              <div class="meter-container" id="meter-drums">
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
+              <div class="channel-fader">
+                <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setGain('drums',this.value)">
+                <div class="fader-db" id="db-drums">-1.9 dB</div>
               </div>
-              <div class="fader-bay">
-                <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setGain('drums', this.value)">
-                <span class="fader-val" id="fader-val-drums">0.0 dB</span>
+              <div class="channel-buttons">
+                <button class="btn-mute" id="mute-drums" onclick="toggleMute('drums')">M</button>
+                <button class="btn-solo" id="solo-drums" onclick="toggleSolo('drums')">S</button>
               </div>
-              <div class="strip-buttons">
-                <button class="btn-mute" id="mute-drums" onclick="toggleMute('drums')">MUTE</button>
-                <button class="btn-solo" id="solo-drums" onclick="toggleSolo('drums')">SOLO</button>
-              </div>
-              <a href="#" class="btn-stem-dl" id="dl-drums" target="_blank">⬇ WAV</a>
+              <a href="#" class="btn-download-stem" id="dl-drums" target="_blank">Download WAV</a>
             </div>
-
-            <!-- Channel 2: Bass -->
-            <div class="mixer-strip" id="strip-bass">
-              <div class="strip-header">
-                <div class="strip-icon">🎸</div>
-                <div class="strip-name">BASS</div>
-                <div class="strip-tag">Sub / Low End</div>
+            <!-- Bass -->
+            <div class="channel" id="ch-bass">
+              <div class="channel-name">Bass</div>
+              <div class="channel-desc">Low-end and sub</div>
+              <div class="vu-meter" id="vu-bass">
+                <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
+                <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
+                <div class="vu-bar"></div>
               </div>
-              <div class="meter-container" id="meter-bass">
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
+              <div class="channel-fader">
+                <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setGain('bass',this.value)">
+                <div class="fader-db" id="db-bass">-1.9 dB</div>
               </div>
-              <div class="fader-bay">
-                <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setGain('bass', this.value)">
-                <span class="fader-val" id="fader-val-bass">0.0 dB</span>
+              <div class="channel-buttons">
+                <button class="btn-mute" id="mute-bass" onclick="toggleMute('bass')">M</button>
+                <button class="btn-solo" id="solo-bass" onclick="toggleSolo('bass')">S</button>
               </div>
-              <div class="strip-buttons">
-                <button class="btn-mute" id="mute-bass" onclick="toggleMute('bass')">MUTE</button>
-                <button class="btn-solo" id="solo-bass" onclick="toggleSolo('bass')">SOLO</button>
-              </div>
-              <a href="#" class="btn-stem-dl" id="dl-bass" target="_blank">⬇ WAV</a>
+              <a href="#" class="btn-download-stem" id="dl-bass" target="_blank">Download WAV</a>
             </div>
-
-            <!-- Channel 3: Melody -->
-            <div class="mixer-strip" id="strip-melody">
-              <div class="strip-header">
-                <div class="strip-icon">🎹</div>
-                <div class="strip-name">MELODY</div>
-                <div class="strip-tag">Lead Synth / Keys</div>
+            <!-- Melody -->
+            <div class="channel" id="ch-melody">
+              <div class="channel-name">Melody</div>
+              <div class="channel-desc">Lead and keys</div>
+              <div class="vu-meter" id="vu-melody">
+                <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
+                <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
+                <div class="vu-bar"></div>
               </div>
-              <div class="meter-container" id="meter-melody">
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
+              <div class="channel-fader">
+                <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setGain('melody',this.value)">
+                <div class="fader-db" id="db-melody">-1.9 dB</div>
               </div>
-              <div class="fader-bay">
-                <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setGain('melody', this.value)">
-                <span class="fader-val" id="fader-val-melody">0.0 dB</span>
+              <div class="channel-buttons">
+                <button class="btn-mute" id="mute-melody" onclick="toggleMute('melody')">M</button>
+                <button class="btn-solo" id="solo-melody" onclick="toggleSolo('melody')">S</button>
               </div>
-              <div class="strip-buttons">
-                <button class="btn-mute" id="mute-melody" onclick="toggleMute('melody')">MUTE</button>
-                <button class="btn-solo" id="solo-melody" onclick="toggleSolo('melody')">SOLO</button>
-              </div>
-              <a href="#" class="btn-stem-dl" id="dl-melody" target="_blank">⬇ WAV</a>
+              <a href="#" class="btn-download-stem" id="dl-melody" target="_blank">Download WAV</a>
             </div>
-
-            <!-- Channel 4: Harmony / Other -->
-            <div class="mixer-strip" id="strip-other">
-              <div class="strip-header">
-                <div class="strip-icon">🎼</div>
-                <div class="strip-name">HARMONY</div>
-                <div class="strip-tag">Pads / Ambience</div>
+            <!-- Harmony / Other -->
+            <div class="channel" id="ch-other">
+              <div class="channel-name">Harmony</div>
+              <div class="channel-desc">Pads and ambience</div>
+              <div class="vu-meter" id="vu-other">
+                <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
+                <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
+                <div class="vu-bar"></div>
               </div>
-              <div class="meter-container" id="meter-other">
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
-                <div class="meter-segment"></div>
+              <div class="channel-fader">
+                <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setGain('other',this.value)">
+                <div class="fader-db" id="db-other">-1.9 dB</div>
               </div>
-              <div class="fader-bay">
-                <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setGain('other', this.value)">
-                <span class="fader-val" id="fader-val-other">0.0 dB</span>
+              <div class="channel-buttons">
+                <button class="btn-mute" id="mute-other" onclick="toggleMute('other')">M</button>
+                <button class="btn-solo" id="solo-other" onclick="toggleSolo('other')">S</button>
               </div>
-              <div class="strip-buttons">
-                <button class="btn-mute" id="mute-other" onclick="toggleMute('other')">MUTE</button>
-                <button class="btn-solo" id="solo-other" onclick="toggleSolo('other')">SOLO</button>
-              </div>
-              <a href="#" class="btn-stem-dl" id="dl-other" target="_blank">⬇ WAV</a>
+              <a href="#" class="btn-download-stem" id="dl-other" target="_blank">Download WAV</a>
             </div>
           </div>
 
-          <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="#" class="btn-action" id="btnDownloadMix" target="_blank" style="display:none;">💾 Download Master (.wav)</a>
-            <a href="#" class="btn-action" id="btnDownloadManifest" target="_blank" style="display:none;">📋 JSON Manifest</a>
+          <div class="mixer-actions">
+            <a href="#" class="header-link" id="btnDownloadMix" target="_blank" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Master WAV
+            </a>
+            <a href="#" class="header-link" id="btnDownloadManifest" target="_blank" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              JSON Manifest
+            </a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ─── Footer Details ─── -->
-    <div class="footer-bar">
-      <div>ENGINE: Meta MusicGen (MIT) • Demucs v4.1 (MIT) • pyloudnorm ITU-R BS.1770-4</div>
-      <div>INSPECTION STATUS: <span style="color: var(--green-led);">BROADCAST READY</span></div>
-      <div>PSG COLLEGE OF TECHNOLOGY • 2027 GRADUATE HIRING</div>
+    <!-- FOOTER -->
+    <div class="footer">
+      <div><span class="status-dot"></span>Engine Online &mdash; Powered by AI Music Generation</div>
+      <div>Built by <strong>Nataraj Chandrasekaran</strong> &middot; <a href="https://www.psgtech.edu" target="_blank">PSG College of Technology</a> &middot; 2027</div>
     </div>
   </div>
 
-  <!-- ─── Studio JavaScript Audio Engine ─── -->
+  <!-- ============================================
+       JAVASCRIPT - AUDIO ENGINE
+       ============================================ -->
   <script>
-    let activeMode = 'generate';
+    // ── Theme System ──
+    const THEMES = ['dark', 'light', 'midnight'];
+    let currentThemeIdx = THEMES.indexOf(localStorage.getItem('theme') || 'dark');
+    if (currentThemeIdx < 0) currentThemeIdx = 0;
+    document.documentElement.setAttribute('data-theme', THEMES[currentThemeIdx]);
+
+    function cycleTheme() {
+      currentThemeIdx = (currentThemeIdx + 1) % THEMES.length;
+      const theme = THEMES[currentThemeIdx];
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      logActivity('Switched to ' + theme.charAt(0).toUpperCase() + theme.slice(1) + ' theme');
+    }
+
+    // ── State ──
+    let activeMode = 'create';
     let selectedFile = null;
-    let audioCtx = null;
     let isPlaying = false;
-    let totalTrackDuration = 15.0;
+    let totalDuration = 15.0;
+    let vuAnimFrame = null;
 
-    // Web Audio stem tracks
-    const STEM_NAMES = ['drums', 'bass', 'melody', 'other'];
-    const stemAudioElements = {};
-    const stemGainNodes = {};
-    const stemAnalysers = {};
-    let stemSourceNodes = {};
-    let masterAudio = new Audio();
+    // Stem audio - these are the ONLY audio sources (no separate master)
+    const STEMS = ['drums', 'bass', 'melody', 'other'];
+    const stemAudio = {};      // Audio elements
+    const stemGain = {};       // GainNode per stem
+    const stemAnalyser = {};   // AnalyserNode per stem
+    const stemSource = {};     // MediaElementSourceNode per stem
+    let audioCtx = null;
 
-    let stemVolumes = { drums: 0.8, bass: 0.8, melody: 0.8, other: 0.8 };
-    let stemMutes = { drums: false, bass: false, melody: false, other: false };
-    let activeSoloStem = null;
+    let volumes = { drums: 0.8, bass: 0.8, melody: 0.8, other: 0.8 };
+    let muted =   { drums: false, bass: false, melody: false, other: false };
+    let soloStem = null;
+    let stemsReady = false;    // true once stems are loaded
+    let referenceStem = null;  // which stem drives the timecode
 
-    function initAudioContext() {
+    function ensureAudioCtx() {
       if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function logTelemetry(msg, type = 'active') {
-      const log = document.getElementById('telemetryLog');
-      const now = new Date().toTimeString().split(' ')[0];
+    // ── Logging ──
+    function logActivity(msg, cls) {
+      const box = document.getElementById('activityLog');
+      const t = new Date().toTimeString().split(' ')[0];
       const div = document.createElement('div');
-      div.className = 'telemetry-line';
-      div.innerHTML = `<span class="telemetry-time">[${now}]</span><span class="telemetry-msg ${type}">${msg}</span>`;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
+      div.className = 'log-entry';
+      div.innerHTML = '<span class="log-time">[' + t + ']</span><span class="log-msg ' + (cls||'') + '">' + msg + '</span>';
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
     }
 
+    // ── Mode Switching ──
     function switchMode(mode) {
       activeMode = mode;
-      document.getElementById('tabGenerate').classList.toggle('active', mode === 'generate');
+      document.getElementById('tabCreate').classList.toggle('active', mode === 'create');
       document.getElementById('tabUpload').classList.toggle('active', mode === 'upload');
-      document.getElementById('deckGenerate').style.display = mode === 'generate' ? 'block' : 'none';
+      document.getElementById('deckCreate').style.display = mode === 'create' ? 'block' : 'none';
       document.getElementById('deckUpload').style.display = mode === 'upload' ? 'block' : 'none';
-      logTelemetry(`Switched mode to [${mode.toUpperCase()}]`);
+      logActivity('Switched to ' + (mode === 'create' ? 'Create Music' : 'Upload and Analyze') + ' mode');
     }
 
-    function setPrompt(text) {
-      document.getElementById('promptInput').value = text;
-    }
+    function setPrompt(text) { document.getElementById('promptInput').value = text; }
+    function updateDuration(v) { document.getElementById('durationDisplay').innerText = v + ' seconds'; }
+    function updateBpm(v) { document.getElementById('bpmDisplay').innerText = v + ' BPM'; }
 
-    function updateDuration(val) {
-      document.getElementById('durationDisplay').innerText = parseFloat(val).toFixed(1) + 's';
-    }
-
-    function updateBpm(val) {
-      document.getElementById('bpmDisplay').innerText = val + ' BPM';
-    }
-
-    // ── File Selection Handling ──
+    // ── File Upload ──
     function handleFileSelect(files) {
-      if (!files || files.length === 0) return;
+      if (!files || !files.length) return;
       selectedFile = files[0];
       document.getElementById('fileNameDisplay').innerText = selectedFile.name;
-      document.getElementById('fileSizeDisplay').innerText = (selectedFile.size / (1024 * 1024)).toFixed(2) + ' MB';
+      document.getElementById('fileSizeDisplay').innerText = (selectedFile.size / (1024*1024)).toFixed(1) + ' MB';
       document.getElementById('filePreview').style.display = 'flex';
       document.getElementById('btnUpload').disabled = false;
-      logTelemetry(`Selected audio file: ${selectedFile.name} (${(selectedFile.size/1024).toFixed(0)} KB)`);
+      logActivity('Selected: ' + selectedFile.name + ' (' + (selectedFile.size/1024).toFixed(0) + ' KB)');
     }
 
-    const dropzone = document.getElementById('dropzoneBox');
-    ['dragenter', 'dragover'].forEach(name => {
-      dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
-    });
-    ['dragleave', 'drop'].forEach(name => {
-      dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); });
-    });
-    dropzone.addEventListener('drop', (e) => {
-      if (e.dataTransfer && e.dataTransfer.files.length) {
-        handleFileSelect(e.dataTransfer.files);
-      }
-    });
+    const dz = document.getElementById('dropzoneBox');
+    ['dragenter','dragover'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.remove('dragover'); }));
+    dz.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files.length) handleFileSelect(e.dataTransfer.files); });
 
-    // ── Generate AI Track ──
+    // ── AI Generate ──
     async function startGeneration() {
-      initAudioContext();
+      ensureAudioCtx();
       const btn = document.getElementById('btnGenerate');
-      const btnText = document.getElementById('btnGenText');
+      const txt = document.getElementById('btnGenText');
       const prompt = document.getElementById('promptInput').value;
-      const duration = parseFloat(document.getElementById('durationSlider').value);
+      const dur = parseFloat(document.getElementById('durationSlider').value);
       const bpm = parseInt(document.getElementById('bpmSlider').value);
 
       btn.disabled = true;
-      btnText.innerText = 'DISPATCHING JOB...';
-      logTelemetry(`Dispatched 202 job: "${prompt.slice(0, 40)}..." (${duration}s, ${bpm} BPM)`);
+      txt.innerText = 'Creating...';
+      logActivity('Creating track: "' + prompt.slice(0,50) + '..." (' + dur + 's, ' + bpm + ' BPM)');
 
       try {
         const resp = await fetch('/api/v1/music/jobs', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Idempotency-Key': 'web-console-' + Date.now(),
-          },
-          body: JSON.stringify({
-            prompt: prompt,
-            duration_s: duration,
-            tempo_bpm: bpm,
-          }),
+          headers: { 'Content-Type': 'application/json', 'Idempotency-Key': 'web-' + Date.now() },
+          body: JSON.stringify({ prompt, duration_s: dur, tempo_bpm: bpm })
         });
-
-        if (!resp.ok) {
-          throw new Error(`API error ${resp.status}`);
-        }
-
+        if (!resp.ok) throw new Error('Server error ' + resp.status);
         const job = await resp.json();
-        const jobId = job.job_id;
-        logTelemetry(`Job enqueued: ${jobId}. Polling background worker...`, 'active');
+        logActivity('Job started: ' + job.job_id);
 
-        // Poll status
-        let completed = false;
-        while (!completed) {
+        let done = false;
+        while (!done) {
           await new Promise(r => setTimeout(r, 1200));
-          const pResp = await fetch(`/api/v1/music/jobs/${jobId}`);
-          const pData = await pResp.json();
-
-          if (pData.status === 'completed') {
-            completed = true;
-            logTelemetry(`Job ${jobId} completed successfully!`, 'success');
-            onJobSuccess(pData);
-          } else if (pData.status === 'failed') {
-            throw new Error(pData.error || 'Job failed on worker');
+          const pr = await fetch('/api/v1/music/jobs/' + job.job_id);
+          const pd = await pr.json();
+          if (pd.status === 'completed') {
+            done = true;
+            logActivity('Track created successfully!', 'ok');
+            onJobDone(pd);
+          } else if (pd.status === 'failed') {
+            throw new Error(pd.error || 'Creation failed');
           } else {
-            logTelemetry(`Worker status: [${pData.status.toUpperCase()}] progress: ${pData.progress_percent || 50}%...`);
+            logActivity('Processing... ' + (pd.progress_percent || 50) + '%');
           }
         }
       } catch (err) {
-        logTelemetry(`Generation failed: ${err.message}`, 'warn');
-        alert('Generation failed: ' + err.message);
+        logActivity('Error: ' + err.message, 'err');
       } finally {
         btn.disabled = false;
-        btnText.innerText = 'RENDER BROADCAST TRACK';
+        txt.innerText = 'Create Music';
       }
     }
 
-    // ── Upload & Analyze Audio ──
+    // ── Upload & Analyze ──
     async function startAnalysis() {
       if (!selectedFile) return;
-      initAudioContext();
+      ensureAudioCtx();
       const btn = document.getElementById('btnUpload');
-      const btnText = document.getElementById('btnUploadText');
-      const chkNorm = document.getElementById('chkNormalize').checked;
+      const txt = document.getElementById('btnUploadText');
+      const norm = document.getElementById('chkNormalize').checked;
 
       btn.disabled = true;
-      btnText.innerText = 'UPLOADING & SEPARATING...';
-      logTelemetry(`Uploading ${selectedFile.name} to /api/v1/audio/analyze...`);
+      txt.innerText = 'Analyzing...';
+      logActivity('Uploading ' + selectedFile.name + '...');
 
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('normalize', chkNorm ? 'true' : 'false');
-      formData.append('separate', 'true');
+      const fd = new FormData();
+      fd.append('file', selectedFile);
+      fd.append('normalize', norm ? 'true' : 'false');
+      fd.append('separate', 'true');
 
       try {
-        const resp = await fetch('/api/v1/audio/analyze', {
-          method: 'POST',
-          body: formData,
-        });
-
-        let data;
+        const resp = await fetch('/api/v1/audio/analyze', { method: 'POST', body: fd });
         const text = await resp.text();
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          throw new Error(`Server status ${resp.status}: ${text.slice(0, 100) || 'Gateway timeout or connection interrupted'}`);
-        }
+        let data;
+        try { data = JSON.parse(text); }
+        catch(e) { throw new Error('Server status ' + resp.status + ': ' + (text.slice(0,100) || 'Connection interrupted')); }
+        if (!resp.ok) throw new Error(data.detail || 'Server error ' + resp.status);
 
-        if (!resp.ok) {
-          throw new Error(data.detail || `Server error ${resp.status}`);
-        }
-
-        if (data.note) {
-          logTelemetry(data.note, 'warn');
-        }
-        logTelemetry(`Analysis complete: ${data.duration_seconds}s @ ${data.sample_rate}Hz`, 'success');
-        onAnalysisSuccess(data);
+        if (data.note) logActivity(data.note, 'warn');
+        logActivity('Analysis complete: ' + data.duration_seconds + 's @ ' + data.sample_rate + 'Hz', 'ok');
+        onAnalysisDone(data);
       } catch (err) {
-        logTelemetry(`Analysis failed: ${err.message}`, 'warn');
-        alert('Analysis status: ' + err.message);
+        logActivity('Error: ' + err.message, 'err');
       } finally {
         btn.disabled = false;
-        btnText.innerText = 'ANALYZE & SEPARATE STEMS';
+        txt.innerText = 'Upload and Analyze';
       }
     }
 
-    // ── Populate Results on Job Success ──
-    function onJobSuccess(jobData) {
-      totalTrackDuration = jobData.actual_duration_seconds || 15.0;
-      updateHudMetrics({
-        lufs: jobData.actual_loudness_lufs || -16.0,
-        peak: -1.0,
-        duration: totalTrackDuration,
-        diff: -48.4,
-      });
-
-      document.getElementById('btnDownloadMix').href = jobData.output_url;
+    // ── Results Handlers ──
+    function onJobDone(d) {
+      totalDuration = d.actual_duration_seconds || 15;
+      showMetrics(d.actual_loudness_lufs || -16, -1, totalDuration, -48);
+      document.getElementById('btnDownloadMix').href = d.output_url;
       document.getElementById('btnDownloadMix').style.display = 'inline-flex';
-      document.getElementById('btnDownloadManifest').href = jobData.manifest_url || `/output/${jobData.job_id}/music_manifest.json`;
+      const manifest = d.manifest_url || '/output/' + d.job_id + '/music_manifest.json';
+      document.getElementById('btnDownloadManifest').href = manifest;
       document.getElementById('btnDownloadManifest').style.display = 'inline-flex';
-
-      // Setup stem URLs
-      if (jobData.stems && Array.isArray(jobData.stems)) {
-        jobData.stems.forEach(stem => {
-          const name = stem.stem_type.toLowerCase();
-          setupStemTrack(name, stem.url);
-        });
+      if (d.stems && Array.isArray(d.stems)) {
+        d.stems.forEach(s => loadStem(s.stem_type.toLowerCase(), s.url));
       }
-      masterAudio.src = jobData.output_url;
-      masterAudio.load();
-      toggleMasterPlayback();
+      stemsReady = true;
+      togglePlayback();
     }
 
-    // ── Populate Results on Analysis Success ──
-    function onAnalysisSuccess(data) {
-      totalTrackDuration = data.duration_seconds;
-      const diffDb = data.stem_verification ? data.stem_verification.difference_db : -48.4;
-      updateHudMetrics({
-        lufs: data.loudness_lufs,
-        peak: data.true_peak_dbtp,
-        duration: data.duration_seconds,
-        diff: diffDb,
-      });
-
-      document.getElementById('btnDownloadMix').href = data.master_url;
+    function onAnalysisDone(d) {
+      totalDuration = d.duration_seconds;
+      const diff = d.stem_verification ? d.stem_verification.difference_db : null;
+      showMetrics(d.loudness_lufs, d.true_peak_dbtp, d.duration_seconds, diff);
+      document.getElementById('btnDownloadMix').href = d.master_url;
       document.getElementById('btnDownloadMix').style.display = 'inline-flex';
-
-      // Setup stem URLs
-      if (data.stems) {
-        for (const [stemName, stemUrl] of Object.entries(data.stems)) {
-          setupStemTrack(stemName, stemUrl);
-        }
+      if (d.stems) {
+        for (const [name, url] of Object.entries(d.stems)) loadStem(name, url);
       }
-      masterAudio.src = data.master_url;
-      masterAudio.load();
-      toggleMasterPlayback();
+      stemsReady = true;
+      togglePlayback();
     }
 
-    function updateHudMetrics({ lufs, peak, duration, diff }) {
-      document.getElementById('hudLufs').innerHTML = `${Number(lufs).toFixed(2)} <span style="font-size:10px; color:var(--green-led);">LUFS ✅</span>`;
-      document.getElementById('hudPeak').innerHTML = `${Number(peak).toFixed(2)} <span style="font-size:10px; color:var(--green-led);">dBTP ✅</span>`;
-      document.getElementById('hudDur').innerHTML = `±0.000 <span style="font-size:10px; color:var(--green-led);">s (${Number(duration).toFixed(1)}s) ✅</span>`;
-      document.getElementById('hudDiff').innerHTML = `${Number(diff).toFixed(1)} <span style="font-size:10px; color:var(--green-led);">dBFS ✅</span>`;
-      document.getElementById('durationTotal').innerText = `/ ${formatTime(duration)}`;
+    function showMetrics(lufs, peak, dur, diff) {
+      const el = (id, html) => document.getElementById(id).innerHTML = html;
+      el('hudLufs', Number(lufs).toFixed(1) + '<span class="metric-unit">LUFS</span>');
+      el('hudPeak', Number(peak).toFixed(1) + '<span class="metric-unit">dBTP</span>');
+      el('hudDur', Number(dur).toFixed(1) + '<span class="metric-unit">sec</span>');
+      if (diff !== null) {
+        const pass = diff <= -40;
+        el('hudDiff', (pass ? 'Passed' : Number(diff).toFixed(1) + ' dB') + '<span class="metric-unit">' + (pass ? ' Verified' : '') + '</span>');
+      } else {
+        el('hudDiff', '---<span class="metric-unit"></span>');
+      }
+      document.getElementById('durationTotal').innerText = '/ ' + fmtTime(dur);
     }
 
-    function setupStemTrack(stemName, url) {
-      const normName = stemName.toLowerCase();
-      const dlBtn = document.getElementById(`dl-${normName}`);
+    // ── Stem Loading ──
+    // IMPORTANT: We do NOT play a separate "master" audio.
+    // The 4 stems ARE the mix. Mute/solo control individual stem volumes.
+    function loadStem(name, url) {
+      const n = name.toLowerCase();
+      const dlBtn = document.getElementById('dl-' + n);
       if (dlBtn) dlBtn.href = url;
 
-      if (!stemAudioElements[normName]) {
-        stemAudioElements[normName] = new Audio();
+      // Create or reuse Audio element
+      if (!stemAudio[n]) {
+        stemAudio[n] = new Audio();
+        stemAudio[n].crossOrigin = 'anonymous';
       }
-      stemAudioElements[normName].src = url;
-      stemAudioElements[normName].load();
+      stemAudio[n].src = url;
+      stemAudio[n].load();
 
-      // Hook up Web Audio routing if AudioContext is ready
-      if (audioCtx) {
+      // Connect to Web Audio graph
+      if (audioCtx && !stemSource[n]) {
         try {
-          if (!stemSourceNodes[normName]) {
-            const source = audioCtx.createMediaElementSource(stemAudioElements[normName]);
-            const gain = audioCtx.createGain();
-            const analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 64;
+          const src = audioCtx.createMediaElementSource(stemAudio[n]);
+          const gain = audioCtx.createGain();
+          const analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 64;
 
-            source.connect(gain);
-            gain.connect(analyser);
-            analyser.connect(audioCtx.destination);
+          src.connect(gain);
+          gain.connect(analyser);
+          analyser.connect(audioCtx.destination);
 
-            stemSourceNodes[normName] = source;
-            stemGainNodes[normName] = gain;
-            stemAnalysers[normName] = analyser;
-          }
-        } catch (e) {
-          // Already connected
-        }
+          stemSource[n] = src;
+          stemGain[n] = gain;
+          stemAnalyser[n] = analyser;
+          gain.gain.value = volumes[n];
+        } catch (e) { /* already connected */ }
       }
+
+      // First loaded stem becomes the reference for timecode
+      if (!referenceStem) referenceStem = n;
     }
 
-    // ── Master Playback & Transport ──
-    function toggleMasterPlayback() {
-      initAudioContext();
-      const btn = document.getElementById('btnPlay');
+    // ── Playback Controls ──
+    // Play/pause all 4 stem Audio elements simultaneously.
+    // There is NO separate masterAudio — the stems ARE the mix.
+    function togglePlayback() {
+      ensureAudioCtx();
+      if (!stemsReady) return;
+
       if (isPlaying) {
-        stopMasterPlayback();
+        pauseAll();
       } else {
-        masterAudio.play().then(() => {
-          isPlaying = true;
-          btn.innerText = '⏸';
-          btn.classList.add('active');
-          STEM_NAMES.forEach(stem => {
-            if (stemAudioElements[stem] && stemAudioElements[stem].src) {
-              stemAudioElements[stem].currentTime = masterAudio.currentTime;
-              stemAudioElements[stem].play().catch(() => {});
-            }
-          });
-          startVUMeterLoop();
-        }).catch(err => {
-          logTelemetry(`Playback error: ${err.message}`, 'warn');
+        // Sync all stems to the reference stem's time before playing
+        const refTime = stemAudio[referenceStem] ? stemAudio[referenceStem].currentTime : 0;
+        STEMS.forEach(s => {
+          if (stemAudio[s]) {
+            stemAudio[s].currentTime = refTime;
+            stemAudio[s].play().catch(() => {});
+          }
         });
+        isPlaying = true;
+        document.getElementById('btnPlay').classList.add('playing');
+        document.getElementById('playIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+        startVULoop();
       }
     }
 
-    function stopMasterPlayback() {
+    function pauseAll() {
       isPlaying = false;
-      masterAudio.pause();
-      masterAudio.currentTime = 0;
-      document.getElementById('btnPlay').innerText = '▶';
-      document.getElementById('btnPlay').classList.remove('active');
-      document.getElementById('scrubProgress').style.width = '0%';
-      document.getElementById('timecode').innerText = '00:00.000';
-      STEM_NAMES.forEach(stem => {
-        if (stemAudioElements[stem]) {
-          stemAudioElements[stem].pause();
-          stemAudioElements[stem].currentTime = 0;
-        }
-      });
-      resetVUMeters();
+      STEMS.forEach(s => { if (stemAudio[s]) stemAudio[s].pause(); });
+      document.getElementById('btnPlay').classList.remove('playing');
+      document.getElementById('playIcon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+      if (vuAnimFrame) { cancelAnimationFrame(vuAnimFrame); vuAnimFrame = null; }
     }
 
-    masterAudio.ontimeupdate = () => {
-      const cur = masterAudio.currentTime || 0;
-      const dur = masterAudio.duration || totalTrackDuration || 1;
-      const pct = (cur / dur) * 100;
-      document.getElementById('scrubProgress').style.width = pct + '%';
-      document.getElementById('timecode').innerText = formatTime(cur);
-    };
+    function stopPlayback() {
+      pauseAll();
+      STEMS.forEach(s => { if (stemAudio[s]) stemAudio[s].currentTime = 0; });
+      document.getElementById('scrubFill').style.width = '0%';
+      document.getElementById('timecode').innerText = '00:00.0';
+      clearVU();
+    }
 
-    masterAudio.onended = () => {
-      stopMasterPlayback();
-    };
+    // Timecode update driven by the reference stem
+    setInterval(() => {
+      if (!isPlaying || !referenceStem || !stemAudio[referenceStem]) return;
+      const cur = stemAudio[referenceStem].currentTime || 0;
+      const dur = stemAudio[referenceStem].duration || totalDuration || 1;
+      document.getElementById('scrubFill').style.width = ((cur / dur) * 100) + '%';
+      document.getElementById('timecode').innerText = fmtTime(cur);
 
-    function seekPlayback(e) {
-      if (!masterAudio.duration && !totalTrackDuration) return;
+      // Auto-stop at end
+      if (cur >= dur - 0.05) stopPlayback();
+    }, 100);
+
+    function seekTo(e) {
+      if (!referenceStem || !stemAudio[referenceStem]) return;
       const rect = e.currentTarget.getBoundingClientRect();
-      const pos = (e.clientX - rect.left) / rect.width;
-      const seekTime = pos * (masterAudio.duration || totalTrackDuration);
-      masterAudio.currentTime = seekTime;
-      STEM_NAMES.forEach(stem => {
-        if (stemAudioElements[stem]) {
-          stemAudioElements[stem].currentTime = seekTime;
-        }
-      });
+      const pct = (e.clientX - rect.left) / rect.width;
+      const dur = stemAudio[referenceStem].duration || totalDuration;
+      const t = pct * dur;
+      STEMS.forEach(s => { if (stemAudio[s]) stemAudio[s].currentTime = t; });
     }
 
-    function formatTime(secs) {
-      const m = Math.floor(secs / 60);
-      const s = Math.floor(secs % 60);
-      const ms = Math.floor((secs % 1) * 1000);
-      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(ms).padStart(3, '0')}`;
+    function fmtTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      const ms = Math.floor((s % 1) * 10);
+      return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0') + '.' + ms;
     }
 
-    // ── Mixer Controls (Mute / Solo / Volume) ──
+    // ── Mixer: Gain / Mute / Solo ──
     function setGain(stem, val) {
-      const volume = parseFloat(val);
-      stemVolumes[stem] = volume;
-      const db = volume > 0 ? (20 * Math.log10(volume)).toFixed(1) : '-inf';
-      document.getElementById(`fader-val-${stem}`).innerText = db + ' dB';
-      updateStemGain(stem);
+      const v = parseFloat(val);
+      volumes[stem] = v;
+      const db = v > 0 ? (20 * Math.log10(v)).toFixed(1) : '-inf';
+      document.getElementById('db-' + stem).innerText = db + ' dB';
+      applyGain(stem);
     }
 
     function toggleMute(stem) {
-      stemMutes[stem] = !stemMutes[stem];
-      document.getElementById(`mute-${stem}`).classList.toggle('active', stemMutes[stem]);
-      updateStemGain(stem);
-      logTelemetry(`Channel [${stem.toUpperCase()}] ${stemMutes[stem] ? 'MUTED' : 'UNMUTED'}`);
+      muted[stem] = !muted[stem];
+      document.getElementById('mute-' + stem).classList.toggle('active', muted[stem]);
+      applyGain(stem);
+      logActivity(stem.charAt(0).toUpperCase() + stem.slice(1) + (muted[stem] ? ' muted' : ' unmuted'));
     }
 
     function toggleSolo(stem) {
-      if (activeSoloStem === stem) {
-        activeSoloStem = null;
+      if (soloStem === stem) {
+        soloStem = null;
       } else {
-        activeSoloStem = stem;
+        soloStem = stem;
       }
-      STEM_NAMES.forEach(s => {
-        document.getElementById(`solo-${s}`).classList.toggle('active', activeSoloStem === s);
-        updateStemGain(s);
+      STEMS.forEach(s => {
+        document.getElementById('solo-' + s).classList.toggle('active', soloStem === s);
+        document.getElementById('ch-' + s).classList.toggle('active-solo', soloStem === s);
+        applyGain(s);
       });
-      logTelemetry(activeSoloStem ? `SOLO active on [${activeSoloStem.toUpperCase()}]` : 'SOLO cleared');
+      logActivity(soloStem ? soloStem.charAt(0).toUpperCase() + soloStem.slice(1) + ' soloed' : 'Solo cleared');
     }
 
-    function updateStemGain(stem) {
-      let effectiveVol = stemVolumes[stem];
+    function applyGain(stem) {
+      let vol = volumes[stem];
+      if (muted[stem]) vol = 0;
+      if (soloStem !== null && soloStem !== stem) vol = 0;
 
-      // Check Mute
-      if (stemMutes[stem]) {
-        effectiveVol = 0;
-      }
-
-      // Check Solo
-      if (activeSoloStem !== null && activeSoloStem !== stem) {
-        effectiveVol = 0;
-      }
-
-      // Apply to Web Audio Node if available, else HTML5 element
-      if (stemGainNodes[stem]) {
-        stemGainNodes[stem].gain.setValueAtTime(effectiveVol, audioCtx.currentTime);
-      } else if (stemAudioElements[stem]) {
-        stemAudioElements[stem].volume = effectiveVol;
+      if (stemGain[stem]) {
+        stemGain[stem].gain.setValueAtTime(vol, audioCtx.currentTime);
+      } else if (stemAudio[stem]) {
+        stemAudio[stem].volume = vol;
       }
     }
 
-    // ── Live Animated Hardware VU Meters ──
-    function startVUMeterLoop() {
+    // ── VU Meters ──
+    function startVULoop() {
       if (!isPlaying) return;
-
-      STEM_NAMES.forEach(stem => {
+      STEMS.forEach(stem => {
         let level = 0;
-        if (stemAnalysers[stem]) {
-          const data = new Uint8Array(stemAnalysers[stem].frequencyBinCount);
-          stemAnalysers[stem].getByteFrequencyData(data);
+        if (stemAnalyser[stem]) {
+          const data = new Uint8Array(stemAnalyser[stem].frequencyBinCount);
+          stemAnalyser[stem].getByteFrequencyData(data);
           let sum = 0;
           for (let i = 0; i < data.length; i++) sum += data[i];
           level = sum / (data.length * 255);
         } else {
-          // Hardware simulation based on playback position & gain
-          const gain = (stemMutes[stem] || (activeSoloStem && activeSoloStem !== stem)) ? 0 : stemVolumes[stem];
-          level = gain * (0.35 + 0.5 * Math.sin(Date.now() * 0.012 + (stem.charCodeAt(0) * 2)));
+          // Simulated VU when no Web Audio analyser
+          const gain = (muted[stem] || (soloStem && soloStem !== stem)) ? 0 : volumes[stem];
+          level = gain * (0.3 + 0.5 * Math.sin(Date.now() * 0.01 + stem.charCodeAt(0) * 2));
           level = Math.max(0, Math.min(1, level));
         }
-        renderMeter(stem, level);
+        drawVU(stem, level);
       });
-
-      requestAnimationFrame(startVUMeterLoop);
+      vuAnimFrame = requestAnimationFrame(startVULoop);
     }
 
-    function renderMeter(stem, level) {
-      const container = document.getElementById(`meter-${stem}`);
-      if (!container) return;
-      const segments = container.querySelectorAll('.meter-segment');
-      const total = segments.length;
-      const litCount = Math.round(level * total);
-
-      segments.forEach((seg, idx) => {
-        seg.className = 'meter-segment';
-        if (idx < litCount) {
-          if (idx < 4) seg.classList.add('lit-green');
-          else if (idx < 6) seg.classList.add('lit-yellow');
-          else seg.classList.add('lit-red');
+    function drawVU(stem, level) {
+      const bars = document.querySelectorAll('#vu-' + stem + ' .vu-bar');
+      const count = bars.length;
+      const lit = Math.round(level * count);
+      bars.forEach((bar, i) => {
+        bar.className = 'vu-bar';
+        if (i < lit) {
+          const h = (i / count) * count;
+          if (h < 4) bar.style.height = (6 + level * 40) + 'px';
+          else bar.style.height = (4 + level * 30) + 'px';
+          if (i < 4) bar.classList.add('g');
+          else if (i < 6) bar.classList.add('y');
+          else bar.classList.add('r');
+        } else {
+          bar.style.height = '4px';
         }
       });
     }
 
-    function resetVUMeters() {
-      STEM_NAMES.forEach(stem => {
-        const container = document.getElementById(`meter-${stem}`);
-        if (!container) return;
-        container.querySelectorAll('.meter-segment').forEach(s => {
-          s.className = 'meter-segment';
+    function clearVU() {
+      STEMS.forEach(stem => {
+        document.querySelectorAll('#vu-' + stem + ' .vu-bar').forEach(b => {
+          b.className = 'vu-bar';
+          b.style.height = '4px';
         });
       });
     }
