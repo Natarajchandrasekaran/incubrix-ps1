@@ -13,9 +13,19 @@ import uuid
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Optional
+# Ensure python-multipart is available in container environments
+try:
+    import multipart
+except ImportError:
+    import subprocess
+    import sys
+    try:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "python-multipart", "--quiet"])
+    except Exception:
+        pass
 
 import structlog
-from fastapi import FastAPI, File, Form, HTTPException, Header, Query, Request, Response, UploadFile
+from fastapi import FastAPI, HTTPException, Header, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
@@ -382,10 +392,7 @@ async def cancel_job(job_id: str):
     summary="Upload and inspect audio file with stem separation and broadcast compliance",
 )
 async def analyze_uploaded_audio(
-    file: UploadFile = File(...),
-    normalize: bool = Form(False),
-    target_lufs: float = Form(-16.0),
-    separate: bool = Form(True),
+    request: Request,
 ):
     """
     Upload an audio file (WAV, MP3, FLAC, OGG) to:
@@ -398,7 +405,40 @@ async def analyze_uploaded_audio(
     from app.audio.loudness import measure_loudness, normalize_loudness
     from app.audio.stems import separate_stems, verify_stems_sum_to_mix
 
-    filename = file.filename or "uploaded_audio.wav"
+    contents = b""
+    filename = "uploaded_audio.wav"
+    normalize = False
+    target_lufs = -16.0
+    separate = True
+
+    content_type = request.headers.get("content-type", "")
+    if "multipart/form-data" in content_type:
+        try:
+            form = await request.form()
+            file_item = form.get("file")
+            if file_item is not None and hasattr(file_item, "read"):
+                contents = await file_item.read()
+                filename = getattr(file_item, "filename", "uploaded_audio.wav")
+            elif isinstance(file_item, (bytes, bytearray)):
+                contents = bytes(file_item)
+
+            norm_val = form.get("normalize", "false")
+            normalize = str(norm_val).lower() in ("true", "1", "yes")
+            target_lufs = float(form.get("target_lufs", -16.0))
+            sep_val = form.get("separate", "true")
+            separate = str(sep_val).lower() in ("true", "1", "yes")
+        except Exception:
+            contents = await request.body()
+    else:
+        contents = await request.body()
+        filename = request.headers.get("X-Filename", "uploaded_audio.wav")
+        normalize = request.query_params.get("normalize", "false").lower() in ("true", "1", "yes")
+        target_lufs = float(request.query_params.get("target_lufs", -16.0))
+        separate = request.query_params.get("separate", "true").lower() in ("true", "1", "yes")
+
+    if not contents:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty or missing.")
+
     ext = _Path(filename).suffix.lower()
     allowed_exts = [".wav", ".mp3", ".flac", ".ogg", ".aiff", ".m4a"]
     if ext not in allowed_exts:
@@ -411,10 +451,6 @@ async def analyze_uploaded_audio(
     upload_dir = _output_dir / "uploads" / upload_id
     upload_dir.mkdir(parents=True, exist_ok=True)
     raw_path = upload_dir / f"original{ext}"
-
-    contents = await file.read()
-    if not contents:
-        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
 
     raw_path.write_bytes(contents)
 
