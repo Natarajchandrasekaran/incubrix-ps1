@@ -186,7 +186,10 @@ def _mock_separate(
             stem_audio = np.zeros_like(audio)
         else:
             b, a = signal.butter(4, [low, high], btype="band")
-            stem_audio = signal.filtfilt(b, a, audio).astype(np.float32)
+            axis = 0 if audio.ndim > 1 else -1
+            stem_filtered = signal.filtfilt(b, a, audio, axis=axis)
+            stem_filtered = np.nan_to_num(stem_filtered, nan=0.0, posinf=1.0, neginf=-1.0)
+            stem_audio = np.clip(stem_filtered, -1.0, 1.0).astype(np.float32)
 
         stem_path = output_dir / f"{name}.wav"
         sf.write(str(stem_path), stem_audio, sr, subtype="FLOAT")
