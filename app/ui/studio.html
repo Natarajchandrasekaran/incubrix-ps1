@@ -1470,10 +1470,14 @@
       if (muted[stem]) vol = 0;
       if (soloStem !== null && soloStem !== stem) vol = 0;
 
-      if (stemGain[stem]) {
-        stemGain[stem].gain.setValueAtTime(vol, audioCtx.currentTime);
-      } else if (stemAudio[stem]) {
-        stemAudio[stem].volume = vol;
+      if (stemGain[stem] && audioCtx && audioCtx.state !== 'closed') {
+        try { stemGain[stem].gain.setValueAtTime(vol, audioCtx.currentTime); } catch (e) {}
+      }
+      if (stemAudio[stem]) {
+        try {
+          stemAudio[stem].volume = Math.max(0, Math.min(1, vol));
+          stemAudio[stem].muted = (vol === 0);
+        } catch (e) {}
       }
     }
 

@@ -179,10 +179,10 @@ def _mock_separate(
     # Simple frequency band separation (for testing pipeline only)
     stems = []
     band_configs = [
-        ("drums", 20, 250),      # Low frequencies → drums
-        ("bass", 60, 400),       # Bass range
-        ("other", 400, 4000),    # Midrange → harmony/pads
-        ("melody", 2000, 16000), # High frequencies → melody
+        ("drums", 50, 1800),     # Percussion punch, kick, snare body and snap
+        ("bass", 35, 300),       # Deep bass fundamental and warmth
+        ("other", 300, 3500),    # Midrange harmony, rhythm chords, pads
+        ("melody", 2000, 15000), # Lead melody, synth top end, shimmer
     ]
 
     for name, low_hz, high_hz in band_configs:
