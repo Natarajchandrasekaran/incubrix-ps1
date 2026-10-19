@@ -37,6 +37,8 @@ from app.models.schemas import (
     JobStatus,
     MusicJobRequest,
     MusicJobResponse,
+    RemixRequest,
+    RemixResponse,
 )
 
 # ─── Structured logging ───
@@ -560,6 +562,117 @@ async def analyze_uploaded_audio(
             "diff_rms": float(0.0 if (math.isnan(stem_verification["diff_rms"]) or math.isinf(stem_verification["diff_rms"])) else stem_verification["diff_rms"]),
         } if stem_verification else None,
     }
+
+
+# ─── Portion-Based Stem Automation & Remix Endpoint ───
+
+@app.post(
+    "/api/v1/music/remix",
+    tags=["Music Jobs"],
+    summary="Render custom mix with dynamic portion-based stem automation",
+    response_model=RemixResponse,
+)
+async def remix_track_portions(request: RemixRequest):
+    """
+    Render a custom track where individual stems (drums, bass, melody, harmony)
+    are dynamically modulated across specific portions of the timeline.
+    """
+    import soundfile as sf
+    from app.audio.loudness import normalize_loudness
+
+    if request.job_id:
+        stems_dir = _output_dir / request.job_id / "stems"
+        out_mix_path = _output_dir / request.job_id / "custom_mix.wav"
+        rel_url = f"/output/{request.job_id}/custom_mix.wav"
+    elif request.upload_id:
+        stems_dir = _output_dir / "uploads" / request.upload_id / "stems"
+        out_mix_path = _output_dir / "uploads" / request.upload_id / "custom_mix.wav"
+        rel_url = f"/output/uploads/{request.upload_id}/custom_mix.wav"
+    else:
+        if not jobs_store:
+            raise HTTPException(status_code=400, detail="No active or previous job found to remix.")
+        latest_job_id = list(jobs_store.keys())[-1]
+        stems_dir = _output_dir / latest_job_id / "stems"
+        out_mix_path = _output_dir / latest_job_id / "custom_mix.wav"
+        rel_url = f"/output/{latest_job_id}/custom_mix.wav"
+
+    if not stems_dir.exists():
+        raise HTTPException(status_code=404, detail="Stem files not found for the requested track.")
+
+    stem_files = {
+        "drums": stems_dir / "drums.wav",
+        "bass": stems_dir / "bass.wav",
+        "melody": stems_dir / "melody.wav",
+        "other": stems_dir / "other.wav",
+    }
+    if not stem_files["melody"].exists() and (stems_dir / "vocals.wav").exists():
+        stem_files["melody"] = stems_dir / "vocals.wav"
+
+    loaded_stems = {}
+    sr = 48000
+    max_len = 0
+
+    for name, path in stem_files.items():
+        if path.exists():
+            data, sr = sf.read(str(path), dtype="float32")
+            if data.ndim > 1:
+                data = data.mean(axis=1)
+            loaded_stems[name] = data
+            max_len = max(max_len, len(data))
+
+    if not loaded_stems:
+        raise HTTPException(status_code=404, detail="No stems could be loaded.")
+
+    for name in loaded_stems:
+        if len(loaded_stems[name]) < max_len:
+            loaded_stems[name] = np.pad(loaded_stems[name], (0, max_len - len(loaded_stems[name])))
+
+    total_duration = max_len / sr
+    mixed_audio = np.zeros(max_len, dtype=np.float32)
+
+    for stem_name, stem_audio in loaded_stems.items():
+        gain_envelope = np.ones(max_len, dtype=np.float32)
+        for p in request.portions:
+            start_idx = max(0, int(p.start_s * sr))
+            end_idx = min(max_len, int(p.end_s * sr))
+            if start_idx >= end_idx:
+                continue
+
+            if stem_name == "drums":
+                target_g = p.gains.drums
+            elif stem_name == "bass":
+                target_g = p.gains.bass
+            elif stem_name == "melody":
+                target_g = p.gains.melody
+            else:
+                target_g = p.gains.harmony
+
+            gain_envelope[start_idx:end_idx] = target_g
+
+        mixed_audio += stem_audio * gain_envelope
+
+    from app.audio.loudness import measure_loudness, normalize_loudness
+
+    final_audio = normalize_loudness(
+        mixed_audio,
+        sr,
+        target_lufs=-16.0,
+        max_true_peak_dbtp=-1.0,
+    )
+    metrics = measure_loudness(final_audio, sr)
+    final_lufs = metrics["loudness_lufs"]
+    final_peak = metrics["true_peak_dbtp"]
+
+    sf.write(str(out_mix_path), final_audio, sr, subtype="PCM_16")
+
+    return RemixResponse(
+        status="completed",
+        custom_mix_url=rel_url,
+        duration_seconds=float(round(total_duration, 2)),
+        loudness_lufs=float(final_lufs),
+        true_peak_dbtp=float(final_peak),
+        portions_count=len(request.portions),
+    )
 
 
 # ─── Entry point ───

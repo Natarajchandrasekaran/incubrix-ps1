@@ -824,6 +824,303 @@
       height: 16px;
     }
 
+    /* ============================================
+       THEME SWITCHER SEGMENTED PILL
+       ============================================ */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: 24px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .theme-pill {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
+
+    .theme-pill:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .theme-pill.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 2px 10px var(--accent-glow);
+    }
+
+    [data-theme="midnight"] .theme-pill.active {
+      color: #0a192f;
+      font-weight: 700;
+    }
+
+    /* ============================================
+       PORTION ARRANGER & STEM AUTOMATION
+       ============================================ */
+    .portion-tabs-container {
+      margin-bottom: 14px;
+      overflow-x: auto;
+    }
+
+    .portion-tabs {
+      display: flex;
+      gap: 8px;
+      padding-bottom: 4px;
+    }
+
+    .portion-tab-btn {
+      flex: 1;
+      min-width: 120px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .portion-tab-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-accent);
+    }
+
+    .portion-tab-btn.selected {
+      background: var(--bg-card);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .portion-tab-btn.playing {
+      border-color: var(--success);
+      box-shadow: 0 0 12px var(--success-soft);
+      animation: pulse 1.5s infinite;
+    }
+
+    .tab-btn-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .tab-btn-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .portion-editor {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .portion-editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-primary);
+    }
+
+    .portion-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .portion-name-badge {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .portion-time-badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .portion-live-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    .portion-live-tag.active .live-dot {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .portion-quick-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .quick-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 4px;
+    }
+
+    .pill-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .pill-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .pill-btn.highlight {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .portion-faders-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .portion-faders-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .portion-fader-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .portion-fader-card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .portion-fader-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .portion-fader-val {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .portion-range {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+      margin-bottom: 4px;
+    }
+
+    .portion-fader-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    .portion-render-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-primary);
+    }
+
+    .btn-render-mix {
+      background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .btn-render-mix:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+      filter: brightness(1.08);
+    }
+
+    .btn-render-mix:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -842,8 +1139,8 @@
           </svg>
         </div>
         <div>
-          <div class="brand-name">IncuBrix AI Music Studio</div>
-          <div class="brand-sub">Intelligent Background Music for Video Creators</div>
+          <div class="brand-name">🎵 IncuBrix AI Music Studio</div>
+          <div class="brand-sub">Intelligent Background Music Engine &bull; Video Stem Arranger</div>
         </div>
       </div>
       <div class="header-right">
@@ -855,23 +1152,23 @@
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           Source Code
         </a>
-        <button class="theme-btn" onclick="cycleTheme()" title="Switch theme">
-          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-        </button>
+        <div class="theme-switcher">
+          <button class="theme-pill active" id="pill-dark" onclick="setTheme('dark')">🌙 Dark</button>
+          <button class="theme-pill" id="pill-light" onclick="setTheme('light')">☀️ Light</button>
+          <button class="theme-pill" id="pill-midnight" onclick="setTheme('midnight')">🌌 Midnight</button>
+        </div>
       </div>
     </header>
 
     <!-- MODE TABS -->
     <div class="mode-tabs">
       <button class="mode-tab active" id="tabCreate" onclick="switchMode('create')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span style="font-size:16px">⚡</span>
         Create Music
       </button>
       <button class="mode-tab" id="tabUpload" onclick="switchMode('upload')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Upload and Analyze
+        <span style="font-size:16px">🎤</span>
+        Upload & Voiceover
       </button>
     </div>
 
@@ -894,11 +1191,11 @@
             <label class="field-label">Describe the music style you want</label>
             <textarea id="promptInput" rows="3" placeholder="e.g. Upbeat corporate showcase with acoustic guitar and warm synth pads">upbeat corporate showcase with energetic acoustic guitar and warm synth pads</textarea>
             <div class="presets">
-              <span class="preset" onclick="applyPreset('Upbeat corporate showcase with energetic acoustic guitar and light drums', 120, 15)">Corporate</span>
-              <span class="preset" onclick="applyPreset('Cinematic dramatic strings building to an inspiring climax with orchestral brass', 84, 20)">Cinematic</span>
-              <span class="preset" onclick="applyPreset('Chill lo-fi study beat with mellow electric piano and soft vinyl crackle', 78, 20)">Lo-Fi</span>
-              <span class="preset" onclick="applyPreset('High energy tech promo with fast electronic synths and driving beat', 126, 15)">Tech</span>
-              <span class="preset" onclick="applyPreset('Warm podcast intro with acoustic piano and mellow bassline bed', 94, 15)">Podcast</span>
+              <span class="preset" onclick="applyPreset('Upbeat corporate showcase with energetic acoustic guitar and light drums', 120, 15)">🏢 Corporate</span>
+              <span class="preset" onclick="applyPreset('Cinematic dramatic strings building to an inspiring climax with orchestral brass', 84, 20)">🎬 Cinematic</span>
+              <span class="preset" onclick="applyPreset('Chill lo-fi study beat with mellow electric piano and soft vinyl crackle', 78, 20)">☕ Lo-Fi</span>
+              <span class="preset" onclick="applyPreset('High energy tech promo with fast electronic synths and driving beat', 126, 15)">🚀 Tech</span>
+              <span class="preset" onclick="applyPreset('Warm podcast intro with acoustic piano and mellow bassline bed', 94, 15)">🎙️ Podcast</span>
             </div>
           </div>
 
@@ -1028,20 +1325,118 @@
           </div>
         </div>
 
+        <!-- PORTION ARRANGER & AUTOMATION -->
+        <div class="card" id="portionCard" style="margin-bottom:16px;">
+          <div class="card-title">
+            <span class="card-title-left">
+              <span style="font-size:18px">🎛️</span>
+              Portion Arranger & Stem Automation
+            </span>
+            <span class="card-badge" id="portionStatusBadge">Interactive Arranger</span>
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;line-height:1.5;">
+            Control instrument levels for each portion of your song (e.g. Intro, Buildup, Drop, Outro).
+            Set <strong>Drums to Maximum and Bass to Minimum</strong> or pick any custom balance for any section, audition live, and render your custom mix!
+          </p>
+
+          <!-- Timeline Portion Tabs / Blocks -->
+          <div class="portion-tabs-container">
+            <div class="portion-tabs" id="portionTabs">
+              <!-- Dynamically populated pills -->
+            </div>
+          </div>
+
+          <!-- Active Portion Editor Card -->
+          <div class="portion-editor" id="portionEditor">
+            <div class="portion-editor-header">
+              <div class="portion-info">
+                <span class="portion-name-badge" id="activePortionName">Portion 1: Intro</span>
+                <span class="portion-time-badge" id="activePortionTime">[0.0s – 3.8s]</span>
+              </div>
+              <div class="portion-live-tag" id="portionLiveTag">
+                <span class="live-dot"></span> <span id="portionLiveText">Audition Ready</span>
+              </div>
+            </div>
+
+            <!-- Quick Preset Profiles for This Portion -->
+            <div class="portion-quick-bar">
+              <span class="quick-title">Quick Style:</span>
+              <button class="pill-btn highlight" onclick="applyPortionProfile('drumsMaxBassMin')">🥁 Drums Max, Bass Min</button>
+              <button class="pill-btn" onclick="applyPortionProfile('fullEnergy')">💥 Full Mix (100%)</button>
+              <button class="pill-btn" onclick="applyPortionProfile('voiceBed')">🎙️ Voiceover Bed</button>
+              <button class="pill-btn" onclick="applyPortionProfile('groove')">🎸 Bass & Drums</button>
+              <button class="pill-btn" onclick="applyPortionProfile('melodySolo')">🎹 Melody Solo</button>
+              <button class="pill-btn" onclick="applyPortionProfile('breakdown')">✨ Soft Ambient</button>
+            </div>
+
+            <!-- 4 Sliders for Active Portion -->
+            <div class="portion-faders-grid">
+              <!-- Drums -->
+              <div class="portion-fader-card">
+                <div class="portion-fader-head">
+                  <span>🥁 Drums</span>
+                  <span class="portion-fader-val" id="pval-drums">100%</span>
+                </div>
+                <input type="range" min="0" max="1" step="0.05" value="1.0" class="portion-range" id="pslider-drums" oninput="onPortionSlider('drums', this.value)">
+                <div class="portion-fader-sub" id="pdesc-drums">Maximum Beat</div>
+              </div>
+              <!-- Bass -->
+              <div class="portion-fader-card">
+                <div class="portion-fader-head">
+                  <span>🎸 Bass</span>
+                  <span class="portion-fader-val" id="pval-bass">10%</span>
+                </div>
+                <input type="range" min="0" max="1" step="0.05" value="0.1" class="portion-range" id="pslider-bass" oninput="onPortionSlider('bass', this.value)">
+                <div class="portion-fader-sub" id="pdesc-bass">Minimum Sub</div>
+              </div>
+              <!-- Melody -->
+              <div class="portion-fader-card">
+                <div class="portion-fader-head">
+                  <span>🎹 Melody</span>
+                  <span class="portion-fader-val" id="pval-melody">80%</span>
+                </div>
+                <input type="range" min="0" max="1" step="0.05" value="0.8" class="portion-range" id="pslider-melody" oninput="onPortionSlider('melody', this.value)">
+                <div class="portion-fader-sub" id="pdesc-melody">Lead Presence</div>
+              </div>
+              <!-- Harmony -->
+              <div class="portion-fader-card">
+                <div class="portion-fader-head">
+                  <span>🎻 Harmony</span>
+                  <span class="portion-fader-val" id="pval-other">60%</span>
+                </div>
+                <input type="range" min="0" max="1" step="0.05" value="0.6" class="portion-range" id="pslider-other" oninput="onPortionSlider('other', this.value)">
+                <div class="portion-fader-sub" id="pdesc-other">Atmosphere Bed</div>
+              </div>
+            </div>
+
+            <!-- Custom Render Button directly in Portion Arranger -->
+            <div class="portion-render-row">
+              <button class="btn-render-mix" id="btnPortionRender" onclick="renderAndDownloadCustomMix()">
+                <span>🎛️</span>
+                <span id="btnPortionRenderText">Render & Download Custom Arranged Mix (.WAV)</span>
+              </button>
+              <div style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;">
+                <span>⚡</span>
+                <span>Bakes your custom stem levels across all portions into a downloadable broadcast-standard WAV</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- MIXER -->
         <div class="card">
           <div class="card-title">
             <span class="card-title-left">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              <span style="font-size:18px">🎚️</span>
               Stem Mixer
             </span>
-            <span class="card-badge">4-Channel</span>
+            <span class="card-badge">4-Channel Real-Time</span>
           </div>
 
           <div class="mixer-channels">
             <!-- Drums -->
             <div class="channel" id="ch-drums">
-              <div class="channel-name">Drums</div>
+              <div class="channel-name">🥁 Drums</div>
               <div class="channel-desc">Percussion and beats</div>
               <div class="vu-meter" id="vu-drums">
                 <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
@@ -1053,14 +1448,14 @@
                 <div class="fader-db" id="db-drums">-1.9 dB</div>
               </div>
               <div class="channel-buttons">
-                <button class="btn-mute" id="mute-drums" onclick="toggleMute('drums')">M</button>
-                <button class="btn-solo" id="solo-drums" onclick="toggleSolo('drums')">S</button>
+                <button class="btn-mute" id="mute-drums" onclick="toggleMute('drums')">🔇 M</button>
+                <button class="btn-solo" id="solo-drums" onclick="toggleSolo('drums')">⭐ S</button>
               </div>
               <a href="#" class="btn-download-stem" id="dl-drums" target="_blank">Download WAV</a>
             </div>
             <!-- Bass -->
             <div class="channel" id="ch-bass">
-              <div class="channel-name">Bass</div>
+              <div class="channel-name">🎸 Bass</div>
               <div class="channel-desc">Low-end and sub</div>
               <div class="vu-meter" id="vu-bass">
                 <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
@@ -1072,14 +1467,14 @@
                 <div class="fader-db" id="db-bass">-1.9 dB</div>
               </div>
               <div class="channel-buttons">
-                <button class="btn-mute" id="mute-bass" onclick="toggleMute('bass')">M</button>
-                <button class="btn-solo" id="solo-bass" onclick="toggleSolo('bass')">S</button>
+                <button class="btn-mute" id="mute-bass" onclick="toggleMute('bass')">🔇 M</button>
+                <button class="btn-solo" id="solo-bass" onclick="toggleSolo('bass')">⭐ S</button>
               </div>
               <a href="#" class="btn-download-stem" id="dl-bass" target="_blank">Download WAV</a>
             </div>
             <!-- Melody -->
             <div class="channel" id="ch-melody">
-              <div class="channel-name">Melody</div>
+              <div class="channel-name">🎹 Melody</div>
               <div class="channel-desc">Lead and keys</div>
               <div class="vu-meter" id="vu-melody">
                 <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
@@ -1091,14 +1486,14 @@
                 <div class="fader-db" id="db-melody">-1.9 dB</div>
               </div>
               <div class="channel-buttons">
-                <button class="btn-mute" id="mute-melody" onclick="toggleMute('melody')">M</button>
-                <button class="btn-solo" id="solo-melody" onclick="toggleSolo('melody')">S</button>
+                <button class="btn-mute" id="mute-melody" onclick="toggleMute('melody')">🔇 M</button>
+                <button class="btn-solo" id="solo-melody" onclick="toggleSolo('melody')">⭐ S</button>
               </div>
               <a href="#" class="btn-download-stem" id="dl-melody" target="_blank">Download WAV</a>
             </div>
             <!-- Harmony / Other -->
             <div class="channel" id="ch-other">
-              <div class="channel-name">Harmony</div>
+              <div class="channel-name">🎻 Harmony</div>
               <div class="channel-desc">Pads and ambience</div>
               <div class="vu-meter" id="vu-other">
                 <div class="vu-bar"></div><div class="vu-bar"></div><div class="vu-bar"></div>
@@ -1110,8 +1505,8 @@
                 <div class="fader-db" id="db-other">-1.9 dB</div>
               </div>
               <div class="channel-buttons">
-                <button class="btn-mute" id="mute-other" onclick="toggleMute('other')">M</button>
-                <button class="btn-solo" id="solo-other" onclick="toggleSolo('other')">S</button>
+                <button class="btn-mute" id="mute-other" onclick="toggleMute('other')">🔇 M</button>
+                <button class="btn-solo" id="solo-other" onclick="toggleSolo('other')">⭐ S</button>
               </div>
               <a href="#" class="btn-download-stem" id="dl-other" target="_blank">Download WAV</a>
             </div>
@@ -1121,11 +1516,15 @@
             <span style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-right:6px;text-transform:uppercase;letter-spacing:0.5px;">Export Track:</span>
             <a href="#" class="btn-download-primary" id="btnDownloadMix" target="_blank" download>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download Full Mix (.WAV)
+              💾 Download Full Mix (.WAV)
+            </a>
+            <a href="#" class="btn-render-mix" id="btnDownloadCustom" style="display:none;padding:8px 14px;font-size:12px;" target="_blank" download="custom_arranged_mix.wav">
+              <span>🎛️</span>
+              Download Custom Arranged Mix (.WAV)
             </a>
             <a href="#" class="header-link" id="btnDownloadManifest" target="_blank">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              JSON Manifest
+              📜 JSON Manifest
             </a>
           </div>
         </div>
@@ -1144,17 +1543,305 @@
        ============================================ -->
   <script>
     // ── Theme System ──
-    const THEMES = ['dark', 'light', 'midnight'];
-    let currentThemeIdx = THEMES.indexOf(localStorage.getItem('theme') || 'dark');
-    if (currentThemeIdx < 0) currentThemeIdx = 0;
-    document.documentElement.setAttribute('data-theme', THEMES[currentThemeIdx]);
-
-    function cycleTheme() {
-      currentThemeIdx = (currentThemeIdx + 1) % THEMES.length;
-      const theme = THEMES[currentThemeIdx];
+    function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
-      logActivity('Switched to ' + theme.charAt(0).toUpperCase() + theme.slice(1) + ' theme');
+      ['dark', 'light', 'midnight'].forEach(t => {
+        const el = document.getElementById('pill-' + t);
+        if (el) el.classList.toggle('active', t === theme);
+      });
+      logActivity('Switched theme to ' + (theme === 'dark' ? '🌙 Dark' : theme === 'light' ? '☀️ Light' : '🌌 Midnight'));
+    }
+
+    // ── Portion Arranger & Stem Automation State ──
+    let portions = [];
+    let selectedPortionIdx = 0;
+    let activePlayingPortionIdx = -1;
+
+    function initPortions(dur) {
+      const d = dur || 15;
+      portions = [
+        {
+          name: 'Intro',
+          start: 0,
+          end: +(d * 0.25).toFixed(1),
+          gains: { drums: 0.6, bass: 0.5, melody: 0.8, other: 0.7 }
+        },
+        {
+          name: 'Buildup',
+          start: +(d * 0.25).toFixed(1),
+          end: +(d * 0.50).toFixed(1),
+          gains: { drums: 1.0, bass: 0.1, melody: 0.8, other: 0.5 } // Drums Max, Bass Min!
+        },
+        {
+          name: 'Climax / Drop',
+          start: +(d * 0.50).toFixed(1),
+          end: +(d * 0.80).toFixed(1),
+          gains: { drums: 1.0, bass: 1.0, melody: 0.9, other: 0.8 }
+        },
+        {
+          name: 'Outro',
+          start: +(d * 0.80).toFixed(1),
+          end: +d.toFixed(1),
+          gains: { drums: 0.3, bass: 0.2, melody: 0.7, other: 0.9 }
+        }
+      ];
+      selectedPortionIdx = 1;
+      renderPortionTabs();
+      updatePortionEditor();
+    }
+
+    function renderPortionTabs() {
+      const c = document.getElementById('portionTabs');
+      if (!c) return;
+      const icons = ['🎵', '⚡', '💥', '🌅'];
+      c.innerHTML = portions.map((p, i) => `
+        <button class="portion-tab-btn ${i === selectedPortionIdx ? 'selected' : ''} ${i === activePlayingPortionIdx ? 'playing' : ''}" onclick="selectPortion(${i})">
+          <div class="tab-btn-title">
+            <span>${icons[i % icons.length]}</span>
+            <span>${p.name}</span>
+          </div>
+          <div class="tab-btn-time">${p.start}s – ${p.end}s</div>
+        </button>
+      `).join('');
+    }
+
+    function selectPortion(idx) {
+      selectedPortionIdx = idx;
+      renderPortionTabs();
+      updatePortionEditor();
+    }
+
+    function updatePortionEditor() {
+      const p = portions[selectedPortionIdx];
+      if (!p) return;
+      document.getElementById('activePortionName').innerText = `Portion ${selectedPortionIdx + 1}: ${p.name}`;
+      document.getElementById('activePortionTime').innerText = `[${p.start.toFixed(1)}s – ${p.end.toFixed(1)}s]`;
+
+      ['drums', 'bass', 'melody', 'other'].forEach(stem => {
+        const val = p.gains[stem] !== undefined ? p.gains[stem] : 0.8;
+        const slider = document.getElementById('pslider-' + stem);
+        const valTxt = document.getElementById('pval-' + stem);
+        if (slider) slider.value = val;
+        if (valTxt) valTxt.innerText = Math.round(val * 100) + '%';
+      });
+
+      const dEl = document.getElementById('pdesc-drums');
+      if (dEl) dEl.innerText = p.gains.drums >= 0.9 ? 'Maximum Beat' : p.gains.drums <= 0.2 ? 'Subtle Percussion' : 'Standard Rhythm';
+      const bEl = document.getElementById('pdesc-bass');
+      if (bEl) bEl.innerText = p.gains.bass <= 0.2 ? 'Minimum Sub (Clean)' : p.gains.bass >= 0.8 ? 'Heavy Low-End' : 'Warm Bass';
+    }
+
+    function onPortionSlider(stem, val) {
+      const v = parseFloat(val);
+      const p = portions[selectedPortionIdx];
+      if (!p) return;
+      p.gains[stem] = v;
+      const valTxt = document.getElementById('pval-' + stem);
+      if (valTxt) valTxt.innerText = Math.round(v * 100) + '%';
+
+      if (stem === 'drums') {
+        const dEl = document.getElementById('pdesc-drums');
+        if (dEl) dEl.innerText = v >= 0.9 ? 'Maximum Beat' : v <= 0.2 ? 'Subtle Percussion' : 'Standard Rhythm';
+      } else if (stem === 'bass') {
+        const bEl = document.getElementById('pdesc-bass');
+        if (bEl) bEl.innerText = v <= 0.2 ? 'Minimum Sub (Clean)' : v >= 0.8 ? 'Heavy Low-End' : 'Warm Bass';
+      }
+
+      if (isPlaying && activePlayingPortionIdx === selectedPortionIdx && stemGain[stem]) {
+        try { stemGain[stem].gain.setValueAtTime(v * (muted[stem] ? 0 : 1), audioCtx.currentTime); } catch (e) {}
+      }
+    }
+
+    function applyPortionProfile(profile) {
+      const p = portions[selectedPortionIdx];
+      if (!p) return;
+      if (profile === 'drumsMaxBassMin') {
+        p.gains = { drums: 1.0, bass: 0.1, melody: 0.8, other: 0.5 };
+        logActivity(`Portion [${p.name}] tuned: Drums Maximum (100%), Bass Minimum (10%)`, 'ok');
+      } else if (profile === 'fullEnergy') {
+        p.gains = { drums: 1.0, bass: 1.0, melody: 1.0, other: 1.0 };
+        logActivity(`Portion [${p.name}] tuned: Full Mix (100% all stems)`);
+      } else if (profile === 'voiceBed') {
+        p.gains = { drums: 0.25, bass: 0.15, melody: 0.35, other: 0.55 };
+        logActivity(`Portion [${p.name}] tuned: Voiceover Bed (dialogue-ready)`);
+      } else if (profile === 'groove') {
+        p.gains = { drums: 1.0, bass: 1.0, melody: 0.1, other: 0.2 };
+        logActivity(`Portion [${p.name}] tuned: Bass & Drums Groove`);
+      } else if (profile === 'melodySolo') {
+        p.gains = { drums: 0.0, bass: 0.0, melody: 1.0, other: 0.8 };
+        logActivity(`Portion [${p.name}] tuned: Melody Solo (no rhythm)`);
+      } else if (profile === 'breakdown') {
+        p.gains = { drums: 0.2, bass: 0.2, melody: 0.6, other: 0.9 };
+        logActivity(`Portion [${p.name}] tuned: Soft Ambient Breakdown`);
+      }
+      updatePortionEditor();
+
+      if (isPlaying && activePlayingPortionIdx === selectedPortionIdx) {
+        STEMS.forEach(s => {
+          if (stemGain[s]) {
+            try { stemGain[s].gain.setValueAtTime(p.gains[s] * (muted[s] ? 0 : 1), audioCtx.currentTime); } catch (e) {}
+          }
+        });
+      }
+    }
+
+    function checkPortionAutomation(cur) {
+      if (!portions.length) return;
+      let pIdx = portions.findIndex(p => cur >= p.start && cur < p.end);
+      if (pIdx < 0 && portions.length > 0) pIdx = portions.length - 1;
+
+      if (pIdx !== -1 && pIdx !== activePlayingPortionIdx) {
+        activePlayingPortionIdx = pIdx;
+        renderPortionTabs();
+        const activeP = portions[pIdx];
+        const tag = document.getElementById('portionLiveTag');
+        if (tag) {
+          tag.classList.add('active');
+          document.getElementById('portionLiveText').innerText = `Playing: ${activeP.name} [🥁 ${Math.round(activeP.gains.drums*100)}% | 🎸 ${Math.round(activeP.gains.bass*100)}%]`;
+        }
+
+        STEMS.forEach(s => {
+          if (stemGain[s] && !soloStem) {
+            const g = activeP.gains[s] !== undefined ? activeP.gains[s] : 0.8;
+            try {
+              stemGain[s].gain.linearRampToValueAtTime(g * (muted[s] ? 0 : 1), audioCtx.currentTime + 0.05);
+            } catch (e) {}
+            const dbEl = document.getElementById('db-' + s);
+            if (dbEl) dbEl.innerText = g > 0 ? (20 * Math.log10(g)).toFixed(1) + ' dB' : '-inf dB';
+          }
+        });
+      }
+    }
+
+    // ── Pure PCM 16-bit WAV Encoder for Web Audio Buffer ──
+    function audioBufferToWav(buffer) {
+      const numChannels = buffer.numberOfChannels;
+      const sampleRate = buffer.sampleRate;
+      const format = 1;
+      const bitDepth = 16;
+      const bytesPerSample = bitDepth / 8;
+      const blockAlign = numChannels * bytesPerSample;
+      const numSamples = buffer.length;
+      const byteRate = sampleRate * blockAlign;
+      const dataSize = numSamples * blockAlign;
+      const bufferSize = 44 + dataSize;
+      const arrayBuffer = new ArrayBuffer(bufferSize);
+      const view = new DataView(arrayBuffer);
+
+      function writeString(offset, string) {
+        for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
+      }
+
+      writeString(0, 'RIFF');
+      view.setUint32(4, 36 + dataSize, true);
+      writeString(8, 'WAVE');
+      writeString(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, format, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, byteRate, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, bitDepth, true);
+      writeString(36, 'data');
+      view.setUint32(40, dataSize, true);
+
+      let offset = 44;
+      const channels = [];
+      for (let c = 0; c < numChannels; c++) channels.push(buffer.getChannelData(c));
+
+      for (let i = 0; i < numSamples; i++) {
+        for (let c = 0; c < numChannels; c++) {
+          let sample = Math.max(-1, Math.min(1, channels[c][i]));
+          let intSample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+          view.setInt16(offset, intSample, true);
+          offset += 2;
+        }
+      }
+      return new Blob([arrayBuffer], { type: 'audio/wav' });
+    }
+
+    // ── Render & Download Custom Mix ──
+    async function renderAndDownloadCustomMix() {
+      const btn = document.getElementById('btnPortionRender');
+      const txt = document.getElementById('btnPortionRenderText');
+      if (btn) btn.disabled = true;
+      if (txt) txt.innerText = 'Rendering Custom Mix...';
+      logActivity('Baking dynamic portion stem automations into custom WAV...', 'warn');
+
+      try {
+        const sampleRate = 48000;
+        const dur = totalDuration || 15;
+        const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, Math.ceil(sampleRate * dur), sampleRate);
+
+        const stemBuffers = {};
+        for (const stem of STEMS) {
+          if (stemAudio[stem] && stemAudio[stem].src) {
+            const resp = await fetch(stemAudio[stem].src);
+            const ab = await resp.arrayBuffer();
+            const decoded = await offlineCtx.decodeAudioData(ab);
+            stemBuffers[stem] = decoded;
+          }
+        }
+
+        for (const stem of STEMS) {
+          const buf = stemBuffers[stem];
+          if (!buf) continue;
+
+          const src = offlineCtx.createBufferSource();
+          src.buffer = buf;
+          const gainNode = offlineCtx.createGain();
+
+          portions.forEach(p => {
+            const g = (p.gains[stem] !== undefined ? p.gains[stem] : 0.8) * (muted[stem] ? 0 : 1);
+            gainNode.gain.setValueAtTime(g, Math.max(0, p.start));
+          });
+
+          src.connect(gainNode);
+          gainNode.connect(offlineCtx.destination);
+          src.start(0);
+        }
+
+        const renderedBuffer = await offlineCtx.startRendering();
+        const wavBlob = audioBufferToWav(renderedBuffer);
+        const wavUrl = URL.createObjectURL(wavBlob);
+
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = wavUrl;
+        a.download = 'custom_arranged_mix.wav';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        logActivity('Custom mix rendered & downloaded successfully! (custom_arranged_mix.wav)', 'ok');
+
+        const customBtn = document.getElementById('btnDownloadCustom');
+        if (customBtn) {
+          customBtn.href = wavUrl;
+          customBtn.style.display = 'inline-flex';
+        }
+
+        fetch('/api/v1/music/remix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            portions: portions.map(p => ({
+              name: p.name,
+              start_s: p.start,
+              end_s: p.end,
+              gains: p.gains
+            }))
+          })
+        }).catch(() => {});
+
+      } catch (err) {
+        logActivity('Render error: ' + err.message, 'err');
+      } finally {
+        if (btn) btn.disabled = false;
+        if (txt) txt.innerText = 'Render & Download Custom Arranged Mix (.WAV)';
+      }
     }
 
     // ── State ──
@@ -1361,6 +2048,7 @@
           loadStem(type, s.url + bust);
         });
       }
+      initPortions(totalDuration);
       stemsReady = true;
       togglePlayback();
     }
@@ -1382,6 +2070,7 @@
           loadStem(type, url + bust);
         }
       }
+      initPortions(totalDuration);
       stemsReady = true;
       togglePlayback();
     }
@@ -1488,9 +2177,12 @@
       document.getElementById('scrubFill').style.width = ((cur / dur) * 100) + '%';
       document.getElementById('timecode').innerText = fmtTime(cur);
 
+      // Live dynamic portion automation
+      checkPortionAutomation(cur);
+
       // Auto-stop at end
       if (cur >= dur - 0.05) stopPlayback();
-    }, 100);
+    }, 80);
 
     function seekTo(e) {
       if (!referenceStem || !stemAudio[referenceStem]) return;
@@ -1616,6 +2308,11 @@
         });
       });
     }
+
+    // ── Initial Setup ──
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+    initPortions(15);
   </script>
 </body>
 </html>

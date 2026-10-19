@@ -437,3 +437,49 @@ class TestAudioInspection:
         assert response.status_code == 400
         assert "Unsupported format" in response.json()["detail"]
 
+
+class TestRemixEndpoint:
+    """Tests for POST /api/v1/music/remix portion-based stem automation."""
+
+    def test_remix_with_portions(self, client):
+        resp = client.post(
+            "/api/v1/music/jobs",
+            json={"prompt": "dynamic upbeat corporate showcase", "duration_seconds": 6.0},
+        )
+        assert resp.status_code == 202
+        job_id = resp.json()["job_id"]
+
+        import time
+        for _ in range(20):
+            time.sleep(0.3)
+            st = client.get(f"/api/v1/music/jobs/{job_id}").json()
+            if st["status"] == "completed":
+                break
+
+        remix_payload = {
+            "job_id": job_id,
+            "portions": [
+                {
+                    "name": "Intro",
+                    "start_s": 0.0,
+                    "end_s": 3.0,
+                    "gains": {"drums": 1.0, "bass": 0.1, "melody": 0.8, "harmony": 0.5},
+                },
+                {
+                    "name": "Drop",
+                    "start_s": 3.0,
+                    "end_s": 6.0,
+                    "gains": {"drums": 1.0, "bass": 1.0, "melody": 0.7, "harmony": 0.6},
+                },
+            ],
+        }
+        remix_resp = client.post("/api/v1/music/remix", json=remix_payload)
+        assert remix_resp.status_code == 200
+        data = remix_resp.json()
+        assert data["status"] == "completed"
+        assert "custom_mix_url" in data
+        assert data["portions_count"] == 2
+        assert data["true_peak_dbtp"] <= -1.0
+        assert -24.0 <= data["loudness_lufs"] <= -14.0
+
+

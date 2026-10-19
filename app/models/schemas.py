@@ -222,3 +222,36 @@ class ErrorResponse(BaseModel):
     error: str
     detail: Optional[str] = None
     request_id: Optional[str] = None
+
+
+# ─── Portion / Section Remix Models ───
+
+class PortionGain(BaseModel):
+    drums: float = Field(default=1.0, ge=0.0, le=2.0)
+    bass: float = Field(default=1.0, ge=0.0, le=2.0)
+    melody: float = Field(default=1.0, ge=0.0, le=2.0)
+    harmony: float = Field(default=1.0, ge=0.0, le=2.0, validation_alias=AliasChoices("harmony", "other"))
+
+    model_config = {"populate_by_name": True}
+
+
+class PortionConfig(BaseModel):
+    name: str = Field(default="Section")
+    start_s: float = Field(..., ge=0.0)
+    end_s: float = Field(..., gt=0.0)
+    gains: PortionGain
+
+
+class RemixRequest(BaseModel):
+    job_id: Optional[str] = None
+    upload_id: Optional[str] = None
+    portions: list[PortionConfig]
+
+
+class RemixResponse(BaseModel):
+    status: str = "completed"
+    custom_mix_url: str
+    duration_seconds: float
+    loudness_lufs: float
+    true_peak_dbtp: float
+    portions_count: int
