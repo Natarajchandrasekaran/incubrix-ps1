@@ -453,21 +453,28 @@ async def analyze_uploaded_audio(
     raw_path = upload_dir / f"original{ext}"
 
     raw_path.write_bytes(contents)
+    del contents  # Free upload bytes from memory
 
     try:
-        audio, sr = sf.read(str(raw_path), dtype="float32")
+        info = sf.info(str(raw_path))
+        original_sr = info.samplerate
+        original_frames = info.frames
+        original_duration = original_frames / original_sr
+        max_analyze_duration = 30.0
+        truncated = original_duration > max_analyze_duration
+        max_frames = int(original_sr * max_analyze_duration)
+        read_frames = min(max_frames, original_frames)
+        audio, sr = sf.read(str(raw_path), frames=read_frames, dtype="float32")
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to decode audio file: {e}")
 
-    original_duration = len(audio) / sr
-    max_analyze_duration = 30.0
-    truncated = False
-    if original_duration > max_analyze_duration:
-        audio = audio[: int(sr * max_analyze_duration)]
-        truncated = True
+    # Downmix stereo to mono to save memory (halves RAM usage)
+    original_channels = audio.shape[1] if audio.ndim > 1 else 1
+    if audio.ndim > 1:
+        audio = audio.mean(axis=1).astype(np.float32)
 
     duration = len(audio) / sr
-    channels = audio.shape[1] if audio.ndim > 1 else 1
+    channels = original_channels
 
     # Measure initial loudness
     initial_metrics = measure_loudness(audio, sr)
@@ -484,6 +491,10 @@ async def analyze_uploaded_audio(
     master_path = upload_dir / "master.wav"
     sf.write(str(master_path), processed_audio, sr, subtype="FLOAT")
     master_url = f"/output/uploads/{upload_id}/master.wav"
+
+    # Free audio arrays from memory before stem separation
+    del audio, processed_audio
+    import gc; gc.collect()
 
     # Separate stems
     stems_dict = {}

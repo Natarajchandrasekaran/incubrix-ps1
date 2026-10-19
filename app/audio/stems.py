@@ -164,7 +164,16 @@ def _mock_separate(
     """
     from scipy import signal
 
-    audio, sr = sf.read(str(audio_path), dtype="float32")
+    # Read only the first 30 seconds max to stay within memory limits
+    info = sf.info(str(audio_path))
+    max_frames = int(info.samplerate * 30.0)
+    read_frames = min(max_frames, info.frames)
+    audio, sr = sf.read(str(audio_path), frames=read_frames, dtype="float32")
+    
+    # Downmix stereo to mono to save memory
+    if audio.ndim > 1:
+        audio = audio.mean(axis=1).astype(np.float32)
+    
     duration = len(audio) / sr
 
     # Simple frequency band separation (for testing pipeline only)
@@ -186,8 +195,7 @@ def _mock_separate(
             stem_audio = np.zeros_like(audio)
         else:
             b, a = signal.butter(4, [low, high], btype="band")
-            axis = 0 if audio.ndim > 1 else -1
-            stem_filtered = signal.filtfilt(b, a, audio, axis=axis)
+            stem_filtered = signal.filtfilt(b, a, audio, axis=0)
             stem_filtered = np.nan_to_num(stem_filtered, nan=0.0, posinf=1.0, neginf=-1.0)
             stem_audio = np.clip(stem_filtered, -1.0, 1.0).astype(np.float32)
 
@@ -196,10 +204,11 @@ def _mock_separate(
 
         stems.append(StemResult(
             stem_name=name,
-            audio=stem_audio,
+            audio=np.empty(0, dtype=np.float32),  # Don't keep audio in memory
             path=stem_path,
             gain=1.0,
         ))
+        del stem_audio  # Free memory immediately
 
     processing_time = time.time() - start_time
 
