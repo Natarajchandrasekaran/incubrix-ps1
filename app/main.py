@@ -106,6 +106,15 @@ async def correlation_id_middleware(request: Request, call_next):
     return response
 
 
+# ─── Root Redirect to Docs ───
+from fastapi.responses import RedirectResponse
+
+@app.get("/", include_in_schema=False)
+async def root():
+    """Redirect root to interactive Swagger API docs."""
+    return RedirectResponse(url="/docs")
+
+
 # ─── Health endpoints (Integration Standard #8) ───
 
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
