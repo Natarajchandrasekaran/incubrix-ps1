@@ -1,0 +1,10 @@
+{
+  "prompt": "upbeat electronic dance music with synth pads and driving beat",
+  "duration_seconds": 30.0,
+  "style": "electronic",
+  "mood": "energetic",
+  "bpm": 128,
+  "energy": 0.9,
+  "output_format": "wav",
+  "include_stems": true
+}

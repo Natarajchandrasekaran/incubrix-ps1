@@ -1,0 +1,58 @@
+{
+  "job_id": "6f87c344-8d1b-4cc5-b1a8-065860c5336b",
+  "status": "completed",
+  "created_at": "2026-10-19T17:26:04.197507Z",
+  "updated_at": "2026-10-19T17:26:05.464674Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "play the song Bohemian Rhapsody by Queen with vocals and singing",
+    "duration_s": 30.0,
+    "style": null,
+    "mood": null,
+    "tempo_bpm": null,
+    "key": null,
+    "energy": null,
+    "sections": null,
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/stems/bass.wav",
+      "duration_seconds": 30.0,
+      "loudness_lufs": -20.47,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/stems/drums.wav",
+      "duration_seconds": 30.0,
+      "loudness_lufs": -28.76,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/stems/melody.wav",
+      "duration_seconds": 30.0,
+      "loudness_lufs": -21.74,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/stems/other.wav",
+      "duration_seconds": 30.0,
+      "loudness_lufs": -20.57,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/music_manifest.json",
+  "actual_duration_seconds": 30.0,
+  "actual_loudness_lufs": -16.21,
+  "processing_time_seconds": 1.257,
+  "error": null
+}

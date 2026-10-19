@@ -1,0 +1,104 @@
+{
+  "job_id": "c6cc5baa-8993-49e1-ba9c-25729907acdc",
+  "prompt": "jazz piano trio with walking bass and brushed drums, smooth and sophisticated",
+  "duration_seconds": 90.0,
+  "actual_duration_seconds": 90.0,
+  "sample_rate": 48000,
+  "tempo": {
+    "bpm": 139,
+    "beats_per_bar": 4,
+    "num_bars": 52,
+    "beat_times": [
+      0.0,
+      0.4316546762589928,
+      0.8633093525179856,
+      1.2949640287769784,
+      1.7266187050359711,
+      2.158273381294964,
+      2.5899280575539567,
+      3.0215827338129495,
+      3.4532374100719423,
+      3.884892086330935,
+      4.316546762589928,
+      4.748201438848921,
+      5.179856115107913,
+      5.611510791366906,
+      6.043165467625899,
+      6.474820143884892,
+      6.906474820143885,
+      7.338129496402877,
+      7.76978417266187,
+      8.201438848920862
+    ],
+    "bar_times": [
+      0.0,
+      1.7266187050359711,
+      3.4532374100719423,
+      5.179856115107913,
+      6.906474820143885,
+      8.633093525179856,
+      10.359712230215827,
+      12.086330935251798,
+      13.81294964028777,
+      15.53956834532374,
+      17.26618705035971,
+      18.992805755395683,
+      20.719424460431654,
+      22.446043165467625,
+      24.172661870503596,
+      25.899280575539567,
+      27.62589928057554,
+      29.35251798561151,
+      31.07913669064748,
+      32.80575539568345
+    ]
+  },
+  "loudness": {
+    "loudness_lufs": -18.1,
+    "true_peak_dbtp": "-1.0"
+  },
+  "target_lufs": -16.0,
+  "stems": [
+    {
+      "name": "bass",
+      "gain": 1.0,
+      "path": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/stems/bass.wav"
+    },
+    {
+      "name": "drums",
+      "gain": 1.0,
+      "path": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/stems/drums.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/stems/melody.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/stems/other.wav"
+    }
+  ],
+  "generation": {
+    "model": "mock-multi-stem-generator",
+    "model_version": "2.0.0",
+    "seed": null,
+    "generation_time_seconds": 0.675,
+    "cost_estimate_usd": 0.0
+  },
+  "separation": {
+    "model": "multi-track-independent-synthesis",
+    "model_version": "2.0.0",
+    "processing_time_seconds": 0.005
+  },
+  "total_processing_time_seconds": 3.18,
+  "warnings": [
+    "Mock audio for testing \u2014 stems are genuine separate tracks that sum to the mix."
+  ],
+  "licence": {
+    "output_commercial_use": true,
+    "ai_generated": true,
+    "label_required": "AI-generated music"
+  }
+}

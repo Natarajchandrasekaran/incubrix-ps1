@@ -1,0 +1,94 @@
+{
+  "job_id": "fa209719-ee72-451a-b337-3f5c65b3e5d7",
+  "prompt": "calm but aggressive",
+  "duration_seconds": 20.0,
+  "actual_duration_seconds": 20.0,
+  "sample_rate": 48000,
+  "tempo": {
+    "bpm": 120,
+    "beats_per_bar": 4,
+    "num_bars": 10,
+    "beat_times": [
+      0.0,
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0,
+      4.5,
+      5.0,
+      5.5,
+      6.0,
+      6.5,
+      7.0,
+      7.5,
+      8.0,
+      8.5,
+      9.0,
+      9.5
+    ],
+    "bar_times": [
+      0.0,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      16.0,
+      18.0
+    ]
+  },
+  "loudness": {
+    "loudness_lufs": -17.08,
+    "true_peak_dbtp": "-1.0"
+  },
+  "target_lufs": -16.0,
+  "stems": [
+    {
+      "name": "bass",
+      "gain": 1.0,
+      "path": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/stems/bass.wav"
+    },
+    {
+      "name": "drums",
+      "gain": 1.0,
+      "path": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/stems/drums.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/stems/melody.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/stems/other.wav"
+    }
+  ],
+  "generation": {
+    "model": "mock-multi-stem-generator",
+    "model_version": "2.0.0",
+    "seed": null,
+    "generation_time_seconds": 0.187,
+    "cost_estimate_usd": 0.0
+  },
+  "separation": {
+    "model": "multi-track-independent-synthesis",
+    "model_version": "2.0.0",
+    "processing_time_seconds": 0.005
+  },
+  "total_processing_time_seconds": 0.923,
+  "warnings": [
+    "Mock audio for testing \u2014 stems are genuine separate tracks that sum to the mix."
+  ],
+  "licence": {
+    "output_commercial_use": true,
+    "ai_generated": true,
+    "label_required": "AI-generated music"
+  }
+}

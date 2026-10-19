@@ -1,0 +1,83 @@
+{
+  "job_id": "16324bb4-0825-4920-9873-794cbba46eb8",
+  "status": "completed",
+  "created_at": "2026-10-19T17:25:48.436870Z",
+  "updated_at": "2026-10-19T17:25:55.892542Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "corporate presentation music, professional and clean, motivational",
+    "duration_s": 180.0,
+    "style": "corporate",
+    "mood": "uplifting",
+    "tempo_bpm": 110,
+    "key": null,
+    "energy": null,
+    "sections": [
+      {
+        "start_s": 0.0,
+        "end_s": 60.0,
+        "mood": "calm",
+        "style": null,
+        "prompt": "soft intro",
+        "energy": null
+      },
+      {
+        "start_s": 60.0,
+        "end_s": 120.0,
+        "mood": "energetic",
+        "style": null,
+        "prompt": "building energy",
+        "energy": null
+      },
+      {
+        "start_s": 120.0,
+        "end_s": 180.0,
+        "mood": "uplifting",
+        "style": null,
+        "prompt": "triumphant finale",
+        "energy": null
+      }
+    ],
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/16324bb4-0825-4920-9873-794cbba46eb8/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/16324bb4-0825-4920-9873-794cbba46eb8/stems/bass.wav",
+      "duration_seconds": 180.0,
+      "loudness_lufs": -24.54,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/16324bb4-0825-4920-9873-794cbba46eb8/stems/drums.wav",
+      "duration_seconds": 180.0,
+      "loudness_lufs": -31.41,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/16324bb4-0825-4920-9873-794cbba46eb8/stems/melody.wav",
+      "duration_seconds": 180.0,
+      "loudness_lufs": -25.29,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/16324bb4-0825-4920-9873-794cbba46eb8/stems/other.wav",
+      "duration_seconds": 180.0,
+      "loudness_lufs": -23.92,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/16324bb4-0825-4920-9873-794cbba46eb8/music_manifest.json",
+  "actual_duration_seconds": 180.0,
+  "actual_loudness_lufs": -19.82,
+  "processing_time_seconds": 7.447,
+  "error": null
+}

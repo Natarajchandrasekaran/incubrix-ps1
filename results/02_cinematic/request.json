@@ -1,0 +1,10 @@
+{
+  "prompt": "dark cinematic orchestral score with tension and suspense",
+  "duration_seconds": 60.0,
+  "style": "cinematic",
+  "mood": "tense",
+  "bpm": 80,
+  "output_format": "wav",
+  "loudness_lufs": -16.0,
+  "include_stems": true
+}

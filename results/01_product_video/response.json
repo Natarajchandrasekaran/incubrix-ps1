@@ -1,0 +1,58 @@
+{
+  "job_id": "05f77c40-d614-4b87-ab6b-9f2eb4f142e2",
+  "status": "completed",
+  "created_at": "2026-10-19T17:25:16.983897Z",
+  "updated_at": "2026-10-19T17:25:19.122179Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "warm, optimistic acoustic pop for a product launch, builds to an uplifting finish",
+    "duration_s": 45.0,
+    "style": null,
+    "mood": null,
+    "tempo_bpm": null,
+    "key": null,
+    "energy": null,
+    "sections": null,
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/stems/bass.wav",
+      "duration_seconds": 45.0,
+      "loudness_lufs": -21.78,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/stems/drums.wav",
+      "duration_seconds": 45.0,
+      "loudness_lufs": -29.81,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/stems/melody.wav",
+      "duration_seconds": 45.0,
+      "loudness_lufs": -22.99,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/stems/other.wav",
+      "duration_seconds": 45.0,
+      "loudness_lufs": -21.67,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/music_manifest.json",
+  "actual_duration_seconds": 45.0,
+  "actual_loudness_lufs": -17.42,
+  "processing_time_seconds": 2.133,
+  "error": null
+}

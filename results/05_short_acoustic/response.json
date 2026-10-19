@@ -1,0 +1,58 @@
+{
+  "job_id": "d2e5e6fd-e0de-4439-80ce-bb7825189274",
+  "status": "completed",
+  "created_at": "2026-10-19T17:25:43.256330Z",
+  "updated_at": "2026-10-19T17:25:43.906713Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "gentle fingerpicked acoustic guitar, warm and intimate, campfire feeling",
+    "duration_s": 10.0,
+    "style": "acoustic",
+    "mood": "calm",
+    "tempo_bpm": null,
+    "key": null,
+    "energy": null,
+    "sections": null,
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/d2e5e6fd-e0de-4439-80ce-bb7825189274/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/d2e5e6fd-e0de-4439-80ce-bb7825189274/stems/bass.wav",
+      "duration_seconds": 10.0,
+      "loudness_lufs": -23.58,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/d2e5e6fd-e0de-4439-80ce-bb7825189274/stems/drums.wav",
+      "duration_seconds": 10.0,
+      "loudness_lufs": -30.9,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/d2e5e6fd-e0de-4439-80ce-bb7825189274/stems/melody.wav",
+      "duration_seconds": 10.0,
+      "loudness_lufs": -24.19,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/d2e5e6fd-e0de-4439-80ce-bb7825189274/stems/other.wav",
+      "duration_seconds": 10.0,
+      "loudness_lufs": -22.7,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/d2e5e6fd-e0de-4439-80ce-bb7825189274/music_manifest.json",
+  "actual_duration_seconds": 10.0,
+  "actual_loudness_lufs": -18.66,
+  "processing_time_seconds": 0.643,
+  "error": null
+}

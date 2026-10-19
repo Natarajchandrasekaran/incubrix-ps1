@@ -1,0 +1,58 @@
+{
+  "job_id": "827d1059-32d2-4a2d-b748-d089615e6320",
+  "status": "completed",
+  "created_at": "2026-10-19T17:25:22.297807Z",
+  "updated_at": "2026-10-19T17:25:24.932647Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "dark cinematic orchestral score with tension and suspense",
+    "duration_s": 60.0,
+    "style": "cinematic",
+    "mood": "tense",
+    "tempo_bpm": 80,
+    "key": null,
+    "energy": null,
+    "sections": null,
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/827d1059-32d2-4a2d-b748-d089615e6320/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/827d1059-32d2-4a2d-b748-d089615e6320/stems/bass.wav",
+      "duration_seconds": 60.0,
+      "loudness_lufs": -23.13,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/827d1059-32d2-4a2d-b748-d089615e6320/stems/drums.wav",
+      "duration_seconds": 60.0,
+      "loudness_lufs": -31.4,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/827d1059-32d2-4a2d-b748-d089615e6320/stems/melody.wav",
+      "duration_seconds": 60.0,
+      "loudness_lufs": -24.24,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/827d1059-32d2-4a2d-b748-d089615e6320/stems/other.wav",
+      "duration_seconds": 60.0,
+      "loudness_lufs": -21.88,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/827d1059-32d2-4a2d-b748-d089615e6320/music_manifest.json",
+  "actual_duration_seconds": 60.0,
+  "actual_loudness_lufs": -18.61,
+  "processing_time_seconds": 2.625,
+  "error": null
+}

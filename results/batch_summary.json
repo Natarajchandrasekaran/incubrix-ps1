@@ -1,0 +1,107 @@
+{
+  "total_tests": 10,
+  "passed": 10,
+  "failed": 0,
+  "results": [
+    {
+      "test_name": "01_product_video",
+      "job_id": "05f77c40-d614-4b87-ab6b-9f2eb4f142e2",
+      "status": "completed",
+      "total_time_seconds": 5.03,
+      "processing_time_seconds": 2.133,
+      "actual_duration_seconds": 45.0,
+      "actual_loudness_lufs": -17.42,
+      "error": null
+    },
+    {
+      "test_name": "02_cinematic",
+      "job_id": "827d1059-32d2-4a2d-b748-d089615e6320",
+      "status": "completed",
+      "total_time_seconds": 5.01,
+      "processing_time_seconds": 2.625,
+      "actual_duration_seconds": 60.0,
+      "actual_loudness_lufs": -18.61,
+      "error": null
+    },
+    {
+      "test_name": "03_lofi",
+      "job_id": "c181341b-72d7-41ee-a589-1cf63f9073c2",
+      "status": "completed",
+      "total_time_seconds": 10.03,
+      "processing_time_seconds": 5.091,
+      "actual_duration_seconds": 120.0,
+      "actual_loudness_lufs": -18.78,
+      "error": null
+    },
+    {
+      "test_name": "04_electronic",
+      "job_id": "a54943d4-1aaa-45ec-9525-31cb18194b02",
+      "status": "completed",
+      "total_time_seconds": 5.04,
+      "processing_time_seconds": 1.237,
+      "actual_duration_seconds": 30.0,
+      "actual_loudness_lufs": -18.69,
+      "error": null
+    },
+    {
+      "test_name": "05_short_acoustic",
+      "job_id": "d2e5e6fd-e0de-4439-80ce-bb7825189274",
+      "status": "completed",
+      "total_time_seconds": 5.03,
+      "processing_time_seconds": 0.643,
+      "actual_duration_seconds": 10.0,
+      "actual_loudness_lufs": -18.66,
+      "error": null
+    },
+    {
+      "test_name": "06_corporate_sections",
+      "job_id": "16324bb4-0825-4920-9873-794cbba46eb8",
+      "status": "completed",
+      "total_time_seconds": 10.03,
+      "processing_time_seconds": 7.447,
+      "actual_duration_seconds": 180.0,
+      "actual_loudness_lufs": -19.82,
+      "error": null
+    },
+    {
+      "test_name": "07_contradictory_prompt",
+      "job_id": "fa209719-ee72-451a-b337-3f5c65b3e5d7",
+      "status": "completed",
+      "total_time_seconds": 5.03,
+      "processing_time_seconds": 0.923,
+      "actual_duration_seconds": 20.0,
+      "actual_loudness_lufs": -17.08,
+      "error": null
+    },
+    {
+      "test_name": "08_copyrighted_vocals",
+      "job_id": "6f87c344-8d1b-4cc5-b1a8-065860c5336b",
+      "status": "completed",
+      "total_time_seconds": 5.04,
+      "processing_time_seconds": 1.257,
+      "actual_duration_seconds": 30.0,
+      "actual_loudness_lufs": -16.21,
+      "error": null
+    },
+    {
+      "test_name": "09_very_short",
+      "job_id": "04a16aa2-1a71-4af1-a899-1afcc48bbd40",
+      "status": "completed",
+      "total_time_seconds": 5.01,
+      "processing_time_seconds": 0.412,
+      "actual_duration_seconds": 5.0,
+      "actual_loudness_lufs": -17.42,
+      "error": null
+    },
+    {
+      "test_name": "10_jazz",
+      "job_id": "c6cc5baa-8993-49e1-ba9c-25729907acdc",
+      "status": "completed",
+      "total_time_seconds": 5.01,
+      "processing_time_seconds": 3.18,
+      "actual_duration_seconds": 90.0,
+      "actual_loudness_lufs": -18.1,
+      "error": null
+    }
+  ]
+}

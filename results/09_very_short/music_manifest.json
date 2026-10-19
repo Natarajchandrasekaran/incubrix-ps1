@@ -1,0 +1,74 @@
+{
+  "job_id": "04a16aa2-1a71-4af1-a899-1afcc48bbd40",
+  "prompt": "very short jingle",
+  "duration_seconds": 5.0,
+  "actual_duration_seconds": 5.0,
+  "sample_rate": 48000,
+  "tempo": {
+    "bpm": 96,
+    "beats_per_bar": 4,
+    "num_bars": 2,
+    "beat_times": [
+      0.0,
+      0.625,
+      1.25,
+      1.875,
+      2.5,
+      3.125,
+      3.75,
+      4.375
+    ],
+    "bar_times": [
+      0.0,
+      2.5
+    ]
+  },
+  "loudness": {
+    "loudness_lufs": -17.42,
+    "true_peak_dbtp": "-1.0"
+  },
+  "target_lufs": -16.0,
+  "stems": [
+    {
+      "name": "bass",
+      "gain": 1.0,
+      "path": "/output/04a16aa2-1a71-4af1-a899-1afcc48bbd40/stems/bass.wav"
+    },
+    {
+      "name": "drums",
+      "gain": 1.0,
+      "path": "/output/04a16aa2-1a71-4af1-a899-1afcc48bbd40/stems/drums.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/04a16aa2-1a71-4af1-a899-1afcc48bbd40/stems/melody.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/04a16aa2-1a71-4af1-a899-1afcc48bbd40/stems/other.wav"
+    }
+  ],
+  "generation": {
+    "model": "mock-multi-stem-generator",
+    "model_version": "2.0.0",
+    "seed": null,
+    "generation_time_seconds": 0.052,
+    "cost_estimate_usd": 0.0
+  },
+  "separation": {
+    "model": "multi-track-independent-synthesis",
+    "model_version": "2.0.0",
+    "processing_time_seconds": 0.005
+  },
+  "total_processing_time_seconds": 0.412,
+  "warnings": [
+    "Mock audio for testing \u2014 stems are genuine separate tracks that sum to the mix."
+  ],
+  "licence": {
+    "output_commercial_use": true,
+    "ai_generated": true,
+    "label_required": "AI-generated music"
+  }
+}

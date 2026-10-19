@@ -1,0 +1,58 @@
+{
+  "job_id": "fa209719-ee72-451a-b337-3f5c65b3e5d7",
+  "status": "completed",
+  "created_at": "2026-10-19T17:25:59.045963Z",
+  "updated_at": "2026-10-19T17:25:59.978756Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "calm but aggressive",
+    "duration_s": 20.0,
+    "style": null,
+    "mood": null,
+    "tempo_bpm": null,
+    "key": null,
+    "energy": null,
+    "sections": null,
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/stems/bass.wav",
+      "duration_seconds": 20.0,
+      "loudness_lufs": -21.65,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/stems/drums.wav",
+      "duration_seconds": 20.0,
+      "loudness_lufs": -29.25,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/stems/melody.wav",
+      "duration_seconds": 20.0,
+      "loudness_lufs": -22.49,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/stems/other.wav",
+      "duration_seconds": 20.0,
+      "loudness_lufs": -21.2,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/fa209719-ee72-451a-b337-3f5c65b3e5d7/music_manifest.json",
+  "actual_duration_seconds": 20.0,
+  "actual_loudness_lufs": -17.08,
+  "processing_time_seconds": 0.923,
+  "error": null
+}

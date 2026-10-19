@@ -22,6 +22,7 @@ class GeneratedAudio:
     cost_estimate_usd: Optional[float] = None
     generation_time_seconds: Optional[float] = None
     warnings: list[str] | None = None
+    metadata: dict | None = None  # Extra data (e.g. pre-generated stems path)
 
 
 class MusicAdapter(abc.ABC):

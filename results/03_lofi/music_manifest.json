@@ -1,0 +1,104 @@
+{
+  "job_id": "c181341b-72d7-41ee-a589-1cf63f9073c2",
+  "prompt": "lo-fi chill beats with soft piano and vinyl crackle, relaxing study music",
+  "duration_seconds": 120.0,
+  "actual_duration_seconds": 120.0,
+  "sample_rate": 48000,
+  "tempo": {
+    "bpm": 84,
+    "beats_per_bar": 4,
+    "num_bars": 42,
+    "beat_times": [
+      0.0,
+      0.7142857142857143,
+      1.4285714285714286,
+      2.142857142857143,
+      2.857142857142857,
+      3.5714285714285716,
+      4.285714285714286,
+      5.0,
+      5.714285714285714,
+      6.428571428571429,
+      7.142857142857143,
+      7.857142857142858,
+      8.571428571428571,
+      9.285714285714286,
+      10.0,
+      10.714285714285715,
+      11.428571428571429,
+      12.142857142857142,
+      12.857142857142858,
+      13.571428571428571
+    ],
+    "bar_times": [
+      0.0,
+      2.857142857142857,
+      5.714285714285714,
+      8.571428571428571,
+      11.428571428571429,
+      14.285714285714286,
+      17.142857142857142,
+      20.0,
+      22.857142857142858,
+      25.714285714285715,
+      28.571428571428573,
+      31.42857142857143,
+      34.285714285714285,
+      37.142857142857146,
+      40.0,
+      42.85714285714286,
+      45.714285714285715,
+      48.57142857142857,
+      51.42857142857143,
+      54.285714285714285
+    ]
+  },
+  "loudness": {
+    "loudness_lufs": -18.78,
+    "true_peak_dbtp": "-1.0"
+  },
+  "target_lufs": -16.0,
+  "stems": [
+    {
+      "name": "bass",
+      "gain": 1.0,
+      "path": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/stems/bass.wav"
+    },
+    {
+      "name": "drums",
+      "gain": 1.0,
+      "path": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/stems/drums.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/stems/melody.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/stems/other.wav"
+    }
+  ],
+  "generation": {
+    "model": "mock-multi-stem-generator",
+    "model_version": "2.0.0",
+    "seed": null,
+    "generation_time_seconds": 1.15,
+    "cost_estimate_usd": 0.0
+  },
+  "separation": {
+    "model": "multi-track-independent-synthesis",
+    "model_version": "2.0.0",
+    "processing_time_seconds": 0.005
+  },
+  "total_processing_time_seconds": 5.091,
+  "warnings": [
+    "Mock audio for testing \u2014 stems are genuine separate tracks that sum to the mix."
+  ],
+  "licence": {
+    "output_commercial_use": true,
+    "ai_generated": true,
+    "label_required": "AI-generated music"
+  }
+}

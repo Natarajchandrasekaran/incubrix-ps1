@@ -1,0 +1,100 @@
+{
+  "job_id": "a54943d4-1aaa-45ec-9525-31cb18194b02",
+  "prompt": "upbeat electronic dance music with synth pads and driving beat",
+  "duration_seconds": 30.0,
+  "actual_duration_seconds": 30.0,
+  "sample_rate": 48000,
+  "tempo": {
+    "bpm": 128,
+    "beats_per_bar": 4,
+    "num_bars": 16,
+    "beat_times": [
+      0.0,
+      0.46875,
+      0.9375,
+      1.40625,
+      1.875,
+      2.34375,
+      2.8125,
+      3.28125,
+      3.75,
+      4.21875,
+      4.6875,
+      5.15625,
+      5.625,
+      6.09375,
+      6.5625,
+      7.03125,
+      7.5,
+      7.96875,
+      8.4375,
+      8.90625
+    ],
+    "bar_times": [
+      0.0,
+      1.875,
+      3.75,
+      5.625,
+      7.5,
+      9.375,
+      11.25,
+      13.125,
+      15.0,
+      16.875,
+      18.75,
+      20.625,
+      22.5,
+      24.375,
+      26.25,
+      28.125
+    ]
+  },
+  "loudness": {
+    "loudness_lufs": -18.69,
+    "true_peak_dbtp": "-1.0"
+  },
+  "target_lufs": -16.0,
+  "stems": [
+    {
+      "name": "bass",
+      "gain": 1.0,
+      "path": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/stems/bass.wav"
+    },
+    {
+      "name": "drums",
+      "gain": 1.0,
+      "path": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/stems/drums.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/stems/melody.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/stems/other.wav"
+    }
+  ],
+  "generation": {
+    "model": "mock-multi-stem-generator",
+    "model_version": "2.0.0",
+    "seed": null,
+    "generation_time_seconds": 0.293,
+    "cost_estimate_usd": 0.0
+  },
+  "separation": {
+    "model": "multi-track-independent-synthesis",
+    "model_version": "2.0.0",
+    "processing_time_seconds": 0.005
+  },
+  "total_processing_time_seconds": 1.237,
+  "warnings": [
+    "Mock audio for testing \u2014 stems are genuine separate tracks that sum to the mix."
+  ],
+  "licence": {
+    "output_commercial_use": true,
+    "ai_generated": true,
+    "label_required": "AI-generated music"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "job_id": "05f77c40-d614-4b87-ab6b-9f2eb4f142e2",
+  "prompt": "warm, optimistic acoustic pop for a product launch, builds to an uplifting finish",
+  "duration_seconds": 45.0,
+  "actual_duration_seconds": 45.0,
+  "sample_rate": 48000,
+  "tempo": {
+    "bpm": 117,
+    "beats_per_bar": 4,
+    "num_bars": 22,
+    "beat_times": [
+      0.0,
+      0.5128205128205128,
+      1.0256410256410255,
+      1.5384615384615383,
+      2.051282051282051,
+      2.564102564102564,
+      3.0769230769230766,
+      3.5897435897435894,
+      4.102564102564102,
+      4.615384615384615,
+      5.128205128205128,
+      5.6410256410256405,
+      6.153846153846153,
+      6.666666666666666,
+      7.179487179487179,
+      7.692307692307692,
+      8.205128205128204,
+      8.717948717948717,
+      9.23076923076923,
+      9.743589743589743
+    ],
+    "bar_times": [
+      0.0,
+      2.051282051282051,
+      4.102564102564102,
+      6.153846153846153,
+      8.205128205128204,
+      10.256410256410255,
+      12.307692307692307,
+      14.358974358974358,
+      16.41025641025641,
+      18.46153846153846,
+      20.51282051282051,
+      22.564102564102562,
+      24.615384615384613,
+      26.666666666666664,
+      28.717948717948715,
+      30.769230769230766,
+      32.82051282051282,
+      34.87179487179487,
+      36.92307692307692,
+      38.97435897435897
+    ]
+  },
+  "loudness": {
+    "loudness_lufs": -17.42,
+    "true_peak_dbtp": "-1.0"
+  },
+  "target_lufs": -16.0,
+  "stems": [
+    {
+      "name": "bass",
+      "gain": 1.0,
+      "path": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/stems/bass.wav"
+    },
+    {
+      "name": "drums",
+      "gain": 1.0,
+      "path": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/stems/drums.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/stems/melody.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/05f77c40-d614-4b87-ab6b-9f2eb4f142e2/stems/other.wav"
+    }
+  ],
+  "generation": {
+    "model": "mock-multi-stem-generator",
+    "model_version": "2.0.0",
+    "seed": null,
+    "generation_time_seconds": 0.427,
+    "cost_estimate_usd": 0.0
+  },
+  "separation": {
+    "model": "multi-track-independent-synthesis",
+    "model_version": "2.0.0",
+    "processing_time_seconds": 0.005
+  },
+  "total_processing_time_seconds": 2.133,
+  "warnings": [
+    "Mock audio for testing \u2014 stems are genuine separate tracks that sum to the mix."
+  ],
+  "licence": {
+    "output_commercial_use": true,
+    "ai_generated": true,
+    "label_required": "AI-generated music"
+  }
+}

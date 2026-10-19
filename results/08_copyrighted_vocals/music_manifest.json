@@ -1,0 +1,99 @@
+{
+  "job_id": "6f87c344-8d1b-4cc5-b1a8-065860c5336b",
+  "prompt": "play the song Bohemian Rhapsody by Queen with vocals and singing",
+  "duration_seconds": 30.0,
+  "actual_duration_seconds": 30.0,
+  "sample_rate": 48000,
+  "tempo": {
+    "bpm": 120,
+    "beats_per_bar": 4,
+    "num_bars": 15,
+    "beat_times": [
+      0.0,
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0,
+      4.5,
+      5.0,
+      5.5,
+      6.0,
+      6.5,
+      7.0,
+      7.5,
+      8.0,
+      8.5,
+      9.0,
+      9.5
+    ],
+    "bar_times": [
+      0.0,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      16.0,
+      18.0,
+      20.0,
+      22.0,
+      24.0,
+      26.0,
+      28.0
+    ]
+  },
+  "loudness": {
+    "loudness_lufs": -16.21,
+    "true_peak_dbtp": "-1.0"
+  },
+  "target_lufs": -16.0,
+  "stems": [
+    {
+      "name": "bass",
+      "gain": 1.0,
+      "path": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/stems/bass.wav"
+    },
+    {
+      "name": "drums",
+      "gain": 1.0,
+      "path": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/stems/drums.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/stems/melody.wav"
+    },
+    {
+      "name": "other",
+      "gain": 1.0,
+      "path": "/output/6f87c344-8d1b-4cc5-b1a8-065860c5336b/stems/other.wav"
+    }
+  ],
+  "generation": {
+    "model": "mock-multi-stem-generator",
+    "model_version": "2.0.0",
+    "seed": null,
+    "generation_time_seconds": 0.251,
+    "cost_estimate_usd": 0.0
+  },
+  "separation": {
+    "model": "multi-track-independent-synthesis",
+    "model_version": "2.0.0",
+    "processing_time_seconds": 0.005
+  },
+  "total_processing_time_seconds": 1.257,
+  "warnings": [
+    "Mock audio for testing \u2014 stems are genuine separate tracks that sum to the mix."
+  ],
+  "licence": {
+    "output_commercial_use": true,
+    "ai_generated": true,
+    "label_required": "AI-generated music"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "job_id": "c6cc5baa-8993-49e1-ba9c-25729907acdc",
+  "status": "completed",
+  "created_at": "2026-10-19T17:26:14.509331Z",
+  "updated_at": "2026-10-19T17:26:17.697860Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "jazz piano trio with walking bass and brushed drums, smooth and sophisticated",
+    "duration_s": 90.0,
+    "style": "jazz",
+    "mood": "calm",
+    "tempo_bpm": 140,
+    "key": null,
+    "energy": 0.5,
+    "sections": null,
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/stems/bass.wav",
+      "duration_seconds": 90.0,
+      "loudness_lufs": -22.34,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/stems/drums.wav",
+      "duration_seconds": 90.0,
+      "loudness_lufs": -30.43,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/stems/melody.wav",
+      "duration_seconds": 90.0,
+      "loudness_lufs": -23.61,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/stems/other.wav",
+      "duration_seconds": 90.0,
+      "loudness_lufs": -22.82,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/c6cc5baa-8993-49e1-ba9c-25729907acdc/music_manifest.json",
+  "actual_duration_seconds": 90.0,
+  "actual_loudness_lufs": -18.1,
+  "processing_time_seconds": 3.18,
+  "error": null
+}

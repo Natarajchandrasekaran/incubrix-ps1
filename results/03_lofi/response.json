@@ -1,0 +1,58 @@
+{
+  "job_id": "c181341b-72d7-41ee-a589-1cf63f9073c2",
+  "status": "completed",
+  "created_at": "2026-10-19T17:25:27.558942Z",
+  "updated_at": "2026-10-19T17:25:32.678095Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "lo-fi chill beats with soft piano and vinyl crackle, relaxing study music",
+    "duration_s": 120.0,
+    "style": "lo-fi",
+    "mood": "calm",
+    "tempo_bpm": 85,
+    "key": null,
+    "energy": 0.3,
+    "sections": null,
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/stems/bass.wav",
+      "duration_seconds": 120.0,
+      "loudness_lufs": -22.44,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/stems/drums.wav",
+      "duration_seconds": 120.0,
+      "loudness_lufs": -32.12,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/stems/melody.wav",
+      "duration_seconds": 120.0,
+      "loudness_lufs": -24.64,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/stems/other.wav",
+      "duration_seconds": 120.0,
+      "loudness_lufs": -22.39,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/c181341b-72d7-41ee-a589-1cf63f9073c2/music_manifest.json",
+  "actual_duration_seconds": 120.0,
+  "actual_loudness_lufs": -18.78,
+  "processing_time_seconds": 5.091,
+  "error": null
+}

@@ -1,0 +1,58 @@
+{
+  "job_id": "a54943d4-1aaa-45ec-9525-31cb18194b02",
+  "status": "completed",
+  "created_at": "2026-10-19T17:25:38.010363Z",
+  "updated_at": "2026-10-19T17:25:39.251993Z",
+  "progress_percent": 100.0,
+  "request": {
+    "prompt": "upbeat electronic dance music with synth pads and driving beat",
+    "duration_s": 30.0,
+    "style": "electronic",
+    "mood": "energetic",
+    "tempo_bpm": 128,
+    "key": null,
+    "energy": 0.9,
+    "sections": null,
+    "narration_url": null,
+    "loopable": false,
+    "seed": null,
+    "output": null,
+    "callback_url": null
+  },
+  "output_url": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/mix.wav",
+  "stems": [
+    {
+      "stem_type": "bass",
+      "url": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/stems/bass.wav",
+      "duration_seconds": 30.0,
+      "loudness_lufs": -23.02,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "drums",
+      "url": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/stems/drums.wav",
+      "duration_seconds": 30.0,
+      "loudness_lufs": -31.09,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/stems/melody.wav",
+      "duration_seconds": 30.0,
+      "loudness_lufs": -24.24,
+      "gain": 1.0
+    },
+    {
+      "stem_type": "other",
+      "url": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/stems/other.wav",
+      "duration_seconds": 30.0,
+      "loudness_lufs": -23.18,
+      "gain": 1.0
+    }
+  ],
+  "manifest_url": "/output/a54943d4-1aaa-45ec-9525-31cb18194b02/music_manifest.json",
+  "actual_duration_seconds": 30.0,
+  "actual_loudness_lufs": -18.69,
+  "processing_time_seconds": 1.237,
+  "error": null
+}

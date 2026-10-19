@@ -115,7 +115,7 @@ def run_batch(
             }
 
             if status == "completed":
-                print(f"  ✅ Completed in {total_time:.1f}s")
+                print(f"  [OK] Completed in {total_time:.1f}s")
                 # Download outputs if available
                 if status_data.get("output_url"):
                     try:
@@ -133,13 +133,29 @@ def run_batch(
                                 f.write(manifest_response.content)
                     except Exception:
                         pass
+                # Download stems
+                stems_list = status_data.get("stems") or []
+                if stems_list:
+                    stems_out_dir = test_output_dir / "stems"
+                    stems_out_dir.mkdir(parents=True, exist_ok=True)
+                    for s_item in stems_list:
+                        s_url = s_item.get("url") if isinstance(s_item, dict) else getattr(s_item, "url", None)
+                        s_type = s_item.get("stem_type") if isinstance(s_item, dict) else getattr(s_item, "stem_type", "stem")
+                        if s_url:
+                            try:
+                                s_resp = client.get(s_url)
+                                if s_resp.status_code == 200:
+                                    with open(stems_out_dir / f"{s_type}.wav", "wb") as f:
+                                        f.write(s_resp.content)
+                            except Exception:
+                                pass
             else:
-                print(f"  ❌ {status}: {status_data.get('error', 'Unknown error')}")
+                print(f"  [FAILED] {status}: {status_data.get('error', 'Unknown error')}")
 
             results.append(result)
 
         except Exception as e:
-            print(f"  ❌ Error: {e}")
+            print(f"  [ERROR] {e}")
             results.append({
                 "test_name": test_name,
                 "status": "error",
