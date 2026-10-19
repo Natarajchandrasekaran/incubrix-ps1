@@ -1,0 +1,34 @@
+# Core API
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+python-multipart==0.0.19
+
+# Background Jobs
+celery==5.4.0
+redis==5.2.1
+
+# Audio Processing
+torch==2.5.1
+torchaudio==2.5.1
+audiocraft==1.4.0a1
+demucs==4.1.0
+pyloudnorm==0.1.1
+soundfile==0.13.1
+numpy==2.2.1
+scipy==1.15.0
+pydub==0.25.1
+
+# Storage
+boto3==1.35.81
+minio==7.2.12
+
+# Testing
+pytest==8.3.4
+httpx==0.28.1
+pytest-asyncio==0.25.0
+
+# Utilities
+python-dotenv==1.0.1
+pyyaml==6.0.2
+structlog==24.4.0

@@ -1,0 +1,10 @@
+{
+  "prompt": "jazz piano trio with walking bass and brushed drums, smooth and sophisticated",
+  "duration_seconds": 90.0,
+  "style": "jazz",
+  "mood": "calm",
+  "bpm": 140,
+  "energy": 0.5,
+  "output_format": "wav",
+  "include_stems": true
+}

@@ -1,0 +1,14 @@
+{
+  "prompt": "corporate presentation music, professional and clean, motivational",
+  "duration_seconds": 180.0,
+  "style": "corporate",
+  "mood": "uplifting",
+  "bpm": 110,
+  "sections": [
+    {"start_seconds": 0.0, "end_seconds": 60.0, "mood": "calm", "prompt": "soft intro"},
+    {"start_seconds": 60.0, "end_seconds": 120.0, "mood": "energetic", "prompt": "building energy"},
+    {"start_seconds": 120.0, "end_seconds": 180.0, "mood": "uplifting", "prompt": "triumphant finale"}
+  ],
+  "output_format": "wav",
+  "include_stems": true
+}

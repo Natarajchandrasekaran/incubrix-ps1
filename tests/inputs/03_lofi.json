@@ -1,0 +1,11 @@
+{
+  "prompt": "lo-fi chill beats with soft piano and vinyl crackle, relaxing study music",
+  "duration_seconds": 120.0,
+  "style": "lo-fi",
+  "mood": "calm",
+  "bpm": 85,
+  "energy": 0.3,
+  "output_format": "wav",
+  "loudness_lufs": -14.0,
+  "include_stems": true
+}

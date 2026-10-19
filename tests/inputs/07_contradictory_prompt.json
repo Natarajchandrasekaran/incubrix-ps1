@@ -1,0 +1,6 @@
+{
+  "prompt": "calm but aggressive",
+  "duration_seconds": 20.0,
+  "output_format": "wav",
+  "include_stems": true
+}

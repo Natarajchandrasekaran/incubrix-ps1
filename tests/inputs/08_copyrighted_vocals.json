@@ -1,0 +1,6 @@
+{
+  "prompt": "play the song Bohemian Rhapsody by Queen with vocals and singing",
+  "duration_seconds": 30.0,
+  "output_format": "wav",
+  "include_stems": true
+}

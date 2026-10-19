@@ -1,0 +1,6 @@
+{
+  "prompt": "very short jingle",
+  "duration_seconds": 5.0,
+  "output_format": "wav",
+  "include_stems": true
+}

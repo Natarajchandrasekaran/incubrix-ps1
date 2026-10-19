@@ -1,0 +1,8 @@
+{
+  "prompt": "gentle fingerpicked acoustic guitar, warm and intimate, campfire feeling",
+  "duration_seconds": 10.0,
+  "style": "acoustic",
+  "mood": "calm",
+  "output_format": "wav",
+  "include_stems": true
+}

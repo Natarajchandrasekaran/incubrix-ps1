@@ -1,0 +1,7 @@
+{
+  "prompt": "warm, optimistic acoustic pop for a product launch, builds to an uplifting finish",
+  "duration_seconds": 45.0,
+  "output_format": "wav",
+  "loudness_lufs": -16.0,
+  "include_stems": true
+}
