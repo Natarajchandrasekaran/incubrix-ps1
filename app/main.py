@@ -8,6 +8,7 @@ Follows IncuBrix Integration Standard v2.
 from __future__ import annotations
 
 import math
+import numpy as np
 import time
 import uuid
 from contextlib import asynccontextmanager
