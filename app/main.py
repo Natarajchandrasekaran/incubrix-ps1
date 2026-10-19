@@ -459,6 +459,13 @@ async def analyze_uploaded_audio(
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to decode audio file: {e}")
 
+    original_duration = len(audio) / sr
+    max_analyze_duration = 30.0
+    truncated = False
+    if original_duration > max_analyze_duration:
+        audio = audio[: int(sr * max_analyze_duration)]
+        truncated = True
+
     duration = len(audio) / sr
     channels = audio.shape[1] if audio.ndim > 1 else 1
 
@@ -520,6 +527,9 @@ async def analyze_uploaded_audio(
         "upload_id": upload_id,
         "filename": filename,
         "duration_seconds": float(round(duration, 3)),
+        "original_duration_seconds": float(round(original_duration, 3)),
+        "truncated_to_preview": bool(truncated),
+        "note": f"Analyzed first {duration:.1f}s window (optimized for short-form video background music)" if truncated else None,
         "sample_rate": int(sr),
         "channels": int(channels),
         "initial_loudness_lufs": float(initial_metrics["loudness_lufs"]),

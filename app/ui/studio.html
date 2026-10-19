@@ -810,7 +810,7 @@
             <input type="file" id="audioFileInput" accept=".wav,.mp3,.flac,.ogg,.aiff" onchange="handleFileSelect(this.files)">
             <div class="dropzone-icon">📁</div>
             <div class="dropzone-text">Drop WAV, MP3, FLAC, or OGG file here</div>
-            <div class="dropzone-sub">or click to browse local computer</div>
+            <div class="dropzone-sub">or click to browse (first 30s analyzed for short-form video sync)</div>
           </div>
 
           <div class="file-preview" id="filePreview">
@@ -1195,17 +1195,26 @@
           body: formData,
         });
 
-        if (!resp.ok) {
-          const errData = await resp.json();
-          throw new Error(errData.detail || `Upload error ${resp.status}`);
+        let data;
+        const text = await resp.text();
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          throw new Error(`Server status ${resp.status}: ${text.slice(0, 100) || 'Gateway timeout or connection interrupted'}`);
         }
 
-        const data = await resp.json();
+        if (!resp.ok) {
+          throw new Error(data.detail || `Server error ${resp.status}`);
+        }
+
+        if (data.note) {
+          logTelemetry(data.note, 'warn');
+        }
         logTelemetry(`Analysis complete: ${data.duration_seconds}s @ ${data.sample_rate}Hz`, 'success');
         onAnalysisSuccess(data);
       } catch (err) {
         logTelemetry(`Analysis failed: ${err.message}`, 'warn');
-        alert('Analysis error: ' + err.message);
+        alert('Analysis status: ' + err.message);
       } finally {
         btn.disabled = false;
         btnText.innerText = 'ANALYZE & SEPARATE STEMS';
