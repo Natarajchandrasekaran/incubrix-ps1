@@ -121,7 +121,7 @@ def _process_music_job_impl(job_id: str):
         sections_list = None
         if request.sections:
             sections_list = [
-                {"start_s": s.start_seconds, "mood": s.mood or s.prompt or ""}
+                {"start_s": s.start_s, "mood": s.mood or s.prompt or ""}
                 for s in request.sections
             ]
 
@@ -244,24 +244,20 @@ def _process_music_job_impl(job_id: str):
 
         # ── Step 6: Voiceover ducking (if narration provided) ──
         ducking_result = None
-        if request.voiceover_ducking and request.voiceover_ducking.enabled:
-            logger.info("step_6_ducking", job_id=job_id)
+        if request.narration_url:
+            logger.info("step_6_ducking", job_id=job_id, narration_url=request.narration_url)
 
-            if request.voiceover_ducking.voiceover_timestamps:
-                # Use provided timestamps
-                mix_audio, sr = sf.read(str(mix_path), dtype="float32")
-                ducked_audio, volume_curve = apply_ducking(
-                    mix_audio, sr,
-                    request.voiceover_ducking.voiceover_timestamps,
-                    duck_level_db=request.voiceover_ducking.duck_level_db,
-                    fade_ms=request.voiceover_ducking.fade_ms,
+            # Download or read narration file
+            narration_path = _resolve_narration(request.narration_url, job_dir)
+            if narration_path and narration_path.exists():
+                ducking_data = duck_music_file(
+                    mix_path,
+                    narration_path,
+                    job_dir / "mix_ducked.wav",
+                    duck_level_db=-12.0,
+                    fade_ms=200,
                 )
-                ducked_path = job_dir / "mix_ducked.wav"
-                sf.write(str(ducked_path), ducked_audio, sr)
-                ducking_result = {
-                    "ducked_path": str(ducked_path),
-                    "volume_curve": volume_curve,
-                }
+                ducking_result = ducking_data
 
         job.progress_percent = 90.0
 
@@ -332,6 +328,7 @@ def _process_music_job_impl(job_id: str):
         job.updated_at = datetime.now(timezone.utc)
         job.progress_percent = 100.0
         job.output_url = f"/output/{job_id}/mix.wav"
+        job.manifest_url = f"/output/{job_id}/music_manifest.json"
         job.stems = stem_infos if request.include_stems else None
         job.actual_duration_seconds = length_result["actual_duration_s"]
         job.actual_loudness_lufs = final_loudness["loudness_lufs"]
@@ -352,6 +349,37 @@ def _process_music_job_impl(job_id: str):
         job.error = str(e)
         job.updated_at = datetime.now(timezone.utc)
         job.processing_time_seconds = round(time.time() - start_time, 3)
+
+
+def _resolve_narration(narration_url: str, job_dir: Path) -> Optional[Path]:
+    """Download or resolve a narration URL to a local file path."""
+    import urllib.parse
+
+    parsed = urllib.parse.urlparse(narration_url)
+
+    # Handle local file paths
+    if parsed.scheme in ("", "file"):
+        local_path = Path(parsed.path)
+        if local_path.exists():
+            return local_path
+        return None
+
+    # Handle HTTP(S) URLs
+    if parsed.scheme in ("http", "https"):
+        try:
+            import httpx
+            narration_path = job_dir / "narration.wav"
+            with httpx.Client(timeout=30) as client:
+                response = client.get(narration_url)
+                response.raise_for_status()
+                with open(narration_path, "wb") as f:
+                    f.write(response.content)
+            return narration_path
+        except Exception as e:
+            logger.warning("narration_download_failed", url=narration_url, error=str(e))
+            return None
+
+    return None
 
 
 def _cuda_available() -> bool:

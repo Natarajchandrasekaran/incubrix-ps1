@@ -86,6 +86,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ─── Static file serving for generated outputs ───
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path as _Path
+
+_output_dir = _Path("./output")
+_output_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/output", StaticFiles(directory=str(_output_dir)), name="output")
+
 
 # ─── Middleware: Correlation ID ───
 @app.middleware("http")
@@ -112,8 +120,24 @@ async def health_check():
 
 @app.get("/ready", response_model=HealthResponse, tags=["Health"])
 async def readiness_check():
-    """Readiness check — is the service ready to handle requests?"""
-    # TODO: Check Redis connection, model loaded, storage accessible
+    """Readiness check — verifies model adapter availability and storage directory."""
+    from app.jobs.music_job import get_adapter, OUTPUT_BASE
+
+    # 1. Check storage directory is writable
+    if not OUTPUT_BASE.exists():
+        try:
+            OUTPUT_BASE.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            raise HTTPException(status_code=503, detail=f"Storage directory not writable: {e}")
+
+    # 2. Check music generation adapter is ready
+    try:
+        adapter = get_adapter()
+        if not adapter.is_available():
+            raise HTTPException(status_code=503, detail="Music adapter not available")
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Adapter initialization error: {e}")
+
     return HealthResponse(
         status="ok",
         version="1.0.0",

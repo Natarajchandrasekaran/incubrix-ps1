@@ -86,7 +86,19 @@ class TestJobCreation:
         response = client.post("/api/v1/music/jobs", json=request)
         assert response.status_code == 202
         data = response.json()
-        assert data["request"]["duration_seconds"] == 30.0
+        assert data["request"]["duration_s"] == 30.0
+
+    def test_create_job_with_brief_format(self, client):
+        """Test the brief's exact JSON format with duration_s, tempo_bpm."""
+        request = {
+            "prompt": "upbeat corporate music for product demo",
+            "duration_s": 20.0,
+            "tempo_bpm": 120,
+        }
+        response = client.post("/api/v1/music/jobs", json=request)
+        assert response.status_code == 202
+        data = response.json()
+        assert data["request"]["duration_s"] == 20.0
 
     def test_create_job_with_sections(self, client):
         request = {

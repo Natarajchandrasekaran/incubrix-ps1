@@ -1,6 +1,11 @@
 """
 Pydantic models for the AI Background Music Engine API.
 Follows IncuBrix Integration Standard v2.
+
+Field names align with the brief's API specification:
+- duration_s (brief) mapped from duration_seconds
+- tempo_bpm (brief) mapped from bpm
+- narration_url (brief) for voiceover ducking
 """
 from __future__ import annotations
 
@@ -8,7 +13,7 @@ import enum
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import AliasChoices, BaseModel, Field, field_validator, model_validator
 
 
 class MusicStyle(str, enum.Enum):
@@ -65,62 +70,104 @@ class StemType(str, enum.Enum):
 
 class Section(BaseModel):
     """A section within a music track with its own mood/style."""
-    start_seconds: float = Field(..., ge=0, description="Start time in seconds")
-    end_seconds: float = Field(..., gt=0, description="End time in seconds")
+    start_s: float = Field(
+        ..., ge=0, description="Start time in seconds",
+        validation_alias=AliasChoices("start_s", "start_seconds"),
+    )
+    end_s: float = Field(
+        ..., gt=0, description="End time in seconds",
+        validation_alias=AliasChoices("end_s", "end_seconds"),
+    )
     mood: Optional[Mood] = Field(None, description="Mood for this section")
     style: Optional[MusicStyle] = Field(None, description="Style for this section")
     prompt: Optional[str] = Field(None, max_length=500, description="Free-text prompt for this section")
     energy: Optional[float] = Field(None, ge=0.0, le=1.0, description="Energy level 0.0-1.0")
 
-    @field_validator("end_seconds")
+    model_config = {"populate_by_name": True}
+
+    @field_validator("end_s")
     @classmethod
     def end_after_start(cls, v, info):
-        if "start_seconds" in info.data and v <= info.data["start_seconds"]:
-            raise ValueError("end_seconds must be greater than start_seconds")
+        if "start_s" in info.data and v <= info.data["start_s"]:
+            raise ValueError("end_s must be greater than start_s")
         return v
 
 
-class VoiceoverDucking(BaseModel):
-    """Configuration for ducking music under voiceover segments."""
-    enabled: bool = Field(True, description="Whether ducking is active")
-    duck_level_db: float = Field(-12.0, ge=-30.0, le=0.0, description="How much to reduce music (dB)")
-    fade_ms: int = Field(200, ge=50, le=2000, description="Fade in/out duration in ms")
-    voiceover_timestamps: list[tuple[float, float]] = Field(
-        default_factory=list,
-        description="List of (start_s, end_s) tuples where voiceover is active"
-    )
+class OutputConfig(BaseModel):
+    """Output format configuration matching the brief's spec."""
+    sample_rate: int = Field(default=48000, description="Output sample rate")
+    target_lufs: float = Field(default=-16.0, description="Target loudness in LUFS")
+    formats: list[str] = Field(default=["wav"], description="Output audio formats")
 
 
 class MusicJobRequest(BaseModel):
-    """Request to create a background music track."""
+    """
+    Request to create a background music track.
+
+    Accepts both brief-style field names (duration_s, tempo_bpm, narration_url)
+    and expanded names (duration_seconds, bpm) for flexibility.
+    """
     prompt: str = Field(
         ...,
         min_length=1,
         max_length=1000,
         description="Describe the music you want (mood, style, instruments, tempo)"
     )
-    duration_seconds: float = Field(
+    duration_s: float = Field(
         ...,
         gt=0,
         le=300,
-        description="Exact duration of the output track in seconds"
+        description="Exact duration of the output track in seconds",
+        validation_alias=AliasChoices("duration_s", "duration_seconds"),
     )
     style: Optional[MusicStyle] = Field(None, description="Music style category")
     mood: Optional[Mood] = Field(None, description="Mood tag")
-    bpm: Optional[int] = Field(None, ge=40, le=300, description="Desired tempo in BPM")
+    tempo_bpm: Optional[int] = Field(
+        None, ge=40, le=300, description="Desired tempo in BPM",
+        validation_alias=AliasChoices("tempo_bpm", "bpm"),
+    )
+    key: Optional[str] = Field(None, description="Musical key (e.g., 'C major', 'A minor')")
     energy: Optional[float] = Field(None, ge=0.0, le=1.0, description="Energy level 0.0-1.0")
     sections: Optional[list[Section]] = Field(
         None,
         description="Optional sections with different moods/styles at different timestamps"
     )
-    voiceover_ducking: Optional[VoiceoverDucking] = Field(
+    narration_url: Optional[str] = Field(
         None,
-        description="Configuration for ducking music under voiceover"
+        description="URL to voiceover audio for automatic ducking"
     )
-    output_format: str = Field("wav", pattern=r"^(wav|mp3|flac|ogg)$", description="Output audio format")
-    loudness_lufs: float = Field(-16.0, ge=-24.0, le=-6.0, description="Target loudness in LUFS")
-    include_stems: bool = Field(False, description="Whether to include separated stems in output")
+    loopable: bool = Field(False, description="Whether the track should loop seamlessly")
+    seed: Optional[int] = Field(None, description="Random seed for reproducible output")
+    output: Optional[OutputConfig] = Field(
+        None,
+        description="Output format configuration"
+    )
     callback_url: Optional[str] = Field(None, description="Webhook URL for job completion notification")
+
+    model_config = {"populate_by_name": True}
+
+    # ── Backward-compatible accessors ──
+    @property
+    def duration_seconds(self) -> float:
+        """Alias for duration_s (backward compatibility)."""
+        return self.duration_s
+
+    @property
+    def bpm(self) -> Optional[int]:
+        """Alias for tempo_bpm (backward compatibility)."""
+        return self.tempo_bpm
+
+    @property
+    def loudness_lufs(self) -> float:
+        """Get target loudness from output config or default."""
+        if self.output:
+            return self.output.target_lufs
+        return -16.0
+
+    @property
+    def include_stems(self) -> bool:
+        """Always include stems (must-have requirement)."""
+        return True
 
 
 # ─── Response Models ───
@@ -132,6 +179,7 @@ class StemInfo(BaseModel):
     url: str
     duration_seconds: float
     loudness_lufs: Optional[float] = None
+    gain: float = Field(default=1.0, description="Gain to reconstruct mix from stems")
 
 
 class MusicJobResponse(BaseModel):
@@ -145,6 +193,7 @@ class MusicJobResponse(BaseModel):
     # Populated on completion:
     output_url: Optional[str] = Field(None, description="URL to download the generated track")
     stems: Optional[list[StemInfo]] = Field(None, description="Separated stems if requested")
+    manifest_url: Optional[str] = Field(None, description="URL to the output manifest JSON")
     actual_duration_seconds: Optional[float] = None
     actual_loudness_lufs: Optional[float] = None
     processing_time_seconds: Optional[float] = None

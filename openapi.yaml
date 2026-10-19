@@ -1,0 +1,400 @@
+openapi: 3.1.0
+info:
+  title: IncuBrix AI Background Music Engine
+  description: |
+    Generate original, commercially safe instrumental music that fits a video
+    exactly — with real instrument stems and broadcast-ready loudness.
+  version: 1.0.0
+  contact:
+    name: Nataraj Chandrasekaran
+    email: nataraj05chandrummh@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://incubrix-ps1.onrender.com
+    description: Live demo
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        "200":
+          description: Service is running
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /ready:
+    get:
+      tags: [Health]
+      summary: Readiness check
+      operationId: readinessCheck
+      responses:
+        "200":
+          description: Service is ready to handle requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /api/v1/music/jobs:
+    post:
+      tags: [Music Jobs]
+      summary: Submit a music generation job
+      operationId: createMusicJob
+      description: |
+        Returns 202 Accepted with a job_id. Poll GET /api/v1/music/jobs/{job_id}
+        for status updates. Include an Idempotency-Key header to safely retry.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Idempotency key for safe retries
+        - name: X-Correlation-Id
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Correlation ID for distributed tracing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MusicJobRequest"
+            examples:
+              simple:
+                summary: Simple 30-second corporate track
+                value:
+                  prompt: "calm acoustic guitar for a product video"
+                  duration_s: 30.0
+              sections:
+                summary: Track with mood changes
+                value:
+                  prompt: "cinematic orchestral score"
+                  duration_s: 60.0
+                  tempo_bpm: 90
+                  sections:
+                    - start_s: 0.0
+                      end_s: 20.0
+                      mood: calm
+                    - start_s: 20.0
+                      end_s: 40.0
+                      mood: dramatic
+                    - start_s: 40.0
+                      end_s: 60.0
+                      mood: uplifting
+      responses:
+        "202":
+          description: Job accepted and queued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MusicJobResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    get:
+      tags: [Music Jobs]
+      summary: List all jobs
+      operationId: listJobs
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, processing, completed, failed]
+      responses:
+        "200":
+          description: Paginated list of jobs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobListResponse"
+
+  /api/v1/music/jobs/{job_id}:
+    get:
+      tags: [Music Jobs]
+      summary: Get job status and results
+      operationId: getJobStatus
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Job details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MusicJobResponse"
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      tags: [Music Jobs]
+      summary: Cancel a job
+      operationId: cancelJob
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Job cancelled
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    MusicJobRequest:
+      type: object
+      required:
+        - prompt
+        - duration_s
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: Describe the music you want (mood, style, instruments, tempo)
+        duration_s:
+          type: number
+          minimum: 1
+          maximum: 300
+          description: Exact duration of the output track in seconds
+        style:
+          type: string
+          enum: [ambient, cinematic, corporate, electronic, acoustic, jazz, classical, hip-hop, pop, rock, lo-fi, custom]
+          description: Music style category
+        mood:
+          type: string
+          enum: [happy, sad, energetic, calm, dramatic, mysterious, uplifting, tense, romantic, dark, playful, inspirational]
+          description: Mood tag
+        tempo_bpm:
+          type: integer
+          minimum: 40
+          maximum: 300
+          description: Desired tempo in BPM
+        key:
+          type: string
+          description: "Musical key (e.g., 'C major', 'A minor')"
+        energy:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          description: Energy level from 0 (ambient) to 1 (intense)
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/Section"
+          description: Optional sections with different moods at different timestamps
+        narration_url:
+          type: string
+          format: uri
+          description: URL to voiceover audio for automatic ducking
+        loopable:
+          type: boolean
+          default: false
+          description: Whether the track should loop seamlessly
+        seed:
+          type: integer
+          description: Random seed for reproducible output
+        output:
+          type: object
+          properties:
+            sample_rate:
+              type: integer
+              default: 48000
+              enum: [44100, 48000]
+            target_lufs:
+              type: number
+              default: -16.0
+            formats:
+              type: array
+              items:
+                type: string
+                enum: [wav, mp3, flac, ogg]
+              default: [wav]
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook URL for job completion notification (HMAC-SHA256 signed)
+
+    Section:
+      type: object
+      required:
+        - start_s
+        - end_s
+      properties:
+        start_s:
+          type: number
+          minimum: 0
+          description: Start time in seconds
+        end_s:
+          type: number
+          minimum: 0
+          description: End time in seconds
+        mood:
+          type: string
+          description: Mood for this section
+        style:
+          type: string
+          description: Style for this section
+        prompt:
+          type: string
+          maxLength: 500
+          description: Free-text prompt for this section
+        energy:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          description: Energy level for this section
+
+    MusicJobResponse:
+      type: object
+      properties:
+        job_id:
+          type: string
+          format: uuid
+          description: Unique job identifier
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        progress_percent:
+          type: number
+          minimum: 0
+          maximum: 100
+        request:
+          $ref: "#/components/schemas/MusicJobRequest"
+        output_url:
+          type: string
+          description: URL to download the generated track
+        stems:
+          type: array
+          items:
+            $ref: "#/components/schemas/StemInfo"
+          description: Separated instrument stems
+        manifest_url:
+          type: string
+          description: URL to the output manifest JSON
+        actual_duration_seconds:
+          type: number
+        actual_loudness_lufs:
+          type: number
+        processing_time_seconds:
+          type: number
+        error:
+          type: string
+
+    StemInfo:
+      type: object
+      properties:
+        stem_type:
+          type: string
+          enum: [drums, bass, vocals, other, full_mix]
+        url:
+          type: string
+        duration_seconds:
+          type: number
+        loudness_lufs:
+          type: number
+        gain:
+          type: number
+          default: 1.0
+          description: Gain to apply when mixing stem back to reconstruct original
+
+    JobListResponse:
+      type: object
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: "#/components/schemas/MusicJobResponse"
+        total:
+          type: integer
+        page:
+          type: integer
+        page_size:
+          type: integer
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        version:
+          type: string
+          example: "1.0.0"
+        uptime_seconds:
+          type: number
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+            message:
+              type: string
+              description: Human-readable error message
+            retryable:
+              type: boolean
+              description: Whether the client should retry
