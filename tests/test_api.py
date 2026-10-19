@@ -371,5 +371,69 @@ class TestMockAdapter:
 
             a1, _ = sf.read(str(r1.audio_path))
             a2, _ = sf.read(str(r2.audio_path))
-
             np.testing.assert_array_almost_equal(a1, a2)
+
+
+class TestAudioInspection:
+    """Test POST /api/v1/audio/analyze endpoint."""
+
+    def test_analyze_audio_endpoint(self, client):
+        sr = 44100
+        t = np.linspace(0, 2.0, int(sr * 2.0), endpoint=False)
+        audio = 0.5 * np.sin(2 * np.pi * 440 * t)
+
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
+            sf.write(f.name, audio, sr, subtype="FLOAT")
+            temp_path = f.name
+
+        try:
+            with open(temp_path, "rb") as audio_file:
+                response = client.post(
+                    "/api/v1/audio/analyze",
+                    files={"file": ("test_track.wav", audio_file, "audio/wav")},
+                    data={"normalize": "false", "separate": "true"},
+                )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert "upload_id" in data
+            assert abs(data["duration_seconds"] - 2.0) < 0.05
+            assert "drums" in data["stems"]
+            assert "stem_verification" in data
+            assert "difference_db" in data["stem_verification"]
+            assert "passes" in data["stem_verification"]
+        finally:
+            Path(temp_path).unlink(missing_ok=True)
+
+    def test_analyze_with_normalization(self, client):
+        sr = 44100
+        t = np.linspace(0, 2.0, int(sr * 2.0), endpoint=False)
+        audio = 0.8 * np.sin(2 * np.pi * 220 * t)
+
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
+            sf.write(f.name, audio, sr, subtype="FLOAT")
+            temp_path = f.name
+
+        try:
+            with open(temp_path, "rb") as audio_file:
+                response = client.post(
+                    "/api/v1/audio/analyze",
+                    files={"file": ("test_norm.wav", audio_file, "audio/wav")},
+                    data={"normalize": "true", "target_lufs": "-16.0", "separate": "false"},
+                )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["normalization_applied"] is True
+            assert abs(data["loudness_lufs"] - (-16.0)) <= 0.5
+        finally:
+            Path(temp_path).unlink(missing_ok=True)
+
+    def test_analyze_invalid_extension(self, client):
+        response = client.post(
+            "/api/v1/audio/analyze",
+            files={"file": ("document.txt", b"plain text", "text/plain")},
+        )
+        assert response.status_code == 400
+        assert "Unsupported format" in response.json()["detail"]
+

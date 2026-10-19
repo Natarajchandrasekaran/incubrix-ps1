@@ -191,6 +191,47 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /api/v1/audio/analyze:
+    post:
+      tags: [Audio Inspection]
+      summary: Upload and inspect audio file with stem separation and broadcast compliance
+      operationId: analyzeUploadedAudio
+      description: |
+        Upload an audio file (WAV, MP3, FLAC, OGG) to:
+        1. Measure ITU-R BS.1770-4 integrated loudness & true peak.
+        2. Optionally normalize to broadcast standard (-16 LUFS, <= -1 dBTP).
+        3. Separate into 4 instrument stems (Drums, Bass, Melody, Harmony).
+        4. Verify lossless float32 stem summation (< -40 dBFS difference).
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Audio file to analyze (WAV, MP3, FLAC, OGG)
+                normalize:
+                  type: boolean
+                  default: false
+                  description: Whether to normalize audio to -16 LUFS
+                target_lufs:
+                  type: number
+                  default: -16.0
+                  description: Target loudness in LUFS if normalize=true
+                separate:
+                  type: boolean
+                  default: true
+                  description: Whether to separate audio into 4 instrument stems
+      responses:
+        "200":
+          description: Audio analysis and stem separation results
+        "400":
+          description: Invalid audio file or unsupported format
 
 components:
   schemas:

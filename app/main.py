@@ -7,6 +7,7 @@ Follows IncuBrix Integration Standard v2.
 """
 from __future__ import annotations
 
+import math
 import time
 import uuid
 from contextlib import asynccontextmanager
@@ -14,7 +15,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import structlog
-from fastapi import FastAPI, HTTPException, Header, Query, Request, Response
+from fastapi import FastAPI, File, Form, HTTPException, Header, Query, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
@@ -371,6 +372,136 @@ async def cancel_job(job_id: str):
         logger.info("job_cancelled", job_id=job_id)
 
     return Response(status_code=204)
+
+
+# ─── Audio Inspection & Stem Separation Endpoint ───
+
+@app.post(
+    "/api/v1/audio/analyze",
+    tags=["Audio Inspection"],
+    summary="Upload and inspect audio file with stem separation and broadcast compliance",
+)
+async def analyze_uploaded_audio(
+    file: UploadFile = File(...),
+    normalize: bool = Form(False),
+    target_lufs: float = Form(-16.0),
+    separate: bool = Form(True),
+):
+    """
+    Upload an audio file (WAV, MP3, FLAC, OGG) to:
+    1. Measure ITU-R BS.1770-4 integrated loudness & true peak.
+    2. Optionally normalize to broadcast standard (-16 LUFS, <= -1 dBTP).
+    3. Separate into 4 instrument stems (Drums, Bass, Melody, Harmony).
+    4. Verify lossless float32 stem summation (< -40 dBFS difference).
+    """
+    import soundfile as sf
+    from app.audio.loudness import measure_loudness, normalize_loudness
+    from app.audio.stems import separate_stems, verify_stems_sum_to_mix
+
+    filename = file.filename or "uploaded_audio.wav"
+    ext = _Path(filename).suffix.lower()
+    allowed_exts = [".wav", ".mp3", ".flac", ".ogg", ".aiff", ".m4a"]
+    if ext not in allowed_exts:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported format '{ext}'. Allowed formats: {', '.join(allowed_exts)}",
+        )
+
+    upload_id = str(uuid.uuid4())
+    upload_dir = _output_dir / "uploads" / upload_id
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    raw_path = upload_dir / f"original{ext}"
+
+    contents = await file.read()
+    if not contents:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+
+    raw_path.write_bytes(contents)
+
+    try:
+        audio, sr = sf.read(str(raw_path), dtype="float32")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to decode audio file: {e}")
+
+    duration = len(audio) / sr
+    channels = audio.shape[1] if audio.ndim > 1 else 1
+
+    # Measure initial loudness
+    initial_metrics = measure_loudness(audio, sr)
+
+    # Optional normalization
+    if normalize:
+        processed_audio = normalize_loudness(audio, sr, target_lufs=target_lufs, max_true_peak_dbtp=-1.0)
+        final_metrics = measure_loudness(processed_audio, sr)
+    else:
+        processed_audio = audio
+        final_metrics = initial_metrics
+
+    # Save master WAV in 32-bit float for lossless stem operations
+    master_path = upload_dir / "master.wav"
+    sf.write(str(master_path), processed_audio, sr, subtype="FLOAT")
+    master_url = f"/output/uploads/{upload_id}/master.wav"
+
+    # Separate stems
+    stems_dict = {}
+    stem_verification = None
+    if separate:
+        stems_dir = upload_dir / "stems"
+        sep_res = separate_stems(master_path, stems_dir)
+
+        stem_paths = []
+        for s in sep_res.stems:
+            stem_rel = f"/output/uploads/{upload_id}/stems/{s.stem_name}.wav"
+            stems_dict[s.stem_name] = stem_rel
+            stem_paths.append(s.path)
+
+        verification = verify_stems_sum_to_mix(master_path, stem_paths)
+        stem_verification = {
+            "passes": verification["passes"],
+            "difference_db": verification["difference_db"],
+            "tolerance_db": verification["tolerance_db"],
+            "mix_rms": verification["mix_rms"],
+            "diff_rms": verification["diff_rms"],
+        }
+
+    is_compliant = (
+        abs(final_metrics["loudness_lufs"] - (-16.0)) <= 1.0 and
+        final_metrics["true_peak_dbtp"] <= -1.0
+    )
+
+    logger.info(
+        "audio_upload_analyzed",
+        upload_id=upload_id,
+        filename=filename,
+        duration_s=float(round(duration, 3)),
+        lufs=float(final_metrics["loudness_lufs"]),
+        peak=float(final_metrics["true_peak_dbtp"]),
+        stems=list(stems_dict.keys()),
+        stems_verified=bool(stem_verification["passes"]) if stem_verification else None,
+    )
+
+    return {
+        "upload_id": upload_id,
+        "filename": filename,
+        "duration_seconds": float(round(duration, 3)),
+        "sample_rate": int(sr),
+        "channels": int(channels),
+        "initial_loudness_lufs": float(initial_metrics["loudness_lufs"]),
+        "initial_true_peak_dbtp": float(initial_metrics["true_peak_dbtp"]),
+        "loudness_lufs": float(final_metrics["loudness_lufs"]),
+        "true_peak_dbtp": float(final_metrics["true_peak_dbtp"]),
+        "broadcast_compliant": bool(is_compliant),
+        "normalization_applied": bool(normalize),
+        "master_url": master_url,
+        "stems": stems_dict,
+        "stem_verification": {
+            "passes": bool(stem_verification["passes"]),
+            "difference_db": float(-100.0 if (math.isnan(stem_verification["difference_db"]) or math.isinf(stem_verification["difference_db"])) else stem_verification["difference_db"]),
+            "tolerance_db": float(stem_verification["tolerance_db"]),
+            "mix_rms": float(0.0 if (math.isnan(stem_verification["mix_rms"]) or math.isinf(stem_verification["mix_rms"])) else stem_verification["mix_rms"]),
+            "diff_rms": float(0.0 if (math.isnan(stem_verification["diff_rms"]) or math.isinf(stem_verification["diff_rms"])) else stem_verification["diff_rms"]),
+        } if stem_verification else None,
+    }
 
 
 # ─── Entry point ───
