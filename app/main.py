@@ -37,6 +37,9 @@ from app.models.schemas import (
     JobStatus,
     MusicJobRequest,
     MusicJobResponse,
+    NatifyAction,
+    NatifyMessage,
+    NatifyResponse,
     RemixRequest,
     RemixResponse,
 )
@@ -107,6 +110,10 @@ from pathlib import Path as _Path
 _output_dir = _Path("./output")
 _output_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/output", StaticFiles(directory=str(_output_dir)), name="output")
+
+_static_dir = _Path(__file__).parent / "ui" / "static"
+_static_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
 
 
 # ─── Middleware: Correlation ID ───
@@ -672,6 +679,181 @@ async def remix_track_portions(request: RemixRequest):
         loudness_lufs=float(final_lufs),
         true_peak_dbtp=float(final_peak),
         portions_count=len(request.portions),
+    )
+
+
+# ─── Natify AI Assistant Endpoint ───
+
+@app.post(
+    "/api/v1/natify/chat",
+    tags=["Natify AI Assistant"],
+    summary="Interactive AI Assistant for Natural Language Studio Control",
+    response_model=NatifyResponse,
+)
+async def natify_chat(msg: NatifyMessage):
+    """
+    Intelligent chatbot for IncuBrix Studio that understands commands,
+    arranges music, controls stems, switches themes, and guides the creator.
+    """
+    text = msg.message.lower().strip()
+
+    # 1. Theme control
+    if any(k in text for k in ["theme", "mode", "color", "dark", "light", "midnight", "neon", "cyber"]):
+        if any(k in text for k in ["light", "white", "day"]):
+            return NatifyResponse(
+                reply="Switching studio theme to Clean Light mode! ☀️",
+                action=NatifyAction(type="SET_THEME", payload={"theme": "light"}),
+                suggestions=["Switch to Dark", "Compose a Lo-Fi study beat", "Drums max in drop"]
+            )
+        elif any(k in text for k in ["cyber", "neon", "midnight", "blue"]):
+            return NatifyResponse(
+                reply="Welcome to Cyber Neon mode! Deep navy with neon glow. 🌌",
+                action=NatifyAction(type="SET_THEME", payload={"theme": "midnight"}),
+                suggestions=["Compose a Tech promo track", "Drums Max, Bass Min", "Switch to Dark"]
+            )
+        else:
+            return NatifyResponse(
+                reply="Switched back to Dark Studio theme! 🌙",
+                action=NatifyAction(type="SET_THEME", payload={"theme": "dark"}),
+                suggestions=["Switch to Cyber Neon", "Create a corporate track", "How to extract audio?"]
+            )
+
+    # 2. Portion / Stem Arrangement (Drums Max, Bass Min, Voice Bed, etc.)
+    if any(k in text for k in ["drum", "bass", "portion", "section", "buildup", "drop", "duck", "mute", "stem"]):
+        if ("drum" in text and "max" in text) or ("bass" in text and "min" in text) or "punch" in text or "beat drop" in text:
+            return NatifyResponse(
+                reply="Tuned Buildup portion: Drums set to 100% Maximum and Bass set to 10% Minimum! Perfect for punchy impact before the main drop. 🥁",
+                action=NatifyAction(type="SET_PORTION", payload={"profile": "drumsMaxBassMin", "portionIdx": 1}),
+                suggestions=["Full Energy on Climax", "Render & Download Custom Mix", "Audition Buildup"]
+            )
+        elif any(k in text for k in ["voice", "speech", "talk", "bed", "narration", "duck"]):
+            return NatifyResponse(
+                reply="Applied Voiceover Bed profile: Drums & Bass lowered so spoken narration stays front and center! 🎙️",
+                action=NatifyAction(type="SET_PORTION", payload={"profile": "voiceBed", "portionIdx": 0}),
+                suggestions=["Record voice now", "Drums Max on Drop", "Download custom mix"]
+            )
+        elif any(k in text for k in ["full", "all", "climax", "energy", "100"]):
+            return NatifyResponse(
+                reply="Set all stems to 100% Full Energy for a massive anthem climax! 💥",
+                action=NatifyAction(type="SET_PORTION", payload={"profile": "fullEnergy", "portionIdx": 2}),
+                suggestions=["Render custom mix", "Add a voiceover track", "Make a cinematic track"]
+            )
+        elif any(k in text for k in ["groove", "only drums", "bass and drum"]):
+            return NatifyResponse(
+                reply="Stripped melodies — pure Bass & Drum Groove active! 🎸",
+                action=NatifyAction(type="SET_PORTION", payload={"profile": "groove", "portionIdx": 1}),
+                suggestions=["Add melody back", "Drums Max, Bass Min", "Download mix"]
+            )
+        elif any(k in text for k in ["melody", "piano", "solo", "acoustic"]):
+            return NatifyResponse(
+                reply="Soloing the melodic and harmonic lead — percussion muted for a soulful feel! 🎹",
+                action=NatifyAction(type="SET_PORTION", payload={"profile": "melodySolo", "portionIdx": 0}),
+                suggestions=["Full energy buildup", "Drums max in drop", "Export WAV"]
+            )
+
+    # 3. Voice recording / overdubbing
+    if any(k in text for k in ["record", "mic", "microphone", "sing", "voiceover", "voice"]):
+        return NatifyResponse(
+            reply="Opening the Voiceover Recording studio! Click the red Record button to capture your microphone audio directly over the background track. 🎙️",
+            action=NatifyAction(type="START_VOICE", payload={}),
+            suggestions=["Upload voice file", "Auto-duck music during voice", "Download mix with voice"]
+        )
+
+    # 4. Download / Export audio instructions
+    if any(k in text for k in ["download", "export", "extract", "save", "wav", "mix"]):
+        return NatifyResponse(
+            reply="Here is how to extract your desired audio: Click 'Download Full Mix (.WAV)' for the broadcast master, 'Render & Download Custom Arranged Mix' for your portion-tuned track, or 'Download WAV' on any channel strip for individual stems! 💾",
+            action=NatifyAction(type="HIGHLIGHT_EXPORT", payload={}),
+            suggestions=["Render & Download Custom Mix", "Download Drums stem", "JSON Manifest"]
+        )
+
+    # 5. Music Creation Commands (Cinematic, Lo-Fi, Tech, Corporate, Podcast, etc.)
+    dur = 15.0
+    import re
+    dur_match = re.search(r"(\d+)\s*(?:s|sec|seconds)", text)
+    if dur_match:
+        dur = float(dur_match.group(1))
+        dur = max(5.0, min(60.0, dur))
+
+    bpm = 120
+    bpm_match = re.search(r"(\d+)\s*bpm", text)
+    if bpm_match:
+        bpm = int(bpm_match.group(1))
+
+    if any(k in text for k in ["cinema", "trailer", "epic", "dramatic", "orchestr", "film", "movie"]):
+        return NatifyResponse(
+            reply=f"Composing a dramatic Cinematic score at {bpm if bpm_match else 84} BPM with soaring strings and taiko drums ({dur}s)! 🎬",
+            action=NatifyAction(
+                type="CREATE_MUSIC",
+                payload={
+                    "prompt": "Cinematic dramatic strings building to an inspiring climax with orchestral brass",
+                    "duration_seconds": dur if dur_match else 20.0,
+                    "tempo_bpm": bpm if bpm_match else 84
+                }
+            ),
+            suggestions=["Drums Max, Bass Min in Buildup", "Record voiceover over track", "Download Full Mix"]
+        )
+    elif any(k in text for k in ["lofi", "lo-fi", "chill", "study", "relax", "mellow", "coffee"]):
+        return NatifyResponse(
+            reply=f"Creating a cozy Lo-Fi study beat with Rhodes piano and soft vinyl crackle at {bpm if bpm_match else 78} BPM! ☕",
+            action=NatifyAction(
+                type="CREATE_MUSIC",
+                payload={
+                    "prompt": "Chill lo-fi study beat with mellow electric piano and soft vinyl crackle",
+                    "duration_seconds": dur if dur_match else 20.0,
+                    "tempo_bpm": bpm if bpm_match else 78
+                }
+            ),
+            suggestions=["Add voiceover narration", "Drop drums in intro", "Render custom mix"]
+        )
+    elif any(k in text for k in ["tech", "electron", "synth", "edm", "future", "cyber", "fast"]):
+        return NatifyResponse(
+            reply=f"Firing up high-energy electronic synths and driving bass at {bpm if bpm_match else 126} BPM ({dur}s)! 🚀",
+            action=NatifyAction(
+                type="CREATE_MUSIC",
+                payload={
+                    "prompt": "High energy tech promo with fast electronic synths and driving beat",
+                    "duration_seconds": dur if dur_match else 15.0,
+                    "tempo_bpm": bpm if bpm_match else 126
+                }
+            ),
+            suggestions=["Set Drums Max, Bass Min", "Switch to Cyber Neon theme", "Render custom mix"]
+        )
+    elif any(k in text for k in ["podcast", "interview", "intro", "bed", "talk", "acoustic"]):
+        return NatifyResponse(
+            reply=f"Generating a warm podcast intro with acoustic piano and subtle bassline bed at {bpm if bpm_match else 94} BPM! 🎙️",
+            action=NatifyAction(
+                type="CREATE_MUSIC",
+                payload={
+                    "prompt": "Warm podcast intro with acoustic piano and mellow bassline bed",
+                    "duration_seconds": dur if dur_match else 15.0,
+                    "tempo_bpm": bpm if bpm_match else 94
+                }
+            ),
+            suggestions=["Voiceover bed profile", "Record mic voiceover", "Download Full Mix"]
+        )
+    elif any(k in text for k in ["make", "create", "generate", "compose", "song", "track", "music", "beat"]):
+        return NatifyResponse(
+            reply=f"Composing your custom music track: '{msg.message}' ({dur}s @ {bpm} BPM)! ⚡",
+            action=NatifyAction(
+                type="CREATE_MUSIC",
+                payload={
+                    "prompt": msg.message,
+                    "duration_seconds": dur,
+                    "tempo_bpm": bpm
+                }
+            ),
+            suggestions=["Drums Max, Bass Min", "Record voiceover", "Switch to Cyber Neon"]
+        )
+
+    return NatifyResponse(
+        reply="Hello! I'm Natify, your AI Music Co-Pilot. I can create any style of background music, tune stem portions (like Drums Max, Bass Min), record voiceovers, and export your track. What would you like to build? 🎵",
+        suggestions=[
+            "Make a high energy Tech promo",
+            "Cinematic dramatic strings",
+            "Set Drums Max, Bass Min",
+            "Record my voiceover"
+        ]
     )
 
 

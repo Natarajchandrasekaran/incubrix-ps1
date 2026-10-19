@@ -255,3 +255,23 @@ class RemixResponse(BaseModel):
     loudness_lufs: float
     true_peak_dbtp: float
     portions_count: int
+
+
+# ─── Natify AI Assistant Models ───
+
+class NatifyAction(BaseModel):
+    type: str
+    payload: dict = Field(default_factory=dict)
+
+
+class NatifyMessage(BaseModel):
+    message: str
+    current_mode: Optional[str] = "create"
+    duration_s: Optional[float] = 15.0
+    tempo_bpm: Optional[int] = 120
+
+
+class NatifyResponse(BaseModel):
+    reply: str
+    action: Optional[NatifyAction] = None
+    suggestions: list[str] = Field(default_factory=list)

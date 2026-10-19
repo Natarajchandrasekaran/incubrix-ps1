@@ -483,3 +483,30 @@ class TestRemixEndpoint:
         assert -24.0 <= data["loudness_lufs"] <= -14.0
 
 
+class TestNatifyAssistant:
+    """Tests for POST /api/v1/natify/chat intelligent assistant."""
+
+    def test_natify_theme_command(self, client):
+        resp = client.post("/api/v1/natify/chat", json={"message": "Switch to cyber neon mode"})
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["action"]["type"] == "SET_THEME"
+        assert data["action"]["payload"]["theme"] == "midnight"
+
+    def test_natify_portion_command(self, client):
+        resp = client.post("/api/v1/natify/chat", json={"message": "Make drums maximum and bass minimum"})
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["action"]["type"] == "SET_PORTION"
+        assert data["action"]["payload"]["profile"] == "drumsMaxBassMin"
+
+    def test_natify_music_creation_command(self, client):
+        resp = client.post("/api/v1/natify/chat", json={"message": "Compose a high energy tech promo for 20 seconds at 128 bpm"})
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["action"]["type"] == "CREATE_MUSIC"
+        assert data["action"]["payload"]["tempo_bpm"] == 128
+        assert data["action"]["payload"]["duration_seconds"] == 20.0
+
+
+

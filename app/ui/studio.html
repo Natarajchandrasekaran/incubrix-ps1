@@ -1121,6 +1121,366 @@
       transform: none;
     }
 
+    /* ============================================
+       NATIFY AI CHATBOT WIDGET
+       ============================================ */
+    .natify-launcher {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 2px solid var(--accent);
+      border-radius: 50px;
+      padding: 6px 14px 6px 6px;
+      box-shadow: 0 8px 30px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
+
+    .natify-launcher:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 12px 36px var(--accent-glow);
+    }
+
+    .natify-launcher-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+    }
+
+    .natify-launcher-badge {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .natify-pulse {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      animation: pulse-ring 2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 0; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+
+    .natify-chat-container {
+      position: fixed;
+      bottom: 86px;
+      right: 24px;
+      width: 380px;
+      max-width: calc(100vw - 32px);
+      height: 520px;
+      max-height: calc(100vh - 120px);
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 24px var(--accent-soft);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px) scale(0.96); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .natify-chat-header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-primary);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .natify-chat-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .natify-chat-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      object-fit: cover;
+    }
+
+    .natify-chat-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .natify-chat-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .natify-chat-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .natify-chat-close:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .natify-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .natify-bubble {
+      display: flex;
+      gap: 8px;
+      max-width: 90%;
+    }
+
+    .natify-bubble.bot {
+      align-self: flex-start;
+    }
+
+    .natify-bubble.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .bubble-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .bubble-content {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: var(--text-primary);
+    }
+
+    .natify-bubble.user .bubble-content {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    [data-theme="midnight"] .natify-bubble.user .bubble-content {
+      color: #0a192f;
+      font-weight: 600;
+    }
+
+    .natify-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .chip:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .natify-input-bar {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-primary);
+      padding: 10px 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .natify-input-bar input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 12.5px;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .natify-input-bar input:focus {
+      border-color: var(--accent);
+    }
+
+    .natify-send-btn {
+      background: var(--accent);
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+    }
+
+    [data-theme="midnight"] .natify-send-btn {
+      color: #0a192f;
+    }
+
+    .natify-send-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .natify-send-btn svg { width: 16px; height: 16px; }
+
+    /* ============================================
+       VOICEOVER & RECORDING CONTROLS
+       ============================================ */
+    .voice-controls-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-record {
+      background: var(--bg-input);
+      border: 1px solid var(--danger);
+      color: var(--text-primary);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-record:hover {
+      background: var(--danger-soft);
+      border-color: var(--danger);
+    }
+
+    .btn-record.recording {
+      background: var(--danger);
+      color: #ffffff;
+      box-shadow: 0 0 16px var(--danger);
+      animation: pulse 1.2s infinite;
+    }
+
+    .rec-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--danger);
+    }
+
+    .btn-record.recording .rec-dot {
+      background: #ffffff;
+    }
+
+    .btn-voice-upload {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-voice-upload:hover {
+      color: var(--text-primary);
+      border-color: var(--border-accent);
+    }
+
+    .voice-timecode {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .voice-preview-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      margin-top: 8px;
+    }
+
+    .voice-settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -1133,13 +1493,11 @@
     <!-- HEADER -->
     <header class="header">
       <div class="brand">
-        <div class="brand-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">
-            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
-          </svg>
+        <div class="brand-logo" style="background:transparent;border:none;width:auto;height:42px;">
+          <img src="/static/incubrix_logo.png" alt="IncuBrix Logo" style="height:42px;width:auto;border-radius:6px;object-fit:contain;box-shadow:0 2px 10px rgba(0,0,0,0.3);">
         </div>
         <div>
-          <div class="brand-name">🎵 IncuBrix AI Music Studio</div>
+          <div class="brand-name">IncuBrix AI Music Studio</div>
           <div class="brand-sub">Intelligent Background Music Engine &bull; Video Stem Arranger</div>
         </div>
       </div>
@@ -1155,7 +1513,7 @@
         <div class="theme-switcher">
           <button class="theme-pill active" id="pill-dark" onclick="setTheme('dark')">🌙 Dark</button>
           <button class="theme-pill" id="pill-light" onclick="setTheme('light')">☀️ Light</button>
-          <button class="theme-pill" id="pill-midnight" onclick="setTheme('midnight')">🌌 Midnight</button>
+          <button class="theme-pill" id="pill-midnight" onclick="setTheme('midnight')">🌌 Cyber Neon</button>
         </div>
       </div>
     </header>
@@ -1254,6 +1612,57 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <span id="btnUploadText">Upload and Analyze</span>
           </button>
+        </div>
+
+        <!-- VOICEOVER & AUDIO RECORDING TRACK -->
+        <div class="card" id="voiceoverCard">
+          <div class="card-title">
+            <span class="card-title-left">
+              <span style="font-size:18px">🎙️</span>
+              Voiceover & Speech Studio
+            </span>
+            <span class="card-badge" id="voiceStatusBadge">Auto-Ducking</span>
+          </div>
+          <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:12px;line-height:1.45;">
+            Record your voice live via microphone or upload pre-recorded speech. Voice blends over your background track with automatic -12 dB music ducking upon export.
+          </p>
+
+          <div class="voice-controls-row">
+            <button class="btn-record" id="btnVoiceRecord" onclick="toggleVoiceRecording()">
+              <span class="rec-dot"></span>
+              <span id="btnVoiceRecordText">Record Voice</span>
+            </button>
+            <span class="voice-timecode" id="voiceRecTime">00:00.0</span>
+
+            <label class="btn-voice-upload" title="Upload audio file (.wav, .mp3)">
+              <input type="file" id="voiceFileInput" accept="audio/*" style="display:none;" onchange="handleVoiceFileUpload(this.files)">
+              <span>📁 Upload Voice</span>
+            </label>
+
+            <button class="btn-voice-upload" id="btnClearVoice" onclick="clearVoiceTrack()" style="display:none;color:var(--danger);border-color:var(--danger-soft);">
+              <span>🗑️ Clear Voice</span>
+            </button>
+          </div>
+
+          <div class="voice-preview-box" id="voicePreviewBox" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:11.5px;font-weight:700;color:var(--text-primary);" id="voiceTrackLabel">🎙️ Voice Track Loaded</span>
+              <span style="font-size:11px;color:var(--accent);" id="voiceDurationDisplay">0.0s</span>
+            </div>
+            <audio id="voiceAudioPlayer" controls style="width:100%;height:32px;border-radius:4px;margin-bottom:8px;"></audio>
+            <div class="voice-settings-row">
+              <div style="display:flex;align-items:center;gap:8px;flex:1;">
+                <span style="font-size:11px;font-weight:600;color:var(--text-muted);">Voice Level:</span>
+                <input type="range" id="voiceVolumeSlider" min="0" max="1.5" step="0.05" value="1.0" style="flex:1;" oninput="setVoiceVolume(this.value)">
+                <span style="font-size:11px;font-weight:700;color:var(--accent);" id="voiceVolumeDisplay">100%</span>
+              </div>
+            </div>
+          </div>
+
+          <label class="checkbox-row" style="margin-top:10px;margin-bottom:0;">
+            <input type="checkbox" id="chkAutoDuck" checked>
+            <span>Auto-duck music during voiceover (-12 dB)</span>
+          </label>
         </div>
 
         <!-- ACTIVITY LOG -->
@@ -1538,6 +1947,57 @@
     </div>
   </div>
 
+  <!-- NATIFY AI CHATBOT LAUNCHER -->
+  <div class="natify-launcher" id="natifyLauncher" onclick="toggleNatifyChat()">
+    <div class="natify-pulse"></div>
+    <img src="/static/natify_logo.png" class="natify-launcher-img" alt="Natify Robot Avatar">
+    <div class="natify-launcher-badge">
+      <span>Natify AI</span>
+      <span style="font-size:10px;color:var(--accent);">●</span>
+    </div>
+  </div>
+
+  <!-- NATIFY AI CHATBOT WINDOW -->
+  <div class="natify-chat-container" id="natifyChatContainer" style="display:none;">
+    <div class="natify-chat-header">
+      <div class="natify-chat-brand">
+        <img src="/static/natify_logo.png" class="natify-chat-logo" alt="Natify Avatar">
+        <div>
+          <div class="natify-chat-title">Natify AI Studio Assistant</div>
+          <div class="natify-chat-subtitle">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;"></span>
+            Online &bull; IncuBrix AI Engine
+          </div>
+        </div>
+      </div>
+      <button class="natify-chat-close" onclick="toggleNatifyChat()" title="Close Natify Chat">&times;</button>
+    </div>
+
+    <div class="natify-messages" id="natifyMessages">
+      <div class="natify-bubble bot">
+        <img src="/static/natify_logo.png" class="bubble-avatar" alt="Natify">
+        <div class="bubble-content">
+          👋 Hi! I'm <strong>Natify</strong>, your IncuBrix AI studio assistant.<br>
+          I can create tracks, balance your stems (like drums max & bass min), record your voiceover, switch themes, or export your final mix! What would you like to do?
+          <div class="natify-chips">
+            <button class="chip" onclick="sendNatifyQuick('Create an upbeat corporate showcase track for 15 seconds')">🏢 Corporate 15s</button>
+            <button class="chip" onclick="sendNatifyQuick('Set portion Drums to maximum and Bass to minimum')">🥁 Drums Max, Bass Min</button>
+            <button class="chip" onclick="sendNatifyQuick('Record voiceover for my video')">🎙️ Record Voice</button>
+            <button class="chip" onclick="sendNatifyQuick('Switch to Cyber Neon theme')">🌌 Cyber Neon</button>
+            <button class="chip" onclick="sendNatifyQuick('Render and download custom mix')">💾 Render Mix</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="natify-input-bar">
+      <input type="text" id="natifyInput" placeholder="Ask Natify (e.g. 'Drums max and bass min')..." onkeydown="if(event.key==='Enter') sendNatifyMessage()">
+      <button class="natify-send-btn" onclick="sendNatifyMessage()" title="Send command to Natify">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
   <!-- ============================================
        JAVASCRIPT - AUDIO ENGINE
        ============================================ -->
@@ -1550,7 +2010,7 @@
         const el = document.getElementById('pill-' + t);
         if (el) el.classList.toggle('active', t === theme);
       });
-      logActivity('Switched theme to ' + (theme === 'dark' ? '🌙 Dark' : theme === 'light' ? '☀️ Light' : '🌌 Midnight'));
+      logActivity('Switched theme to ' + (theme === 'dark' ? '🌙 Dark' : theme === 'light' ? '☀️ Light' : '🌌 Cyber Neon'));
     }
 
     // ── Portion Arranger & Stem Automation State ──
@@ -1785,6 +2245,8 @@
           }
         }
 
+        const autoDuck = document.getElementById('chkAutoDuck') ? document.getElementById('chkAutoDuck').checked : true;
+
         for (const stem of STEMS) {
           const buf = stemBuffers[stem];
           if (!buf) continue;
@@ -1794,13 +2256,29 @@
           const gainNode = offlineCtx.createGain();
 
           portions.forEach(p => {
-            const g = (p.gains[stem] !== undefined ? p.gains[stem] : 0.8) * (muted[stem] ? 0 : 1);
+            let g = (p.gains[stem] !== undefined ? p.gains[stem] : 0.8) * (muted[stem] ? 0 : 1);
+            // If auto-ducking is enabled and voiceBuffer exists, duck stems during voice speech
+            if (autoDuck && voiceBuffer && p.start < voiceBuffer.duration) {
+              g *= 0.25; // -12 dB ducking during speech
+            }
             gainNode.gain.setValueAtTime(g, Math.max(0, p.start));
           });
 
           src.connect(gainNode);
           gainNode.connect(offlineCtx.destination);
           src.start(0);
+        }
+
+        // Add Voiceover Track to Mix
+        if (voiceBuffer) {
+          const vSrc = offlineCtx.createBufferSource();
+          vSrc.buffer = voiceBuffer;
+          const vGain = offlineCtx.createGain();
+          vGain.gain.setValueAtTime(voiceVolume, 0);
+          vSrc.connect(vGain);
+          vGain.connect(offlineCtx.destination);
+          vSrc.start(0);
+          logActivity('Blended voiceover track with auto-ducking into mix', 'ok');
         }
 
         const renderedBuffer = await offlineCtx.startRendering();
@@ -1864,6 +2342,251 @@
     let soloStem = null;
     let stemsReady = false;    // true once stems are loaded
     let referenceStem = null;  // which stem drives the timecode
+
+    // ── Voiceover & Speech Recording State ──
+    let mediaRecorder = null;
+    let voiceAudioChunks = [];
+    let voiceBlob = null;
+    let voiceAudioUrl = null;
+    let voiceBuffer = null;
+    let voiceVolume = 1.0;
+    let isVoiceRecording = false;
+    let voiceRecInterval = null;
+    let voiceRecStartTime = 0;
+
+    async function toggleVoiceRecording() {
+      if (isVoiceRecording) {
+        stopVoiceRecording();
+      } else {
+        await startVoiceRecording();
+      }
+    }
+
+    async function startVoiceRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        voiceAudioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.ondataavailable = e => {
+          if (e.data && e.data.size > 0) voiceAudioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          voiceBlob = new Blob(voiceAudioChunks, { type: 'audio/wav' });
+          voiceAudioUrl = URL.createObjectURL(voiceBlob);
+          const player = document.getElementById('voiceAudioPlayer');
+          player.src = voiceAudioUrl;
+          player.style.display = 'block';
+          document.getElementById('voicePreviewBox').style.display = 'block';
+          document.getElementById('btnClearVoice').style.display = 'inline-flex';
+          
+          await decodeVoiceBlob(voiceBlob);
+          logActivity('Voice recording saved (' + (voiceBuffer ? voiceBuffer.duration.toFixed(1) + 's' : 'loaded') + ')', 'ok');
+          
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        isVoiceRecording = true;
+        document.getElementById('btnVoiceRecord').classList.add('recording');
+        document.getElementById('btnVoiceRecordText').innerText = 'Stop Recording';
+        voiceRecStartTime = Date.now();
+        voiceRecInterval = setInterval(() => {
+          const elapsed = (Date.now() - voiceRecStartTime) / 1000;
+          document.getElementById('voiceRecTime').innerText = fmtTime(elapsed);
+        }, 100);
+        logActivity('Microphone recording active... Speak now! 🎙️', 'warn');
+
+        if (stemsReady && !isPlaying) {
+          togglePlayback();
+        }
+      } catch (err) {
+        logActivity('Microphone access denied: ' + err.message, 'err');
+      }
+    }
+
+    function stopVoiceRecording() {
+      if (!mediaRecorder || !isVoiceRecording) return;
+      mediaRecorder.stop();
+      isVoiceRecording = false;
+      clearInterval(voiceRecInterval);
+      document.getElementById('btnVoiceRecord').classList.remove('recording');
+      document.getElementById('btnVoiceRecordText').innerText = 'Record Voice';
+      if (isPlaying) {
+        pauseAll();
+      }
+    }
+
+    async function handleVoiceFileUpload(files) {
+      if (!files || !files.length) return;
+      const file = files[0];
+      voiceBlob = file;
+      voiceAudioUrl = URL.createObjectURL(file);
+      const player = document.getElementById('voiceAudioPlayer');
+      player.src = voiceAudioUrl;
+      player.style.display = 'block';
+      document.getElementById('voicePreviewBox').style.display = 'block';
+      document.getElementById('btnClearVoice').style.display = 'inline-flex';
+      document.getElementById('voiceTrackLabel').innerText = '🎙️ ' + file.name;
+
+      await decodeVoiceBlob(file);
+      logActivity('Voice file uploaded: ' + file.name, 'ok');
+    }
+
+    async function decodeVoiceBlob(blob) {
+      try {
+        ensureAudioCtx();
+        const arrayBuf = await blob.arrayBuffer();
+        voiceBuffer = await audioCtx.decodeAudioData(arrayBuf);
+        document.getElementById('voiceDurationDisplay').innerText = voiceBuffer.duration.toFixed(1) + 's';
+      } catch (e) {
+        console.warn('Voice decode warning:', e);
+      }
+    }
+
+    function setVoiceVolume(v) {
+      voiceVolume = parseFloat(v);
+      document.getElementById('voiceVolumeDisplay').innerText = Math.round(voiceVolume * 100) + '%';
+      const player = document.getElementById('voiceAudioPlayer');
+      if (player) player.volume = Math.min(1, voiceVolume);
+    }
+
+    function clearVoiceTrack() {
+      voiceBlob = null;
+      voiceBuffer = null;
+      if (voiceAudioUrl) { URL.revokeObjectURL(voiceAudioUrl); voiceAudioUrl = null; }
+      const player = document.getElementById('voiceAudioPlayer');
+      player.pause();
+      player.src = '';
+      player.style.display = 'none';
+      document.getElementById('voicePreviewBox').style.display = 'none';
+      document.getElementById('btnClearVoice').style.display = 'none';
+      document.getElementById('voiceRecTime').innerText = '00:00.0';
+      logActivity('Voice track cleared');
+    }
+
+    // ── Natify AI Chatbot Client ──
+    let isNatifyOpen = false;
+
+    function toggleNatifyChat() {
+      isNatifyOpen = !isNatifyOpen;
+      const modal = document.getElementById('natifyChatContainer');
+      if (modal) {
+        modal.style.display = isNatifyOpen ? 'flex' : 'none';
+        if (isNatifyOpen) {
+          document.getElementById('natifyInput').focus();
+        }
+      }
+    }
+
+    function sendNatifyQuick(prompt) {
+      const input = document.getElementById('natifyInput');
+      if (input) {
+        input.value = prompt;
+        sendNatifyMessage();
+      }
+    }
+
+    async function sendNatifyMessage() {
+      const input = document.getElementById('natifyInput');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      appendNatifyBubble('user', text);
+
+      const typingId = 'natify-typing-' + Date.now();
+      appendNatifyBubble('bot', '<span style="font-style:italic;color:var(--text-muted)">Natify is thinking...</span>', typingId);
+
+      try {
+        const resp = await fetch('/api/v1/natify/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await resp.json();
+
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+
+        let contentHtml = data.reply.replace(/\n/g, '<br>');
+        if (data.action) {
+          if (data.action.type === 'CREATE_MUSIC') {
+            contentHtml += '<br><br>🚀 <em>Launching AI Music Engine now...</em>';
+          } else if (data.action.type === 'SET_PORTION') {
+            contentHtml += '<br><br>🎛️ <em>Portion faders automatically adjusted!</em>';
+          } else if (data.action.type === 'SET_THEME') {
+            contentHtml += '<br><br>🎨 <em>Applied theme across IncuBrix studio!</em>';
+          } else if (data.action.type === 'START_VOICE') {
+            contentHtml += '<br><br>🎙️ <em>Voice recorder activated!</em>';
+          }
+        }
+        appendNatifyBubble('bot', contentHtml);
+
+        if (data.action) {
+          executeNatifyAction(data.action);
+        }
+      } catch (err) {
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+        appendNatifyBubble('bot', '⚠️ Sorry, could not reach Natify backend: ' + err.message);
+      }
+    }
+
+    function appendNatifyBubble(sender, html, id) {
+      const container = document.getElementById('natifyMessages');
+      if (!container) return;
+      const bubble = document.createElement('div');
+      bubble.className = 'natify-bubble ' + sender;
+      if (id) bubble.id = id;
+
+      if (sender === 'bot') {
+        bubble.innerHTML = `
+          <img src="/static/natify_logo.png" class="bubble-avatar" alt="Natify">
+          <div class="bubble-content">${html}</div>
+        `;
+      } else {
+        bubble.innerHTML = `
+          <div class="bubble-content">${html}</div>
+        `;
+      }
+      container.appendChild(bubble);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function executeNatifyAction(action) {
+      if (!action || !action.type) return;
+      logActivity('Natify executed: ' + action.type, 'ok');
+
+      if (action.type === 'CREATE_MUSIC') {
+        switchMode('create');
+        if (action.payload && action.payload.prompt) {
+          document.getElementById('promptInput').value = action.payload.prompt;
+        }
+        if (action.payload && action.payload.duration_s) {
+          document.getElementById('durationSlider').value = action.payload.duration_s;
+          updateDuration(action.payload.duration_s);
+        }
+        startGeneration();
+      } else if (action.type === 'SET_PORTION') {
+        const profile = (action.payload && action.payload.profile) || 'drumsMaxBassMin';
+        applyPortionProfile(profile);
+      } else if (action.type === 'SET_THEME') {
+        const theme = (action.payload && action.payload.theme) || 'midnight';
+        setTheme(theme);
+      } else if (action.type === 'START_VOICE') {
+        if (!isVoiceRecording) {
+          toggleVoiceRecording();
+        }
+      } else if (action.type === 'HIGHLIGHT_EXPORT') {
+        const card = document.getElementById('portionCard');
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth' });
+          renderAndDownloadCustomMix();
+        }
+      }
+    }
 
     function ensureAudioCtx() {
       if (!audioCtx) {
@@ -2146,6 +2869,13 @@
             stemAudio[s].play().catch(() => {});
           }
         });
+        if (voiceAudioUrl) {
+          const vPlayer = document.getElementById('voiceAudioPlayer');
+          if (vPlayer) {
+            vPlayer.currentTime = refTime;
+            vPlayer.play().catch(() => {});
+          }
+        }
         isPlaying = true;
         document.getElementById('btnPlay').classList.add('playing');
         document.getElementById('playIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
@@ -2156,6 +2886,10 @@
     function pauseAll() {
       isPlaying = false;
       STEMS.forEach(s => { if (stemAudio[s]) stemAudio[s].pause(); });
+      if (voiceAudioUrl) {
+        const vPlayer = document.getElementById('voiceAudioPlayer');
+        if (vPlayer) vPlayer.pause();
+      }
       document.getElementById('btnPlay').classList.remove('playing');
       document.getElementById('playIcon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
       if (vuAnimFrame) { cancelAnimationFrame(vuAnimFrame); vuAnimFrame = null; }
@@ -2164,6 +2898,10 @@
     function stopPlayback() {
       pauseAll();
       STEMS.forEach(s => { if (stemAudio[s]) stemAudio[s].currentTime = 0; });
+      if (voiceAudioUrl) {
+        const vPlayer = document.getElementById('voiceAudioPlayer');
+        if (vPlayer) { vPlayer.pause(); vPlayer.currentTime = 0; }
+      }
       document.getElementById('scrubFill').style.width = '0%';
       document.getElementById('timecode').innerText = '00:00.0';
       clearVU();
@@ -2191,6 +2929,10 @@
       const dur = stemAudio[referenceStem].duration || totalDuration;
       const t = pct * dur;
       STEMS.forEach(s => { if (stemAudio[s]) stemAudio[s].currentTime = t; });
+      if (voiceAudioUrl) {
+        const vPlayer = document.getElementById('voiceAudioPlayer');
+        if (vPlayer) vPlayer.currentTime = t;
+      }
     }
 
     function fmtTime(s) {
