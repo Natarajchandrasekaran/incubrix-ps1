@@ -106,12 +106,16 @@ async def correlation_id_middleware(request: Request, call_next):
     return response
 
 
-# ─── Root Redirect to Docs ───
-from fastapi.responses import RedirectResponse
+# ─── Root: Interactive Audio Studio UI ───
+from fastapi.responses import HTMLResponse
 
-@app.get("/", include_in_schema=False)
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def root():
-    """Redirect root to interactive Swagger API docs."""
+    """Serve the interactive IncuBrix AI Background Music Studio UI."""
+    studio_html_path = _Path(__file__).parent / "ui" / "studio.html"
+    if studio_html_path.exists():
+        return HTMLResponse(content=studio_html_path.read_text(encoding="utf-8"))
+    from fastapi.responses import RedirectResponse
     return RedirectResponse(url="/docs")
 
 
