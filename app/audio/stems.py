@@ -180,7 +180,7 @@ def _mock_separate(
     stems = []
     band_configs = [
         ("drums", 50, 1800),     # Percussion punch, kick, snare body and snap
-        ("bass", 35, 300),       # Deep bass fundamental and warmth
+        ("bass", 40, 700),       # Deep bass fundamental + audible punchy harmonics
         ("other", 300, 3500),    # Midrange harmony, rhythm chords, pads
         ("melody", 2000, 15000), # Lead melody, synth top end, shimmer
     ]

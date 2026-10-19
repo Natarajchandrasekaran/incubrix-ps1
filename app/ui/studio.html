@@ -711,10 +711,33 @@
     .btn-download-stem:hover { color: var(--accent); }
 
     .mixer-actions {
-      margin-top: 14px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-primary);
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-download-primary {
+      background: var(--accent);
+      color: #000;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s;
+    }
+
+    .btn-download-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px var(--accent-glow);
     }
 
     /* ============================================
@@ -1094,12 +1117,13 @@
             </div>
           </div>
 
-          <div class="mixer-actions">
-            <a href="#" class="header-link" id="btnDownloadMix" target="_blank" style="display:none;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download Master WAV
+          <div class="mixer-actions" id="exportSection" style="display:none;">
+            <span style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-right:6px;text-transform:uppercase;letter-spacing:0.5px;">Export Track:</span>
+            <a href="#" class="btn-download-primary" id="btnDownloadMix" target="_blank" download>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Full Mix (.WAV)
             </a>
-            <a href="#" class="header-link" id="btnDownloadManifest" target="_blank" style="display:none;">
+            <a href="#" class="header-link" id="btnDownloadManifest" target="_blank">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               JSON Manifest
             </a>
@@ -1288,6 +1312,7 @@
     function onJobDone(d) {
       totalDuration = d.actual_duration_seconds || 15;
       showMetrics(d.actual_loudness_lufs || -16, -1, totalDuration, -48);
+      document.getElementById('exportSection').style.display = 'flex';
       document.getElementById('btnDownloadMix').href = d.output_url;
       document.getElementById('btnDownloadMix').style.display = 'inline-flex';
       const manifest = d.manifest_url || '/output/' + d.job_id + '/music_manifest.json';
@@ -1304,6 +1329,7 @@
       totalDuration = d.duration_seconds;
       const diff = d.stem_verification ? d.stem_verification.difference_db : null;
       showMetrics(d.loudness_lufs, d.true_peak_dbtp, d.duration_seconds, diff);
+      document.getElementById('exportSection').style.display = 'flex';
       document.getElementById('btnDownloadMix').href = d.master_url;
       document.getElementById('btnDownloadMix').style.display = 'inline-flex';
       if (d.stems) {
@@ -1486,18 +1512,31 @@
       if (!isPlaying) return;
       STEMS.forEach(stem => {
         let level = 0;
+        const effectiveGain = (muted[stem] || (soloStem && soloStem !== stem)) ? 0 : volumes[stem];
+        
+        if (effectiveGain === 0) {
+          drawVU(stem, 0);
+          return;
+        }
+
         if (stemAnalyser[stem]) {
           const data = new Uint8Array(stemAnalyser[stem].frequencyBinCount);
           stemAnalyser[stem].getByteFrequencyData(data);
-          let sum = 0;
-          for (let i = 0; i < data.length; i++) sum += data[i];
-          level = sum / (data.length * 255);
+          let peakVal = 0;
+          let sumVal = 0;
+          for (let i = 0; i < data.length; i++) {
+            if (data[i] > peakVal) peakVal = data[i];
+            sumVal += data[i];
+          }
+          const avgVal = sumVal / data.length;
+          // Combine peak (for bass/kicks) with average (for sustained pads)
+          const rawLevel = (peakVal * 0.7 + avgVal * 0.3) / 255.0;
+          level = rawLevel * effectiveGain;
         } else {
-          // Simulated VU when no Web Audio analyser
-          const gain = (muted[stem] || (soloStem && soloStem !== stem)) ? 0 : volumes[stem];
-          level = gain * (0.3 + 0.5 * Math.sin(Date.now() * 0.01 + stem.charCodeAt(0) * 2));
-          level = Math.max(0, Math.min(1, level));
+          // Fallback simulation when Web Audio analyser not active
+          level = effectiveGain * (0.35 + 0.45 * Math.sin(Date.now() * 0.012 + stem.charCodeAt(0) * 3));
         }
+        level = Math.max(0, Math.min(1, level));
         drawVU(stem, level);
       });
       vuAnimFrame = requestAnimationFrame(startVULoop);
