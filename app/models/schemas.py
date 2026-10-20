@@ -275,3 +275,36 @@ class NatifyResponse(BaseModel):
     reply: str
     action: Optional[NatifyAction] = None
     suggestions: list[str] = Field(default_factory=list)
+
+
+# ─── AI Voiceover Models ───
+
+class VoiceGender(str, enum.Enum):
+    FEMALE = "female"
+    MALE = "male"
+
+
+class VoiceAgeCategory(str, enum.Enum):
+    CHILD = "child"
+    YOUNG_ADULT = "young_adult"
+    MIDDLE_AGED = "middle_aged"
+    SENIOR = "senior"
+
+
+class VoiceGenerateRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=2000, description="Script or speech text to read aloud")
+    gender: VoiceGender = Field(default=VoiceGender.FEMALE)
+    age_category: VoiceAgeCategory = Field(default=VoiceAgeCategory.YOUNG_ADULT)
+    rate: str = Field(default="+0%", description="Speaking speed adjustment, e.g. +10% or -10%")
+    pitch: str = Field(default="+0Hz", description="Voice pitch adjustment, e.g. +5Hz or -5Hz")
+
+
+class VoiceGenerateResponse(BaseModel):
+    voice_id: str
+    audio_url: str
+    text: str
+    gender: str
+    age_category: str
+    voice_name: str
+    duration_seconds: float
+

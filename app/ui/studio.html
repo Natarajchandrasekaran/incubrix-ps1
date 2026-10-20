@@ -9,86 +9,103 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ============================================
-       THEME SYSTEM - 3 Themes via CSS Variables
+       THEME SYSTEM - 3 Themes with Glassmorphism
        ============================================ */
     :root, [data-theme="dark"] {
-      --bg-primary: #111318;
-      --bg-secondary: #1a1d25;
-      --bg-card: #1e2130;
-      --bg-input: #151821;
-      --bg-hover: #252a38;
-      --border-primary: #2a2f3e;
-      --border-accent: #3d4460;
-      --text-primary: #f0f2f7;
-      --text-secondary: #a0a8c0;
-      --text-muted: #6b7394;
+      --bg-primary: #0e1117;
+      --bg-secondary: #161922;
+      --bg-card: rgba(24, 28, 38, 0.78);
+      --bg-card-solid: #181c26;
+      --bg-input: #11141c;
+      --bg-hover: rgba(44, 52, 72, 0.5);
+      --border-primary: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(232, 164, 56, 0.35);
+      --text-primary: #f2f4f8;
+      --text-secondary: #9ea7bd;
+      --text-muted: #656d84;
       --accent: #e8a438;
-      --accent-soft: rgba(232,164,56,0.12);
-      --accent-glow: rgba(232,164,56,0.25);
-      --success: #3ecf8e;
-      --success-soft: rgba(62,207,142,0.12);
-      --danger: #ef5656;
-      --danger-soft: rgba(239,86,86,0.15);
-      --warning: #f0c246;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
-      --radius: 10px;
-      --radius-sm: 6px;
+      --accent-soft: rgba(232, 164, 56, 0.12);
+      --accent-glow: rgba(232, 164, 56, 0.28);
+      --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.12);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.14);
+      --warning: #f59e0b;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.25);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.38);
+      --shadow-lg: 0 16px 44px rgba(0,0,0,0.55);
+      --radius: 12px;
+      --radius-sm: 7px;
+      --card-blur: blur(14px);
     }
 
     [data-theme="light"] {
       --bg-primary: #f4f6fa;
       --bg-secondary: #ffffff;
-      --bg-card: #ffffff;
-      --bg-input: #f0f2f7;
-      --bg-hover: #e8ebf2;
-      --border-primary: #dce0eb;
-      --border-accent: #b8c0d8;
-      --text-primary: #1a1d2b;
-      --text-secondary: #5a6178;
-      --text-muted: #8b92a8;
+      --bg-card: rgba(255, 255, 255, 0.88);
+      --bg-card-solid: #ffffff;
+      --bg-input: #f1f4f9;
+      --bg-hover: #e8ecf4;
+      --border-primary: rgba(0, 0, 0, 0.09);
+      --border-accent: rgba(37, 99, 235, 0.32);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #8492a6;
       --accent: #2563eb;
-      --accent-soft: rgba(37,99,235,0.08);
-      --accent-glow: rgba(37,99,235,0.15);
-      --success: #16a34a;
-      --success-soft: rgba(22,163,74,0.08);
+      --accent-soft: rgba(37, 99, 235, 0.08);
+      --accent-glow: rgba(37, 99, 235, 0.2);
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      --success: #059669;
+      --success-soft: rgba(5, 150, 105, 0.08);
       --danger: #dc2626;
-      --danger-soft: rgba(220,38,38,0.08);
-      --warning: #ca8a04;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+      --danger-soft: rgba(220, 38, 38, 0.08);
+      --warning: #d97706;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+      --shadow-lg: 0 16px 40px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-sm: 7px;
+      --card-blur: blur(14px);
     }
 
     [data-theme="midnight"] {
-      --bg-primary: #0a192f;
-      --bg-secondary: #112240;
-      --bg-card: #152a4a;
-      --bg-input: #0d1f3c;
-      --bg-hover: #1a3358;
-      --border-primary: #1e3a5f;
-      --border-accent: #2d5086;
-      --text-primary: #e6f1ff;
-      --text-secondary: #8892b0;
-      --text-muted: #5a6a8a;
+      --bg-primary: #060c18;
+      --bg-secondary: #0b1426;
+      --bg-card: rgba(13, 26, 48, 0.78);
+      --bg-card-solid: #0d1a30;
+      --bg-input: #081122;
+      --bg-hover: rgba(25, 48, 86, 0.55);
+      --border-primary: rgba(100, 255, 218, 0.12);
+      --border-accent: rgba(100, 255, 218, 0.38);
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b9eb7;
+      --text-muted: #576b88;
       --accent: #64ffda;
-      --accent-soft: rgba(100,255,218,0.08);
-      --accent-glow: rgba(100,255,218,0.2);
+      --accent-soft: rgba(100, 255, 218, 0.1);
+      --accent-glow: rgba(100, 255, 218, 0.28);
+      --accent-gradient: linear-gradient(135deg, #64ffda 0%, #00b4d8 100%);
       --success: #64ffda;
-      --success-soft: rgba(100,255,218,0.1);
-      --danger: #ff6b6b;
-      --danger-soft: rgba(255,107,107,0.12);
-      --warning: #ffd166;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+      --success-soft: rgba(100, 255, 218, 0.1);
+      --danger: #ff5252;
+      --danger-soft: rgba(255, 82, 82, 0.14);
+      --warning: #ffb703;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.35);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.5);
+      --shadow-lg: 0 16px 44px rgba(0,0,0,0.65);
+      --radius: 12px;
+      --radius-sm: 7px;
+      --card-blur: blur(14px);
     }
 
     /* ============================================
-       BASE STYLES
+       BASE STYLES & RESET
        ============================================ */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       background: var(--bg-primary);
@@ -97,59 +114,62 @@
       min-height: 100vh;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      transition: background 0.3s, color 0.3s;
+      transition: background 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
     }
 
     .container {
-      max-width: 1240px;
+      max-width: 1260px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 16px 20px 24px;
     }
 
     /* ============================================
        HEADER
        ============================================ */
     .header {
-      background: var(--bg-secondary);
+      background: var(--bg-card);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
       border: 1px solid var(--border-primary);
       border-radius: var(--radius);
-      padding: 16px 24px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 20px;
+      gap: 14px;
+      margin-bottom: 16px;
       box-shadow: var(--shadow-md);
+      position: relative;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
-    .brand-logo {
-      width: 40px;
+    .brand-logo-img {
       height: 40px;
-      background: var(--accent-soft);
-      border: 1px solid var(--accent);
+      width: auto;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      object-fit: contain;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
     }
-
-    .brand-logo svg { width: 22px; height: 22px; }
 
     .brand-name {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       letter-spacing: -0.3px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .brand-sub {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
       margin-top: 1px;
     }
@@ -157,22 +177,23 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .header-link {
       background: var(--bg-input);
       border: 1px solid var(--border-primary);
       color: var(--text-secondary);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 7px 12px;
       border-radius: var(--radius-sm);
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
     }
 
@@ -180,40 +201,69 @@
       color: var(--text-primary);
       background: var(--bg-hover);
       border-color: var(--border-accent);
+      transform: translateY(-1px);
     }
 
-    .header-link svg { width: 15px; height: 15px; }
+    .header-link svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-    .theme-btn {
-      background: var(--bg-input);
-      border: 1px solid var(--border-primary);
-      color: var(--text-secondary);
-      width: 38px;
-      height: 38px;
-      border-radius: var(--radius-sm);
+    /* Segmented Pill Theme Switcher */
+    .theme-switcher {
       display: flex;
       align-items: center;
-      justify-content: center;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: 30px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .theme-pill {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
       cursor: pointer;
-      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
     }
 
-    .theme-btn:hover {
-      color: var(--accent);
-      border-color: var(--accent);
-      background: var(--accent-soft);
+    .theme-pill:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
     }
 
-    .theme-btn svg { width: 18px; height: 18px; }
+    .theme-pill.active {
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+      box-shadow: 0 2px 10px var(--accent-glow);
+    }
+
+    [data-theme="light"] .theme-pill.active {
+      color: #ffffff;
+    }
+
+    [data-theme="midnight"] .theme-pill.active {
+      color: #060c18;
+    }
 
     /* ============================================
-       MODE TABS
+       MODE TABS (3-Way Segmented Tabs)
        ============================================ */
     .mode-tabs {
       display: flex;
       gap: 6px;
-      margin-bottom: 20px;
-      background: var(--bg-secondary);
+      margin-bottom: 16px;
+      background: var(--bg-card);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
       border: 1px solid var(--border-primary);
       border-radius: var(--radius);
       padding: 5px;
@@ -222,66 +272,96 @@
     .mode-tab {
       flex: 1;
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       color: var(--text-muted);
       font-family: inherit;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
-      padding: 12px 20px;
-      border-radius: 7px;
+      padding: 10px 16px;
+      border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
     }
 
-    .mode-tab:hover { color: var(--text-secondary); background: var(--bg-hover); }
+    .mode-tab:hover {
+      color: var(--text-secondary);
+      background: var(--bg-hover);
+    }
 
     .mode-tab.active {
       color: var(--text-primary);
       background: var(--accent-soft);
-      border: 1px solid var(--accent);
-      box-shadow: 0 0 12px var(--accent-glow);
+      border-color: var(--accent);
+      box-shadow: 0 0 14px var(--accent-glow);
     }
 
-    .mode-tab svg { width: 16px; height: 16px; }
+    .mode-tab svg { width: 16px; height: 16px; flex-shrink: 0; }
 
     /* ============================================
-       LAYOUT GRID
+       LAYOUT GRID & PANELS
        ============================================ */
     .studio-grid {
       display: grid;
-      grid-template-columns: 400px 1fr;
-      gap: 20px;
+      grid-template-columns: minmax(380px, 420px) 1fr;
+      gap: 16px;
+      align-items: start;
     }
 
-    @media (max-width: 960px) {
+    @media (max-width: 980px) {
       .studio-grid { grid-template-columns: 1fr; }
     }
 
+    /* Smooth Fade-Slide Panel Switching */
+    .mode-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.24s cubic-bezier(0.4, 0, 0.2, 1), transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .mode-panel.active-panel {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* ============================================
-       CARD PANELS
+       CARD CONTAINERS
        ============================================ */
     .card {
       background: var(--bg-card);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
       border: 1px solid var(--border-primary);
       border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 16px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
       box-shadow: var(--shadow-sm);
-      transition: background 0.3s, border-color 0.3s;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    [data-theme="light"] .card:hover {
+      border-color: rgba(0, 0, 0, 0.14);
     }
 
     .card-title {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.7px;
       color: var(--text-secondary);
-      margin-bottom: 16px;
-      padding-bottom: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
       border-bottom: 1px solid var(--border-primary);
       display: flex;
       align-items: center;
@@ -292,23 +372,32 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      color: var(--text-primary);
     }
 
-    .card-title-left svg { width: 16px; height: 16px; color: var(--accent); }
+    .card-title-left svg {
+      width: 16px;
+      height: 16px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
 
     .card-badge {
       font-size: 10px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--accent);
       background: var(--accent-soft);
-      padding: 3px 8px;
+      border: 1px solid var(--border-accent);
+      padding: 2px 7px;
       border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
 
     /* ============================================
-       FORM CONTROLS
+       FORM CONTROLS & INPUTS
        ============================================ */
-    .field { margin-bottom: 16px; }
+    .field { margin-bottom: 14px; }
 
     .field-label {
       display: flex;
@@ -324,6 +413,7 @@
       font-size: 12px;
       font-weight: 700;
       color: var(--accent);
+      font-variant-numeric: tabular-nums;
     }
 
     textarea, input[type="text"] {
@@ -332,9 +422,10 @@
       border: 1px solid var(--border-primary);
       border-radius: var(--radius-sm);
       color: var(--text-primary);
-      padding: 12px;
+      padding: 10px 12px;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 13.5px;
+      line-height: 1.45;
       resize: vertical;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
@@ -347,74 +438,142 @@
 
     input[type="range"] {
       width: 100%;
-      height: 6px;
+      height: 5px;
       -webkit-appearance: none;
+      appearance: none;
       background: var(--bg-input);
       border-radius: 3px;
       border: 1px solid var(--border-primary);
       outline: none;
+      cursor: pointer;
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
+      appearance: none;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: var(--accent);
       cursor: pointer;
       box-shadow: 0 0 8px var(--accent-glow);
+      transition: transform 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
     }
 
     .presets {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
+      gap: 5px;
+      margin-top: 8px;
     }
 
     .preset {
       background: var(--bg-input);
       border: 1px solid var(--border-primary);
       color: var(--text-secondary);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 16px;
+      font-size: 11.5px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .preset:hover {
       color: var(--accent);
       border-color: var(--accent);
       background: var(--accent-soft);
+      transform: translateY(-1px);
     }
 
-    /* ============================================
-       BUTTONS
-       ============================================ */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      margin-top: 10px;
+      user-select: none;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    /* Buttons */
     .btn-primary {
       width: 100%;
       background: var(--accent);
       border: none;
       color: #000;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
-      padding: 14px 20px;
+      padding: 12px 18px;
       border-radius: var(--radius-sm);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       margin-top: 8px;
     }
 
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 16px var(--accent-glow); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .btn-primary svg { width: 16px; height: 16px; }
+    [data-theme="light"] .btn-primary {
+      color: #ffffff;
+    }
+
+    [data-theme="midnight"] .btn-primary {
+      color: #060c18;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary svg { width: 15px; height: 15px; }
+
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(0,0,0,0.25);
+      border-radius: 50%;
+      border-top-color: currentColor;
+      animation: spin 0.8s linear infinite;
+    }
+
+    [data-theme="light"] .spinner {
+      border-color: rgba(255,255,255,0.3);
+      border-top-color: #ffffff;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
     /* ============================================
        FILE UPLOAD ZONE
@@ -422,11 +581,12 @@
     .dropzone {
       border: 2px dashed var(--border-accent);
       border-radius: var(--radius);
-      padding: 36px 20px;
+      padding: 30px 16px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.25s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
+      background: var(--bg-input);
     }
 
     .dropzone:hover, .dropzone.dragover {
@@ -442,26 +602,26 @@
     }
 
     .dropzone-icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 12px;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 10px;
       background: var(--accent-soft);
-      border-radius: 12px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .dropzone-icon svg { width: 24px; height: 24px; color: var(--accent); }
+    .dropzone-icon svg { width: 22px; height: 22px; color: var(--accent); }
 
     .dropzone-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .dropzone-hint {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
     }
 
@@ -472,931 +632,222 @@
       background: var(--accent-soft);
       border: 1px solid var(--accent);
       border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      margin-top: 12px;
-      font-size: 13px;
+      padding: 9px 12px;
+      margin-top: 10px;
+      font-size: 12.5px;
       font-weight: 500;
     }
 
-    .file-info-name { color: var(--text-primary); }
+    .file-info-name {
+      color: var(--text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 250px;
+    }
+
     .file-info-size { color: var(--accent); font-weight: 700; }
 
     /* ============================================
-       METRICS HUD
+       AI VOICEOVER GENERATOR PANEL (NEW)
        ============================================ */
-    .metrics-grid {
+    .voice-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .metric-card {
-      background: var(--bg-input);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      padding: 14px;
-      text-align: center;
-    }
-
-    .metric-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .metric-value {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.5px;
-    }
-
-    .metric-unit {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--success);
-      margin-left: 4px;
-    }
-
-    .metric-sub {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    /* ============================================
-       TRANSPORT BAR
-       ============================================ */
-    .transport {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius);
-      padding: 14px 18px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .transport-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid var(--border-accent);
-      background: var(--bg-input);
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-
-    .transport-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .transport-btn.playing { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
-    .transport-btn svg { width: 16px; height: 16px; }
-
-    .timecode {
-      font-size: 18px;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      min-width: 90px;
-      text-align: center;
-      color: var(--accent);
-    }
-
-    .scrub-container { flex: 1; display: flex; align-items: center; gap: 10px; }
-
-    .scrub-bar {
-      flex: 1;
-      height: 8px;
-      background: var(--bg-input);
-      border-radius: 4px;
-      cursor: pointer;
-      overflow: hidden;
-      border: 1px solid var(--border-primary);
-    }
-
-    .scrub-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 4px;
-      width: 0%;
-      transition: width 0.1s linear;
-    }
-
-    .duration-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      min-width: 70px;
-      text-align: right;
-    }
-
-    /* ============================================
-       MIXER
-       ============================================ */
-    .mixer-channels {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    @media (max-width: 768px) {
-      .mixer-channels { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .channel {
-      background: var(--bg-input);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      padding: 14px 10px;
-      text-align: center;
-      transition: border-color 0.2s;
-    }
-
-    .channel.active-solo { border-color: var(--warning); }
-
-    .channel-name {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
-    }
-
-    .channel-desc {
-      font-size: 10px;
-      color: var(--text-muted);
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
       margin-bottom: 12px;
     }
 
-    /* VU Meter */
-    .vu-meter {
-      display: flex;
-      justify-content: center;
-      gap: 3px;
-      height: 50px;
-      align-items: flex-end;
-      margin-bottom: 12px;
+    @media (max-width: 460px) {
+      .voice-grid { grid-template-columns: 1fr; }
     }
 
-    .vu-bar {
-      width: 8px;
-      background: var(--border-primary);
-      border-radius: 2px;
-      transition: height 0.08s ease-out, background 0.1s;
-      min-height: 4px;
-    }
-
-    .vu-bar.g { background: var(--success); }
-    .vu-bar.y { background: var(--warning); }
-    .vu-bar.r { background: var(--danger); }
-
-    .channel-fader {
-      margin-bottom: 10px;
-    }
-
-    .channel-fader input[type="range"] {
-      width: 100%;
-      height: 4px;
-    }
-
-    .fader-db {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .channel-buttons {
-      display: flex;
-      gap: 4px;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-
-    .btn-mute, .btn-solo {
-      font-family: inherit;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      padding: 5px 10px;
-      border-radius: 4px;
-      border: 1px solid var(--border-primary);
-      background: var(--bg-primary);
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-mute:hover { border-color: var(--danger); color: var(--danger); }
-    .btn-solo:hover { border-color: var(--warning); color: var(--warning); }
-    .btn-mute.active { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
-    .btn-solo.active { background: rgba(240,194,70,0.15); border-color: var(--warning); color: var(--warning); }
-
-    .btn-download-stem {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .btn-download-stem:hover { color: var(--accent); }
-
-    .mixer-actions {
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border-primary);
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn-download-primary {
-      background: var(--accent);
-      color: #000;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 9px 16px;
-      border-radius: var(--radius-sm);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.2s;
-    }
-
-    .btn-download-primary:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 14px var(--accent-glow);
-    }
-
-    /* ============================================
-       ACTIVITY LOG
-       ============================================ */
-    .log-container {
+    .voice-card {
       background: var(--bg-input);
       border: 1px solid var(--border-primary);
       border-radius: var(--radius-sm);
-      max-height: 180px;
-      overflow-y: auto;
-      padding: 10px;
-      font-size: 12px;
-    }
-
-    .log-entry {
-      padding: 4px 0;
-      display: flex;
-      gap: 8px;
-      border-bottom: 1px solid rgba(128,128,128,0.08);
-    }
-
-    .log-entry:last-child { border-bottom: none; }
-
-    .log-time {
-      color: var(--text-muted);
-      font-weight: 600;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .log-msg { color: var(--text-secondary); }
-    .log-msg.ok { color: var(--success); }
-    .log-msg.warn { color: var(--warning); }
-    .log-msg.err { color: var(--danger); }
-
-    /* ============================================
-       FOOTER
-       ============================================ */
-    .footer {
-      margin-top: 28px;
-      padding: 16px 0;
-      border-top: 1px solid var(--border-primary);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .footer a { color: var(--accent); text-decoration: none; }
-    .footer a:hover { text-decoration: underline; }
-
-    .status-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success);
-      margin-right: 6px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--text-secondary);
+      padding: 9px 11px;
       cursor: pointer;
-      margin-top: 12px;
-    }
-
-    .checkbox-row input[type="checkbox"] {
-      accent-color: var(--accent);
-      width: 16px;
-      height: 16px;
-    }
-
-    /* ============================================
-       THEME SWITCHER SEGMENTED PILL
-       ============================================ */
-    .theme-switcher {
-      display: flex;
-      align-items: center;
-      background: var(--bg-input);
-      border: 1px solid var(--border-primary);
-      border-radius: 24px;
-      padding: 3px;
-      gap: 3px;
-    }
-
-    .theme-pill {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      user-select: none;
-    }
-
-    .theme-pill:hover {
-      color: var(--text-primary);
-      background: var(--bg-hover);
-    }
-
-    .theme-pill.active {
-      background: var(--accent);
-      color: #ffffff;
-      box-shadow: 0 2px 10px var(--accent-glow);
-    }
-
-    [data-theme="midnight"] .theme-pill.active {
-      color: #0a192f;
-      font-weight: 700;
-    }
-
-    /* ============================================
-       PORTION ARRANGER & STEM AUTOMATION
-       ============================================ */
-    .portion-tabs-container {
-      margin-bottom: 14px;
-      overflow-x: auto;
-    }
-
-    .portion-tabs {
-      display: flex;
-      gap: 8px;
-      padding-bottom: 4px;
-    }
-
-    .portion-tab-btn {
-      flex: 1;
-      min-width: 120px;
-      background: var(--bg-input);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      padding: 10px 12px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .portion-tab-btn:hover {
-      background: var(--bg-hover);
-      border-color: var(--border-accent);
-    }
-
-    .portion-tab-btn.selected {
-      background: var(--bg-card);
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-soft);
-    }
-
-    .portion-tab-btn.playing {
-      border-color: var(--success);
-      box-shadow: 0 0 12px var(--success-soft);
-      animation: pulse 1.5s infinite;
-    }
-
-    .tab-btn-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .tab-btn-time {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .portion-editor {
-      background: var(--bg-input);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .portion-editor-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border-primary);
-    }
-
-    .portion-info {
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .portion-name-badge {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .portion-time-badge {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent);
-      background: var(--accent-soft);
-      padding: 3px 8px;
-      border-radius: 4px;
-    }
-
-    .portion-live-tag {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--text-muted);
-    }
-
-    .portion-live-tag.active .live-dot {
-      background: var(--success);
-      box-shadow: 0 0 8px var(--success);
-    }
-
-    .portion-quick-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .quick-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-right: 4px;
-    }
-
-    .pill-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-primary);
-      color: var(--text-secondary);
-      font-size: 11.5px;
-      font-weight: 600;
-      padding: 5px 10px;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .pill-btn:hover {
-      color: var(--text-primary);
-      border-color: var(--accent);
-      transform: translateY(-1px);
-    }
-
-    .pill-btn.highlight {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .portion-faders-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    @media (max-width: 768px) {
-      .portion-faders-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .portion-fader-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      padding: 10px;
-      transition: border-color 0.2s;
-    }
-
-    .portion-fader-card:hover {
-      border-color: var(--border-accent);
-    }
-
-    .portion-fader-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .portion-fader-val {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .portion-range {
-      width: 100%;
-      accent-color: var(--accent);
-      cursor: pointer;
-      margin-bottom: 4px;
-    }
-
-    .portion-fader-sub {
-      font-size: 10.5px;
-      color: var(--text-muted);
-    }
-
-    .portion-render-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border-primary);
-    }
-
-    .btn-render-mix {
-      background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 14px var(--accent-glow);
-    }
-
-    .btn-render-mix:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--accent-glow);
-      filter: brightness(1.08);
-    }
-
-    .btn-render-mix:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* ============================================
-       NATIFY AI CHATBOT WIDGET
-       ============================================ */
-    .natify-launcher {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--bg-card);
-      border: 2px solid var(--accent);
-      border-radius: 50px;
-      padding: 6px 14px 6px 6px;
-      box-shadow: 0 8px 30px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
       user-select: none;
     }
 
-    .natify-launcher:hover {
-      transform: translateY(-3px) scale(1.04);
-      box-shadow: 0 12px 36px var(--accent-glow);
+    .voice-card:hover {
+      border-color: var(--border-accent);
+      background: var(--bg-hover);
+      transform: translateY(-1px);
     }
 
-    .natify-launcher-img {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--accent);
+    .voice-card.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      box-shadow: 0 0 0 1px var(--accent), 0 2px 10px var(--accent-glow);
     }
 
-    .natify-launcher-badge {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .natify-pulse {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
-      animation: pulse-ring 2s infinite;
-      pointer-events: none;
-    }
-
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.3); opacity: 0; }
-      100% { transform: scale(1.3); opacity: 0; }
-    }
-
-    .natify-chat-container {
-      position: fixed;
-      bottom: 86px;
-      right: 24px;
-      width: 380px;
-      max-width: calc(100vw - 32px);
-      height: 520px;
-      max-height: calc(100vh - 120px);
-      background: var(--bg-card);
-      border: 1px solid var(--border-accent);
-      border-radius: 16px;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 24px var(--accent-soft);
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(20px) scale(0.96); opacity: 0; }
-      to { transform: translateY(0) scale(1); opacity: 1; }
-    }
-
-    .natify-chat-header {
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border-primary);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .natify-chat-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .natify-chat-logo {
+    .voice-avatar {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      border: 2px solid var(--accent);
-      object-fit: cover;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid var(--border-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
     }
 
-    .natify-chat-title {
-      font-size: 14px;
+    .voice-avatar svg { width: 18px; height: 18px; color: var(--text-secondary); }
+
+    .voice-card.selected .voice-avatar {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .voice-card.selected .voice-avatar svg {
+      color: #000;
+    }
+
+    [data-theme="light"] .voice-card.selected .voice-avatar svg {
+      color: #ffffff;
+    }
+
+    [data-theme="midnight"] .voice-card.selected .voice-avatar svg {
+      color: #060c18;
+    }
+
+    .voice-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .voice-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .voice-name {
+      font-size: 13px;
       font-weight: 700;
       color: var(--text-primary);
     }
 
-    .natify-chat-subtitle {
-      font-size: 11px;
+    .voice-category {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
 
-    .natify-chat-close {
-      background: transparent;
-      border: none;
+    .voice-card.selected .voice-category {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .voice-desc {
+      font-size: 10.5px;
       color: var(--text-muted);
-      font-size: 18px;
-      cursor: pointer;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .voice-result-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-top: 12px;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .voice-result-header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
+      margin-bottom: 8px;
     }
 
-    .natify-chat-close:hover {
-      background: var(--bg-hover);
-      color: var(--text-primary);
-    }
-
-    .natify-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .natify-bubble {
+    .voice-result-actions {
       display: flex;
       gap: 8px;
-      max-width: 90%;
+      margin-top: 10px;
     }
 
-    .natify-bubble.bot {
-      align-self: flex-start;
-    }
-
-    .natify-bubble.user {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-
-    .bubble-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-
-    .bubble-content {
-      background: var(--bg-input);
+    .btn-secondary {
+      background: var(--bg-hover);
       border: 1px solid var(--border-primary);
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 12.5px;
-      line-height: 1.45;
       color: var(--text-primary);
-    }
-
-    .natify-bubble.user .bubble-content {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-    }
-
-    [data-theme="midnight"] .natify-bubble.user .bubble-content {
-      color: #0a192f;
+      font-family: inherit;
+      font-size: 12px;
       font-weight: 600;
-    }
-
-    .natify-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .chip {
-      background: var(--bg-card);
-      border: 1px solid var(--border-accent);
-      color: var(--text-secondary);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 8px;
-      border-radius: 12px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
     }
 
-    .chip:hover {
-      color: var(--accent);
+    .btn-secondary:hover {
       border-color: var(--accent);
+      color: var(--accent);
       transform: translateY(-1px);
     }
 
-    .natify-input-bar {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border-primary);
-      padding: 10px 12px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .natify-input-bar input {
-      flex: 1;
-      background: var(--bg-input);
-      border: 1px solid var(--border-primary);
-      border-radius: 20px;
-      padding: 8px 14px;
-      font-size: 12.5px;
-      color: var(--text-primary);
-      outline: none;
-    }
-
-    .natify-input-bar input:focus {
-      border-color: var(--accent);
-    }
-
-    .natify-send-btn {
-      background: var(--accent);
-      border: none;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      color: #ffffff;
+    .btn-use-voice {
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.15s;
+      gap: 6px;
+      transition: all 0.2s;
     }
 
-    [data-theme="midnight"] .natify-send-btn {
-      color: #0a192f;
+    .btn-use-voice:hover {
+      background: var(--accent);
+      color: #000;
+      transform: translateY(-1px);
     }
 
-    .natify-send-btn:hover {
-      transform: scale(1.08);
-    }
-
-    .natify-send-btn svg { width: 16px; height: 16px; }
+    [data-theme="light"] .btn-use-voice:hover { color: #fff; }
+    [data-theme="midnight"] .btn-use-voice:hover { color: #060c18; }
 
     /* ============================================
-       VOICEOVER & RECORDING CONTROLS
+       VOICEOVER & RECORDING STUDIO
        ============================================ */
     .voice-controls-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 8px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
     }
 
@@ -1404,32 +855,31 @@
       background: var(--bg-input);
       border: 1px solid var(--danger);
       color: var(--text-primary);
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
-      padding: 8px 14px;
+      padding: 7px 12px;
       border-radius: var(--radius-sm);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       transition: all 0.2s;
     }
 
     .btn-record:hover {
       background: var(--danger-soft);
-      border-color: var(--danger);
     }
 
     .btn-record.recording {
       background: var(--danger);
       color: #ffffff;
-      box-shadow: 0 0 16px var(--danger);
+      box-shadow: 0 0 14px var(--danger);
       animation: pulse 1.2s infinite;
     }
 
     .rec-dot {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: var(--danger);
     }
@@ -1444,13 +894,13 @@
       color: var(--text-secondary);
       font-size: 12px;
       font-weight: 600;
-      padding: 8px 12px;
+      padding: 7px 11px;
       border-radius: var(--radius-sm);
       cursor: pointer;
       transition: all 0.2s;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .btn-voice-upload:hover {
@@ -1481,8 +931,907 @@
       gap: 8px;
     }
 
+    /* Highlight Pulse for loaded voice */
+    .highlight-pulse {
+      animation: borderFlash 1.4s ease;
+    }
+
+    @keyframes borderFlash {
+      0%, 100% { border-color: var(--border-primary); }
+      50% { border-color: var(--accent); box-shadow: 0 0 16px var(--accent-glow); }
+    }
+
+    /* ============================================
+       ACTIVITY LOG
+       ============================================ */
+    .log-container {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      max-height: 140px;
+      overflow-y: auto;
+      padding: 8px 10px;
+      font-size: 11.5px;
+    }
+
+    .log-entry {
+      padding: 3px 0;
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid rgba(128,128,128,0.06);
+    }
+
+    .log-entry:last-child { border-bottom: none; }
+
+    .log-time {
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .log-msg { color: var(--text-secondary); word-break: break-word; }
+    .log-msg.ok { color: var(--success); }
+    .log-msg.warn { color: var(--warning); }
+    .log-msg.err { color: var(--danger); }
+
+    /* ============================================
+       METRICS PANEL
+       ============================================ */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .metric-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .metric-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .metric-unit {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--success);
+      margin-left: 3px;
+    }
+
+    .metric-sub {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ============================================
+       TRANSPORT BAR
+       ============================================ */
+    .transport {
+      background: var(--bg-card);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .transport-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border-primary);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .transport-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .transport-btn.playing {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .transport-btn svg { width: 14px; height: 14px; }
+
+    .timecode {
+      font-size: 16px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      min-width: 82px;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    .scrub-container { flex: 1; display: flex; align-items: center; gap: 10px; }
+
+    .scrub-bar {
+      flex: 1;
+      height: 7px;
+      background: var(--bg-input);
+      border-radius: 4px;
+      cursor: pointer;
+      overflow: hidden;
+      border: 1px solid var(--border-primary);
+    }
+
+    .scrub-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.08s linear;
+    }
+
+    .duration-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 65px;
+      text-align: right;
+    }
+
+    /* ============================================
+       PORTION ARRANGER & STEM AUTOMATION
+       ============================================ */
+    .portion-tabs-container {
+      margin-bottom: 12px;
+      overflow-x: auto;
+    }
+
+    .portion-tabs {
+      display: flex;
+      gap: 6px;
+      padding-bottom: 3px;
+    }
+
+    .portion-tab-btn {
+      flex: 1;
+      min-width: 105px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .portion-tab-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-accent);
+    }
+
+    .portion-tab-btn.selected {
+      background: var(--bg-card);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1.5px var(--accent-soft);
+    }
+
+    .portion-tab-btn.playing {
+      border-color: var(--success);
+      box-shadow: 0 0 10px var(--success-soft);
+      animation: pulse 1.5s infinite;
+    }
+
+    .tab-btn-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .tab-btn-time {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .portion-editor {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .portion-editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-primary);
+    }
+
+    .portion-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .portion-name-badge {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .portion-time-badge {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .portion-live-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    .portion-live-tag.active .live-dot {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .portion-quick-bar {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .quick-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 3px;
+    }
+
+    .pill-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .pill-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .pill-btn.highlight {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .portion-faders-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 680px) {
+      .portion-faders-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .portion-fader-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 9px;
+      transition: border-color 0.2s;
+    }
+
+    .portion-fader-card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .portion-fader-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .portion-fader-val {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .portion-range {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+      margin-bottom: 3px;
+    }
+
+    .portion-fader-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .portion-render-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-primary);
+    }
+
+    .btn-render-mix {
+      background: var(--accent-gradient);
+      color: #000;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 9px 15px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 3px 12px var(--accent-glow);
+    }
+
+    [data-theme="light"] .btn-render-mix { color: #ffffff; }
+    [data-theme="midnight"] .btn-render-mix { color: #060c18; }
+
+    .btn-render-mix:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 18px var(--accent-glow);
+      filter: brightness(1.08);
+    }
+
+    .btn-render-mix:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-render-mix svg { width: 14px; height: 14px; }
+
+    /* ============================================
+       MIXER
+       ============================================ */
+    .mixer-channels {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .mixer-channels { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .channel {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 12px 8px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .channel.active-solo { border-color: var(--warning); }
+
+    .channel-name {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .channel-desc {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    /* VU Meter */
+    .vu-meter {
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+      height: 44px;
+      align-items: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .vu-bar {
+      width: 7px;
+      background: var(--border-primary);
+      border-radius: 2px;
+      transition: height 0.08s ease-out, background 0.1s;
+      min-height: 4px;
+    }
+
+    .vu-bar.g { background: var(--success); }
+    .vu-bar.y { background: var(--warning); }
+    .vu-bar.r { background: var(--danger); }
+
+    .channel-fader {
+      margin-bottom: 8px;
+    }
+
+    .channel-fader input[type="range"] {
+      width: 100%;
+      height: 4px;
+    }
+
+    .fader-db {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .channel-buttons {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .btn-mute, .btn-solo {
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-primary);
+      background: var(--bg-primary);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-mute:hover { border-color: var(--danger); color: var(--danger); }
+    .btn-solo:hover { border-color: var(--warning); color: var(--warning); }
+    .btn-mute.active { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+    .btn-solo.active { background: rgba(240,194,70,0.15); border-color: var(--warning); color: var(--warning); }
+
+    .btn-download-stem {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .btn-download-stem:hover { color: var(--accent); }
+    .btn-download-stem svg { width: 11px; height: 11px; }
+
+    .mixer-actions {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-primary);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-download-primary {
+      background: var(--accent);
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    [data-theme="light"] .btn-download-primary { color: #ffffff; }
+    [data-theme="midnight"] .btn-download-primary { color: #060c18; }
+
+    .btn-download-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      margin-top: 24px;
+      padding: 16px 0 10px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--border-accent) 25%, var(--accent) 50%, var(--border-accent) 75%, transparent 100%);
+      opacity: 0.5;
+    }
+
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* ============================================
+       NATIFY AI CHATBOT WIDGET
+       ============================================ */
+    .natify-launcher {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
+      border: 1.5px solid var(--accent);
+      border-radius: 50px;
+      padding: 5px 12px 5px 5px;
+      box-shadow: 0 8px 28px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
+
+    .natify-launcher:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 12px 34px var(--accent-glow);
+    }
+
+    .natify-launcher-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--accent);
+    }
+
+    .natify-launcher-badge {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .natify-pulse {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      animation: pulse-ring 2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.25); opacity: 0; }
+      100% { transform: scale(1.25); opacity: 0; }
+    }
+
+    .natify-chat-container {
+      position: fixed;
+      bottom: 80px;
+      right: 22px;
+      width: 380px;
+      max-width: calc(100vw - 32px);
+      height: 520px;
+      max-height: calc(100vh - 110px);
+      background: var(--bg-card);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
+      border: 1px solid var(--border-accent);
+      border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 20px var(--accent-soft);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(18px) scale(0.96); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .natify-chat-header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-primary);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .natify-chat-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .natify-chat-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      object-fit: cover;
+    }
+
+    .natify-chat-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .natify-chat-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .natify-chat-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .natify-chat-close:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .natify-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .natify-bubble {
+      display: flex;
+      gap: 8px;
+      max-width: 92%;
+    }
+
+    .natify-bubble.bot { align-self: flex-start; }
+    .natify-bubble.user { align-self: flex-end; flex-direction: row-reverse; }
+
+    .bubble-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .bubble-content {
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: var(--text-primary);
+    }
+
+    .natify-bubble.user .bubble-content {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      font-weight: 500;
+    }
+
+    [data-theme="light"] .natify-bubble.user .bubble-content { color: #ffffff; }
+    [data-theme="midnight"] .natify-bubble.user .bubble-content { color: #060c18; }
+
+    .natify-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .chip:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .natify-input-bar {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-primary);
+      padding: 8px 10px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .natify-input-bar input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      border-radius: 20px;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .natify-input-bar input:focus {
+      border-color: var(--accent);
+    }
+
+    .natify-send-btn {
+      background: var(--accent);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      color: #000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+      flex-shrink: 0;
+    }
+
+    [data-theme="light"] .natify-send-btn { color: #ffffff; }
+    [data-theme="midnight"] .natify-send-btn { color: #060c18; }
+
+    .natify-send-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .natify-send-btn svg { width: 14px; height: 14px; }
+
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
   </style>
@@ -1493,9 +1842,7 @@
     <!-- HEADER -->
     <header class="header">
       <div class="brand">
-        <div class="brand-logo" style="background:transparent;border:none;width:auto;height:42px;">
-          <img src="/static/incubrix_logo.png" alt="IncuBrix Logo" style="height:42px;width:auto;border-radius:6px;object-fit:contain;box-shadow:0 2px 10px rgba(0,0,0,0.3);">
-        </div>
+        <img src="/static/incubrix_logo.png" alt="IncuBrix Logo" class="brand-logo-img">
         <div>
           <div class="brand-name">IncuBrix AI Music Studio</div>
           <div class="brand-sub">Intelligent Background Music Engine &bull; Video Stem Arranger</div>
@@ -1518,25 +1865,29 @@
       </div>
     </header>
 
-    <!-- MODE TABS -->
+    <!-- MODE TABS (3-way) -->
     <div class="mode-tabs">
       <button class="mode-tab active" id="tabCreate" onclick="switchMode('create')">
-        <span style="font-size:16px">⚡</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Create Music
       </button>
       <button class="mode-tab" id="tabUpload" onclick="switchMode('upload')">
-        <span style="font-size:16px">🎤</span>
-        Upload & Voiceover
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload &amp; Analyze
+      </button>
+      <button class="mode-tab" id="tabVoice" onclick="switchMode('voice')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        AI Voiceover
       </button>
     </div>
 
     <!-- STUDIO GRID -->
     <div class="studio-grid">
 
-      <!-- LEFT: CONTROLS -->
+      <!-- LEFT COLUMN: CONTROLS & GENERATORS -->
       <div>
-        <!-- CREATE MODE -->
-        <div class="card" id="deckCreate">
+        <!-- TAB 1: CREATE MUSIC MODE -->
+        <div class="card mode-panel active-panel" id="deckCreate">
           <div class="card-title">
             <span class="card-title-left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
@@ -1547,7 +1898,7 @@
 
           <div class="field">
             <label class="field-label">Describe the music style you want</label>
-            <textarea id="promptInput" rows="3" placeholder="e.g. Upbeat corporate showcase with acoustic guitar and warm synth pads">upbeat corporate showcase with energetic acoustic guitar and warm synth pads</textarea>
+            <textarea id="promptInput" rows="3" placeholder="e.g. Upbeat corporate showcase with energetic acoustic guitar and warm synth pads">upbeat corporate showcase with energetic acoustic guitar and warm synth pads</textarea>
             <div class="presets">
               <span class="preset" onclick="applyPreset('Upbeat corporate showcase with energetic acoustic guitar and light drums', 120, 15)">🏢 Corporate</span>
               <span class="preset" onclick="applyPreset('Cinematic dramatic strings building to an inspiring climax with orchestral brass', 84, 20)">🎬 Cinematic</span>
@@ -1579,12 +1930,12 @@
           </button>
         </div>
 
-        <!-- UPLOAD MODE -->
-        <div class="card" id="deckUpload" style="display:none;">
+        <!-- TAB 2: UPLOAD & ANALYZE MODE -->
+        <div class="card mode-panel" id="deckUpload">
           <div class="card-title">
             <span class="card-title-left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              Audio Analyzer
+              Audio Analyzer &amp; Stem Splitter
             </span>
             <span class="card-badge">AI Analysis</span>
           </div>
@@ -1595,7 +1946,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             </div>
             <div class="dropzone-title">Drop your audio file here</div>
-            <div class="dropzone-hint">WAV, MP3, FLAC, OGG or AIFF (first 30 seconds analyzed)</div>
+            <div class="dropzone-hint">WAV, MP3, FLAC, OGG, M4A or AIFF (analyzed &amp; duration synced)</div>
           </div>
 
           <div class="file-info" id="filePreview">
@@ -1605,7 +1956,7 @@
 
           <label class="checkbox-row">
             <input type="checkbox" id="chkNormalize" checked>
-            Normalize to broadcast standard volume
+            <span>Normalize to broadcast standard volume (-16 LUFS)</span>
           </label>
 
           <button class="btn-primary" id="btnUpload" onclick="startAnalysis()" disabled>
@@ -1614,17 +1965,194 @@
           </button>
         </div>
 
+        <!-- TAB 3: AI VOICEOVER GENERATOR (NEW) -->
+        <div class="card mode-panel" id="deckVoice">
+          <div class="card-title">
+            <span class="card-title-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              AI Voiceover Studio
+            </span>
+            <span class="card-badge">Neural Speech</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Voiceover Script</label>
+            <textarea id="voiceScriptInput" rows="3" placeholder="Paste your video script, dialogue, or promotional narration here...">Welcome to IncuBrix AI Studio! Transform your video productions with intelligent background music and studio-grade voice narration synchronized automatically.</textarea>
+          </div>
+
+          <!-- 8 Voice Selection Cards Grid -->
+          <div class="field" style="margin-bottom: 10px;">
+            <div class="field-label">
+              <span>Select Speaker Voice</span>
+              <span class="field-value" id="selectedVoiceNameDisplay">Emma (Female Young Adult)</span>
+            </div>
+            <div class="voice-grid" id="voiceCardsContainer">
+              <!-- Female Voices -->
+              <div class="voice-card" data-voice-id="ana" onclick="selectVoice('ana')">
+                <div class="voice-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name">Ana</span>
+                    <span class="voice-category">Child</span>
+                  </div>
+                  <div class="voice-desc">Cute, cartoon-like</div>
+                </div>
+              </div>
+
+              <div class="voice-card selected" data-voice-id="emma" onclick="selectVoice('emma')">
+                <div class="voice-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name">Emma</span>
+                    <span class="voice-category">Young</span>
+                  </div>
+                  <div class="voice-desc">Cheerful, conversational</div>
+                </div>
+              </div>
+
+              <div class="voice-card" data-voice-id="jenny" onclick="selectVoice('jenny')">
+                <div class="voice-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name">Jenny</span>
+                    <span class="voice-category">Pro</span>
+                  </div>
+                  <div class="voice-desc">Friendly, polished</div>
+                </div>
+              </div>
+
+              <div class="voice-card" data-voice-id="aria" onclick="selectVoice('aria')">
+                <div class="voice-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name">Aria</span>
+                    <span class="voice-category">Senior</span>
+                  </div>
+                  <div class="voice-desc">Warm storyteller</div>
+                </div>
+              </div>
+
+              <!-- Male Voices -->
+              <div class="voice-card" data-voice-id="maisie" onclick="selectVoice('maisie')">
+                <div class="voice-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name">Maisie</span>
+                    <span class="voice-category">Child</span>
+                  </div>
+                  <div class="voice-desc">Young, energetic</div>
+                </div>
+              </div>
+
+              <div class="voice-card" data-voice-id="andrew" onclick="selectVoice('andrew')">
+                <div class="voice-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name">Andrew</span>
+                    <span class="voice-category">Young</span>
+                  </div>
+                  <div class="voice-desc">Warm, authentic</div>
+                </div>
+              </div>
+
+              <div class="voice-card" data-voice-id="brian" onclick="selectVoice('brian')">
+                <div class="voice-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name">Brian</span>
+                    <span class="voice-category">Pro</span>
+                  </div>
+                  <div class="voice-desc">Approachable, sincere</div>
+                </div>
+              </div>
+
+              <div class="voice-card" data-voice-id="christopher" onclick="selectVoice('christopher')">
+                <div class="voice-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name">Christopher</span>
+                    <span class="voice-category">Senior</span>
+                  </div>
+                  <div class="voice-desc">Authoritative, deep</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rate & Pitch Sliders -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div class="field" style="margin-bottom:0;">
+              <div class="field-label">
+                <span>Speed / Rate</span>
+                <span class="field-value" id="voiceRateDisplay">0% (Normal)</span>
+              </div>
+              <input type="range" id="voiceRateSlider" min="-20" max="20" value="0" step="1" oninput="updateVoiceRate(this.value)">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <div class="field-label">
+                <span>Pitch Shift</span>
+                <span class="field-value" id="voicePitchDisplay">0 Hz (Natural)</span>
+              </div>
+              <input type="range" id="voicePitchSlider" min="-10" max="10" value="0" step="1" oninput="updateVoicePitch(this.value)">
+            </div>
+          </div>
+
+          <button class="btn-primary" id="btnGenVoice" onclick="startVoiceGeneration()">
+            <span class="spinner" id="voiceSpinner" style="display:none;"></span>
+            <svg id="voiceGenIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <span id="btnGenVoiceText">Generate Voiceover</span>
+          </button>
+
+          <!-- Generated AI Voice Result Box -->
+          <div class="voice-result-box" id="aiVoiceResultBox" style="display:none;">
+            <div class="voice-result-header">
+              <span style="font-size:12px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:var(--success)"><polyline points="20 6 9 17 4 12"/></svg>
+                <span id="aiVoiceResultTitle">Voiceover Ready</span>
+              </span>
+              <span class="card-badge" id="aiVoiceDurationBadge">0.0s</span>
+            </div>
+            <audio id="aiVoicePlayer" controls style="width:100%;height:32px;border-radius:4px;margin-bottom:6px;"></audio>
+            <div class="voice-result-actions">
+              <button class="btn-use-voice" id="btnUseVoiceAsTrack" onclick="applyGeneratedVoiceToTrack()" style="flex:1;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+                Use as Voice Track
+              </button>
+              <a href="#" class="btn-secondary" id="dlAiVoiceMp3" download="incubrix_voiceover.mp3" style="flex:1;justify-content:center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download MP3
+              </a>
+            </div>
+          </div>
+        </div>
+
         <!-- VOICEOVER & AUDIO RECORDING TRACK -->
         <div class="card" id="voiceoverCard">
           <div class="card-title">
             <span class="card-title-left">
-              <span style="font-size:18px">🎙️</span>
-              Voiceover & Speech Studio
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              Voiceover &amp; Speech Studio
             </span>
             <span class="card-badge" id="voiceStatusBadge">Auto-Ducking</span>
           </div>
-          <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:12px;line-height:1.45;">
-            Record your voice live via microphone or upload pre-recorded speech. Voice blends over your background track with automatic -12 dB music ducking upon export.
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;line-height:1.45;">
+            Record your voice live, upload audio, or load generated AI speech. Voice synchronizes during playback and auto-ducks the background music by -12 dB.
           </p>
 
           <div class="voice-controls-row">
@@ -1636,20 +2164,22 @@
 
             <label class="btn-voice-upload" title="Upload audio file (.wav, .mp3)">
               <input type="file" id="voiceFileInput" accept="audio/*" style="display:none;" onchange="handleVoiceFileUpload(this.files)">
-              <span>📁 Upload Voice</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Upload Voice</span>
             </label>
 
             <button class="btn-voice-upload" id="btnClearVoice" onclick="clearVoiceTrack()" style="display:none;color:var(--danger);border-color:var(--danger-soft);">
-              <span>🗑️ Clear Voice</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+              <span>Clear Voice</span>
             </button>
           </div>
 
           <div class="voice-preview-box" id="voicePreviewBox" style="display:none;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
               <span style="font-size:11.5px;font-weight:700;color:var(--text-primary);" id="voiceTrackLabel">🎙️ Voice Track Loaded</span>
-              <span style="font-size:11px;color:var(--accent);" id="voiceDurationDisplay">0.0s</span>
+              <span style="font-size:11px;color:var(--accent);font-weight:700;" id="voiceDurationDisplay">0.0s</span>
             </div>
-            <audio id="voiceAudioPlayer" controls style="width:100%;height:32px;border-radius:4px;margin-bottom:8px;"></audio>
+            <audio id="voiceAudioPlayer" controls style="width:100%;height:32px;border-radius:4px;margin-bottom:6px;"></audio>
             <div class="voice-settings-row">
               <div style="display:flex;align-items:center;gap:8px;flex:1;">
                 <span style="font-size:11px;font-weight:600;color:var(--text-muted);">Voice Level:</span>
@@ -1659,7 +2189,7 @@
             </div>
           </div>
 
-          <label class="checkbox-row" style="margin-top:10px;margin-bottom:0;">
+          <label class="checkbox-row" style="margin-top:8px;margin-bottom:0;">
             <input type="checkbox" id="chkAutoDuck" checked>
             <span>Auto-duck music during voiceover (-12 dB)</span>
           </label>
@@ -1676,15 +2206,15 @@
           <div class="log-container" id="activityLog">
             <div class="log-entry">
               <span class="log-time">[Ready]</span>
-              <span class="log-msg">AI Music Engine initialized. Ready for use.</span>
+              <span class="log-msg ok">AI Music Engine initialized. Ready for use.</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT: RESULTS -->
+      <!-- RIGHT COLUMN: RESULTS, TRANSPORT, ARRANGER, MIXER -->
       <div>
-        <!-- METRICS -->
+        <!-- METRICS HUD -->
         <div class="card">
           <div class="card-title">
             <span class="card-title-left">
@@ -1697,32 +2227,32 @@
             <div class="metric-card">
               <div class="metric-label">Volume Level</div>
               <div class="metric-value" id="hudLufs">-16.0<span class="metric-unit">LUFS</span></div>
-              <div class="metric-sub">Target: -16.0 (industry standard)</div>
+              <div class="metric-sub">Target: -16.0 (EBU R128)</div>
             </div>
             <div class="metric-card">
               <div class="metric-label">Peak Loudness</div>
               <div class="metric-value" id="hudPeak">-1.0<span class="metric-unit">dBTP</span></div>
-              <div class="metric-sub">Ceiling: not exceeding -1.0</div>
+              <div class="metric-sub">Ceiling: max -1.0</div>
             </div>
             <div class="metric-card">
               <div class="metric-label">Track Length</div>
               <div class="metric-value" id="hudDur">0.0<span class="metric-unit">sec</span></div>
-              <div class="metric-sub">Precision-aligned to request</div>
+              <div class="metric-sub">Precision-aligned</div>
             </div>
             <div class="metric-card">
-              <div class="metric-label">Audio Quality</div>
+              <div class="metric-label">Stem Check</div>
               <div class="metric-value" id="hudDiff">---<span class="metric-unit"></span></div>
-              <div class="metric-sub">Stem verification check</div>
+              <div class="metric-sub">Quality verified</div>
             </div>
           </div>
         </div>
 
-        <!-- TRANSPORT -->
+        <!-- TRANSPORT BAR -->
         <div class="transport">
-          <button class="transport-btn" id="btnPlay" onclick="togglePlayback()">
+          <button class="transport-btn" id="btnPlay" onclick="togglePlayback()" title="Play / Pause stems">
             <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           </button>
-          <button class="transport-btn" onclick="stopPlayback()">
+          <button class="transport-btn" onclick="stopPlayback()" title="Stop playback">
             <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="12" height="16" rx="1"/></svg>
           </button>
           <span class="timecode" id="timecode">00:00.0</span>
@@ -1735,23 +2265,23 @@
         </div>
 
         <!-- PORTION ARRANGER & AUTOMATION -->
-        <div class="card" id="portionCard" style="margin-bottom:16px;">
+        <div class="card" id="portionCard" style="margin-bottom:14px;">
           <div class="card-title">
             <span class="card-title-left">
-              <span style="font-size:18px">🎛️</span>
-              Portion Arranger & Stem Automation
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              Portion Arranger &amp; Stem Automation
             </span>
             <span class="card-badge" id="portionStatusBadge">Interactive Arranger</span>
           </div>
-          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;line-height:1.5;">
-            Control instrument levels for each portion of your song (e.g. Intro, Buildup, Drop, Outro).
-            Set <strong>Drums to Maximum and Bass to Minimum</strong> or pick any custom balance for any section, audition live, and render your custom mix!
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;line-height:1.45;">
+            Control instrument levels for each portion of your song (Intro, Buildup, Climax, Outro).
+            Set <strong>Drums to Maximum and Bass to Minimum</strong> or pick any balance, audition in real-time, and bake into a downloadable WAV!
           </p>
 
-          <!-- Timeline Portion Tabs / Blocks -->
+          <!-- Timeline Portion Tabs -->
           <div class="portion-tabs-container">
             <div class="portion-tabs" id="portionTabs">
-              <!-- Dynamically populated pills -->
+              <!-- Populated dynamically by initPortions -->
             </div>
           </div>
 
@@ -1773,7 +2303,7 @@
               <button class="pill-btn highlight" onclick="applyPortionProfile('drumsMaxBassMin')">🥁 Drums Max, Bass Min</button>
               <button class="pill-btn" onclick="applyPortionProfile('fullEnergy')">💥 Full Mix (100%)</button>
               <button class="pill-btn" onclick="applyPortionProfile('voiceBed')">🎙️ Voiceover Bed</button>
-              <button class="pill-btn" onclick="applyPortionProfile('groove')">🎸 Bass & Drums</button>
+              <button class="pill-btn" onclick="applyPortionProfile('groove')">🎸 Bass &amp; Drums</button>
               <button class="pill-btn" onclick="applyPortionProfile('melodySolo')">🎹 Melody Solo</button>
               <button class="pill-btn" onclick="applyPortionProfile('breakdown')">✨ Soft Ambient</button>
             </div>
@@ -1821,25 +2351,25 @@
             <!-- Custom Render Button directly in Portion Arranger -->
             <div class="portion-render-row">
               <button class="btn-render-mix" id="btnPortionRender" onclick="renderAndDownloadCustomMix()">
-                <span>🎛️</span>
-                <span id="btnPortionRenderText">Render & Download Custom Arranged Mix (.WAV)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span id="btnPortionRenderText">Render &amp; Download Custom Arranged Mix (.WAV)</span>
               </button>
-              <div style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;">
-                <span>⚡</span>
-                <span>Bakes your custom stem levels across all portions into a downloadable broadcast-standard WAV</span>
+              <div style="font-size:11.5px;color:var(--text-muted);display:flex;align-items:center;gap:5px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;color:var(--accent);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>Bakes dynamic portion levels across all sections into broadcast WAV</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- MIXER -->
+        <!-- 4-CHANNEL STEM MIXER -->
         <div class="card">
           <div class="card-title">
             <span class="card-title-left">
-              <span style="font-size:18px">🎚️</span>
-              Stem Mixer
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 6h20M2 18h20"/></svg>
+              4-Channel Stem Mixer
             </span>
-            <span class="card-badge">4-Channel Real-Time</span>
+            <span class="card-badge">Real-Time Audio Graph</span>
           </div>
 
           <div class="mixer-channels">
@@ -1860,8 +2390,12 @@
                 <button class="btn-mute" id="mute-drums" onclick="toggleMute('drums')">🔇 M</button>
                 <button class="btn-solo" id="solo-drums" onclick="toggleSolo('drums')">⭐ S</button>
               </div>
-              <a href="#" class="btn-download-stem" id="dl-drums" target="_blank">Download WAV</a>
+              <a href="#" class="btn-download-stem" id="dl-drums" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download WAV
+              </a>
             </div>
+
             <!-- Bass -->
             <div class="channel" id="ch-bass">
               <div class="channel-name">🎸 Bass</div>
@@ -1879,8 +2413,12 @@
                 <button class="btn-mute" id="mute-bass" onclick="toggleMute('bass')">🔇 M</button>
                 <button class="btn-solo" id="solo-bass" onclick="toggleSolo('bass')">⭐ S</button>
               </div>
-              <a href="#" class="btn-download-stem" id="dl-bass" target="_blank">Download WAV</a>
+              <a href="#" class="btn-download-stem" id="dl-bass" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download WAV
+              </a>
             </div>
+
             <!-- Melody -->
             <div class="channel" id="ch-melody">
               <div class="channel-name">🎹 Melody</div>
@@ -1898,8 +2436,12 @@
                 <button class="btn-mute" id="mute-melody" onclick="toggleMute('melody')">🔇 M</button>
                 <button class="btn-solo" id="solo-melody" onclick="toggleSolo('melody')">⭐ S</button>
               </div>
-              <a href="#" class="btn-download-stem" id="dl-melody" target="_blank">Download WAV</a>
+              <a href="#" class="btn-download-stem" id="dl-melody" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download WAV
+              </a>
             </div>
+
             <!-- Harmony / Other -->
             <div class="channel" id="ch-other">
               <div class="channel-name">🎻 Harmony</div>
@@ -1917,22 +2459,25 @@
                 <button class="btn-mute" id="mute-other" onclick="toggleMute('other')">🔇 M</button>
                 <button class="btn-solo" id="solo-other" onclick="toggleSolo('other')">⭐ S</button>
               </div>
-              <a href="#" class="btn-download-stem" id="dl-other" target="_blank">Download WAV</a>
+              <a href="#" class="btn-download-stem" id="dl-other" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download WAV
+              </a>
             </div>
           </div>
 
           <div class="mixer-actions" id="exportSection" style="display:none;">
-            <span style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-right:6px;text-transform:uppercase;letter-spacing:0.5px;">Export Track:</span>
+            <span style="font-size:11.5px;font-weight:700;color:var(--text-secondary);margin-right:4px;text-transform:uppercase;letter-spacing:0.5px;">Export Track:</span>
             <a href="#" class="btn-download-primary" id="btnDownloadMix" target="_blank" download>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               💾 Download Full Mix (.WAV)
             </a>
-            <a href="#" class="btn-render-mix" id="btnDownloadCustom" style="display:none;padding:8px 14px;font-size:12px;" target="_blank" download="custom_arranged_mix.wav">
-              <span>🎛️</span>
+            <a href="#" class="btn-render-mix" id="btnDownloadCustom" style="display:none;padding:8px 12px;font-size:11.5px;" target="_blank" download="custom_arranged_mix.wav">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               Download Custom Arranged Mix (.WAV)
             </a>
             <a href="#" class="header-link" id="btnDownloadManifest" target="_blank">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               📜 JSON Manifest
             </a>
           </div>
@@ -1978,11 +2523,12 @@
         <img src="/static/natify_logo.png" class="bubble-avatar" alt="Natify">
         <div class="bubble-content">
           👋 Hi! I'm <strong>Natify</strong>, your IncuBrix AI studio assistant.<br>
-          I can create tracks, balance your stems (like drums max & bass min), record your voiceover, switch themes, or export your final mix! What would you like to do?
+          I can create tracks, balance stem portions (like drums max &amp; bass min), generate AI voiceovers, switch themes, or export your final mix! What would you like to build?
           <div class="natify-chips">
             <button class="chip" onclick="sendNatifyQuick('Create an upbeat corporate showcase track for 15 seconds')">🏢 Corporate 15s</button>
             <button class="chip" onclick="sendNatifyQuick('Set portion Drums to maximum and Bass to minimum')">🥁 Drums Max, Bass Min</button>
-            <button class="chip" onclick="sendNatifyQuick('Record voiceover for my video')">🎙️ Record Voice</button>
+            <button class="chip" onclick="sendNatifyQuick('Generate an AI voiceover: Welcome to our brand new tech product')">🎙️ AI Voiceover</button>
+            <button class="chip" onclick="sendNatifyQuick('Record voiceover for my video')">🎤 Record Voice</button>
             <button class="chip" onclick="sendNatifyQuick('Switch to Cyber Neon theme')">🌌 Cyber Neon</button>
             <button class="chip" onclick="sendNatifyQuick('Render and download custom mix')">💾 Render Mix</button>
           </div>
@@ -1991,7 +2537,7 @@
     </div>
 
     <div class="natify-input-bar">
-      <input type="text" id="natifyInput" placeholder="Ask Natify (e.g. 'Drums max and bass min')..." onkeydown="if(event.key==='Enter') sendNatifyMessage()">
+      <input type="text" id="natifyInput" placeholder="Ask Natify (e.g. 'Generate voiceover', 'Drums max bass min')..." onkeydown="if(event.key==='Enter') sendNatifyMessage()">
       <button class="natify-send-btn" onclick="sendNatifyMessage()" title="Send command to Natify">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
@@ -1999,7 +2545,7 @@
   </div>
 
   <!-- ============================================
-       JAVASCRIPT - AUDIO ENGINE
+       JAVASCRIPT - AUDIO ENGINE & APP CONTROLLER
        ============================================ -->
   <script>
     // ── Theme System ──
@@ -2011,6 +2557,173 @@
         if (el) el.classList.toggle('active', t === theme);
       });
       logActivity('Switched theme to ' + (theme === 'dark' ? '🌙 Dark' : theme === 'light' ? '☀️ Light' : '🌌 Cyber Neon'));
+    }
+
+    // ── AI Voiceover State & Models ──
+    const AI_VOICES = [
+      { id: 'ana', name: 'Ana', gender: 'female', age: 'child', category: 'Female Child', desc: 'Cute, cartoon-like' },
+      { id: 'emma', name: 'Emma', gender: 'female', age: 'young_adult', category: 'Female Young Adult', desc: 'Cheerful, conversational' },
+      { id: 'jenny', name: 'Jenny', gender: 'female', age: 'middle_aged', category: 'Female Professional', desc: 'Friendly, polished' },
+      { id: 'aria', name: 'Aria', gender: 'female', age: 'senior', category: 'Female Senior', desc: 'Confident storyteller' },
+      { id: 'maisie', name: 'Maisie', gender: 'male', age: 'child', category: 'Male Child', desc: 'Young, energetic' },
+      { id: 'andrew', name: 'Andrew', gender: 'male', age: 'young_adult', category: 'Male Young Adult', desc: 'Warm, authentic' },
+      { id: 'brian', name: 'Brian', gender: 'male', age: 'middle_aged', category: 'Male Professional', desc: 'Approachable, sincere' },
+      { id: 'christopher', name: 'Christopher', gender: 'male', age: 'senior', category: 'Male Senior', desc: 'Authoritative, deep' }
+    ];
+
+    let selectedVoice = AI_VOICES[1]; // Default: Emma
+    let lastGeneratedVoiceData = null;
+
+    function selectVoice(id) {
+      const found = AI_VOICES.find(v => v.id === id);
+      if (found) {
+        selectedVoice = found;
+        document.querySelectorAll('.voice-card').forEach(c => {
+          c.classList.toggle('selected', c.getAttribute('data-voice-id') === id);
+        });
+        const disp = document.getElementById('selectedVoiceNameDisplay');
+        if (disp) disp.innerText = `${found.name} (${found.category})`;
+        logActivity('Selected speaker: ' + found.name + ' (' + found.category + ')');
+      }
+    }
+
+    function selectVoiceByGenderAge(gender, age) {
+      const g = (gender || 'female').toLowerCase();
+      let a = (age || 'young_adult').toLowerCase();
+      if (a === 'middle') a = 'middle_aged';
+      const found = AI_VOICES.find(v => v.gender === g && v.age === a) || AI_VOICES[1];
+      selectVoice(found.id);
+    }
+
+    function updateVoiceRate(v) {
+      const num = parseInt(v, 10);
+      const disp = document.getElementById('voiceRateDisplay');
+      if (disp) disp.innerText = num === 0 ? '0% (Normal)' : (num > 0 ? '+' : '') + num + '%';
+    }
+
+    function updateVoicePitch(v) {
+      const num = parseInt(v, 10);
+      const disp = document.getElementById('voicePitchDisplay');
+      if (disp) disp.innerText = num === 0 ? '0 Hz (Natural)' : (num > 0 ? '+' : '') + num + ' Hz';
+    }
+
+    function formatRate(v) {
+      const num = parseInt(v, 10) || 0;
+      return (num >= 0 ? '+' : '') + num + '%';
+    }
+
+    function formatPitch(v) {
+      const num = parseInt(v, 10) || 0;
+      return (num >= 0 ? '+' : '') + num + 'Hz';
+    }
+
+    async function startVoiceGeneration() {
+      const scriptInput = document.getElementById('voiceScriptInput');
+      const text = scriptInput ? scriptInput.value.trim() : '';
+      if (!text) {
+        logActivity('Please enter a script text for voiceover generation.', 'err');
+        return;
+      }
+
+      const btn = document.getElementById('btnGenVoice');
+      const txt = document.getElementById('btnGenVoiceText');
+      const spinner = document.getElementById('voiceSpinner');
+      const icon = document.getElementById('voiceGenIcon');
+
+      btn.disabled = true;
+      if (spinner) spinner.style.display = 'inline-block';
+      if (icon) icon.style.display = 'none';
+      if (txt) txt.innerText = 'Generating Voice...';
+
+      const rateVal = formatRate(document.getElementById('voiceRateSlider') ? document.getElementById('voiceRateSlider').value : 0);
+      const pitchVal = formatPitch(document.getElementById('voicePitchSlider') ? document.getElementById('voicePitchSlider').value : 0);
+
+      logActivity(`Synthesizing speech with ${selectedVoice.name} (${selectedVoice.category})...`);
+
+      try {
+        const resp = await fetch('/api/v1/voice/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: text,
+            gender: selectedVoice.gender,
+            age_category: selectedVoice.age,
+            rate: rateVal,
+            pitch: pitchVal
+          })
+        });
+
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          const errMsg = (errData.detail && errData.detail.error && errData.detail.error.message) || (typeof errData.detail === 'string' ? errData.detail : 'Speech generation failed');
+          throw new Error(errMsg);
+        }
+
+        const data = await resp.json();
+        lastGeneratedVoiceData = data;
+
+        // Display results in AI Voiceover deck
+        const resBox = document.getElementById('aiVoiceResultBox');
+        const resAudio = document.getElementById('aiVoicePlayer');
+        const resTitle = document.getElementById('aiVoiceResultTitle');
+        const resBadge = document.getElementById('aiVoiceDurationBadge');
+        const dlLink = document.getElementById('dlAiVoiceMp3');
+
+        if (resBox) resBox.style.display = 'block';
+        if (resAudio) {
+          resAudio.src = data.audio_url + '?t=' + Date.now();
+          resAudio.load();
+        }
+        if (resTitle) resTitle.innerText = `${data.voice_name || selectedVoice.name} Speech Generated`;
+        if (resBadge) resBadge.innerText = `${data.duration_seconds}s`;
+        if (dlLink) {
+          dlLink.href = data.audio_url;
+          dlLink.download = `incubrix_${selectedVoice.name.toLowerCase()}_voice.mp3`;
+        }
+
+        logActivity(`AI Voiceover synthesized successfully (${data.duration_seconds}s)!`, 'ok');
+      } catch (err) {
+        logActivity('Voiceover generation error: ' + err.message, 'err');
+      } finally {
+        btn.disabled = false;
+        if (spinner) spinner.style.display = 'none';
+        if (icon) icon.style.display = 'inline-block';
+        if (txt) txt.innerText = 'Generate Voiceover';
+      }
+    }
+
+    async function applyGeneratedVoiceToTrack() {
+      if (!lastGeneratedVoiceData || !lastGeneratedVoiceData.audio_url) {
+        logActivity('No generated voiceover audio available yet.', 'warn');
+        return;
+      }
+      try {
+        logActivity('Loading AI voiceover into synchronized voice studio track...', 'ok');
+        const resp = await fetch(lastGeneratedVoiceData.audio_url);
+        const blob = await resp.blob();
+
+        voiceBlob = blob;
+        voiceAudioUrl = lastGeneratedVoiceData.audio_url;
+
+        const player = document.getElementById('voiceAudioPlayer');
+        player.src = voiceAudioUrl;
+        player.style.display = 'block';
+        document.getElementById('voicePreviewBox').style.display = 'block';
+        document.getElementById('btnClearVoice').style.display = 'inline-flex';
+        document.getElementById('voiceTrackLabel').innerText = `🎙️ ${lastGeneratedVoiceData.voice_name || 'AI Voiceover'}`;
+
+        await decodeVoiceBlob(blob);
+
+        logActivity(`Voice track loaded (${voiceBuffer ? voiceBuffer.duration.toFixed(1) + 's' : 'ready'}) with auto-ducking!`, 'ok');
+
+        const vCard = document.getElementById('voiceoverCard');
+        if (vCard) {
+          vCard.classList.add('highlight-pulse');
+          setTimeout(() => vCard.classList.remove('highlight-pulse'), 1400);
+        }
+      } catch (e) {
+        logActivity('Failed to load generated voice to track: ' + e.message, 'err');
+      }
     }
 
     // ── Portion Arranger & Stem Automation State ──
@@ -2257,7 +2970,6 @@
 
           portions.forEach(p => {
             let g = (p.gains[stem] !== undefined ? p.gains[stem] : 0.8) * (muted[stem] ? 0 : 1);
-            // If auto-ducking is enabled and voiceBuffer exists, duck stems during voice speech
             if (autoDuck && voiceBuffer && p.start < voiceBuffer.duration) {
               g *= 0.25; // -12 dB ducking during speech
             }
@@ -2269,7 +2981,7 @@
           src.start(0);
         }
 
-        // Add Voiceover Track to Mix
+        // Add Voiceover Track to Offline Mix
         if (voiceBuffer) {
           const vSrc = offlineCtx.createBufferSource();
           vSrc.buffer = voiceBuffer;
@@ -2322,26 +3034,26 @@
       }
     }
 
-    // ── State ──
+    // ── Global Studio State ──
     let activeMode = 'create';
     let selectedFile = null;
     let isPlaying = false;
     let totalDuration = 15.0;
     let vuAnimFrame = null;
 
-    // Stem audio - these are the ONLY audio sources (no separate master)
+    // Stem audio - these are the ONLY audio sources (no separate master playing)
     const STEMS = ['drums', 'bass', 'melody', 'other'];
-    const stemAudio = {};      // Audio elements
-    const stemGain = {};       // GainNode per stem
-    const stemAnalyser = {};   // AnalyserNode per stem
-    const stemSource = {};     // MediaElementSourceNode per stem
+    const stemAudio = {};
+    const stemGain = {};
+    const stemAnalyser = {};
+    const stemSource = {};
     let audioCtx = null;
 
     let volumes = { drums: 0.8, bass: 0.8, melody: 0.8, other: 0.8 };
     let muted =   { drums: false, bass: false, melody: false, other: false };
     let soloStem = null;
-    let stemsReady = false;    // true once stems are loaded
-    let referenceStem = null;  // which stem drives the timecode
+    let stemsReady = false;
+    let referenceStem = null;
 
     // ── Voiceover & Speech Recording State ──
     let mediaRecorder = null;
@@ -2367,7 +3079,7 @@
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         voiceAudioChunks = [];
         mediaRecorder = new MediaRecorder(stream);
-        
+
         mediaRecorder.ondataavailable = e => {
           if (e.data && e.data.size > 0) voiceAudioChunks.push(e.data);
         };
@@ -2380,10 +3092,11 @@
           player.style.display = 'block';
           document.getElementById('voicePreviewBox').style.display = 'block';
           document.getElementById('btnClearVoice').style.display = 'inline-flex';
-          
+          document.getElementById('voiceTrackLabel').innerText = '🎙️ Live Microphone Recording';
+
           await decodeVoiceBlob(voiceBlob);
           logActivity('Voice recording saved (' + (voiceBuffer ? voiceBuffer.duration.toFixed(1) + 's' : 'loaded') + ')', 'ok');
-          
+
           stream.getTracks().forEach(track => track.stop());
         };
 
@@ -2428,7 +3141,7 @@
       player.style.display = 'block';
       document.getElementById('voicePreviewBox').style.display = 'block';
       document.getElementById('btnClearVoice').style.display = 'inline-flex';
-      document.getElementById('voiceTrackLabel').innerText = '🎙️ ' + file.name;
+      document.getElementById('voiceTrackLabel').innerText = '📁 ' + file.name;
 
       await decodeVoiceBlob(file);
       logActivity('Voice file uploaded: ' + file.name, 'ok');
@@ -2520,6 +3233,8 @@
             contentHtml += '<br><br>🎨 <em>Applied theme across IncuBrix studio!</em>';
           } else if (data.action.type === 'START_VOICE') {
             contentHtml += '<br><br>🎙️ <em>Voice recorder activated!</em>';
+          } else if (data.action.type === 'GENERATE_VOICE') {
+            contentHtml += '<br><br>🎙️ <em>Synthesizing speech in AI Voiceover studio...</em>';
           }
         }
         appendNatifyBubble('bot', contentHtml);
@@ -2579,6 +3294,16 @@
         if (!isVoiceRecording) {
           toggleVoiceRecording();
         }
+      } else if (action.type === 'GENERATE_VOICE') {
+        switchMode('voice');
+        if (action.payload && action.payload.text) {
+          const sIn = document.getElementById('voiceScriptInput');
+          if (sIn) sIn.value = action.payload.text;
+        }
+        const g = (action.payload && action.payload.gender) || 'female';
+        const a = (action.payload && (action.payload.age_category || action.payload.age)) || 'young_adult';
+        selectVoiceByGenderAge(g, a);
+        startVoiceGeneration();
       } else if (action.type === 'HIGHLIGHT_EXPORT') {
         const card = document.getElementById('portionCard');
         if (card) {
@@ -2595,9 +3320,10 @@
       if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    // ── Logging ──
+    // ── Activity Logging ──
     function logActivity(msg, cls) {
       const box = document.getElementById('activityLog');
+      if (!box) return;
       const t = new Date().toTimeString().split(' ')[0];
       const div = document.createElement('div');
       div.className = 'log-entry';
@@ -2625,17 +3351,32 @@
       clearVU();
     }
 
-    // ── Mode Switching ──
+    // ── Mode Switching (Create, Upload, AI Voiceover) ──
     function switchMode(mode) {
       if (activeMode !== mode) {
         resetAllAudio();
       }
       activeMode = mode;
-      document.getElementById('tabCreate').classList.toggle('active', mode === 'create');
-      document.getElementById('tabUpload').classList.toggle('active', mode === 'upload');
-      document.getElementById('deckCreate').style.display = mode === 'create' ? 'block' : 'none';
-      document.getElementById('deckUpload').style.display = mode === 'upload' ? 'block' : 'none';
-      logActivity('Switched to ' + (mode === 'create' ? 'Create Music' : 'Upload and Analyze') + ' mode');
+
+      const modes = ['create', 'upload', 'voice'];
+      modes.forEach(m => {
+        const tabEl = document.getElementById('tab' + m.charAt(0).toUpperCase() + m.slice(1));
+        const deckEl = document.getElementById('deck' + m.charAt(0).toUpperCase() + m.slice(1));
+
+        if (tabEl) tabEl.classList.toggle('active', m === mode);
+        if (deckEl) {
+          if (m === mode) {
+            deckEl.style.display = 'block';
+            setTimeout(() => deckEl.classList.add('active-panel'), 10);
+          } else {
+            deckEl.classList.remove('active-panel');
+            deckEl.style.display = 'none';
+          }
+        }
+      });
+
+      const modeTitles = { create: 'Create Music', upload: 'Upload & Analyze', voice: 'AI Voiceover' };
+      logActivity('Switched to ' + (modeTitles[mode] || mode) + ' mode');
     }
 
     function setPrompt(text) { document.getElementById('promptInput').value = text; }
@@ -2666,11 +3407,13 @@
     }
 
     const dz = document.getElementById('dropzoneBox');
-    ['dragenter','dragover'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.add('dragover'); }));
-    ['dragleave','drop'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.remove('dragover'); }));
-    dz.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files.length) handleFileSelect(e.dataTransfer.files); });
+    if (dz) {
+      ['dragenter','dragover'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.add('dragover'); }));
+      ['dragleave','drop'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.remove('dragover'); }));
+      dz.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files.length) handleFileSelect(e.dataTransfer.files); });
+    }
 
-    // ── AI Generate ──
+    // ── AI Generate Music ──
     async function startGeneration() {
       ensureAudioCtx();
       const btn = document.getElementById('btnGenerate');
@@ -2779,6 +3522,15 @@
     function onAnalysisDone(d) {
       resetAllAudio();
       totalDuration = d.duration_seconds;
+
+      // Auto-detect and sync uploaded duration to duration slider & display
+      const durSlider = document.getElementById('durationSlider');
+      if (durSlider) {
+        if (durSlider.max < d.duration_seconds) durSlider.max = Math.ceil(d.duration_seconds);
+        durSlider.value = Math.min(60, Math.round(d.duration_seconds));
+      }
+      updateDuration(Math.round(d.duration_seconds));
+
       const diff = d.stem_verification ? d.stem_verification.difference_db : null;
       showMetrics(d.loudness_lufs, d.true_peak_dbtp, d.duration_seconds, diff);
       document.getElementById('exportSection').style.display = 'flex';
@@ -2813,14 +3565,12 @@
     }
 
     // ── Stem Loading ──
-    // IMPORTANT: We do NOT play a separate "master" audio.
     // The 4 stems ARE the mix. Mute/solo control individual stem volumes.
     function loadStem(name, url) {
       const n = name.toLowerCase();
       const dlBtn = document.getElementById('dl-' + n);
       if (dlBtn) dlBtn.href = url;
 
-      // Create or reuse Audio element
       if (!stemAudio[n]) {
         stemAudio[n] = new Audio();
         stemAudio[n].crossOrigin = 'anonymous';
@@ -2828,7 +3578,6 @@
       stemAudio[n].src = url;
       stemAudio[n].load();
 
-      // Connect to Web Audio graph
       if (audioCtx && !stemSource[n]) {
         try {
           const src = audioCtx.createMediaElementSource(stemAudio[n]);
@@ -2847,13 +3596,10 @@
         } catch (e) { /* already connected */ }
       }
 
-      // First loaded stem becomes the reference for timecode
       if (!referenceStem) referenceStem = n;
     }
 
     // ── Playback Controls ──
-    // Play/pause all 4 stem Audio elements simultaneously.
-    // There is NO separate masterAudio — the stems ARE the mix.
     function togglePlayback() {
       ensureAudioCtx();
       if (!stemsReady) return;
@@ -2861,7 +3607,6 @@
       if (isPlaying) {
         pauseAll();
       } else {
-        // Sync all stems to the reference stem's time before playing
         const refTime = stemAudio[referenceStem] ? stemAudio[referenceStem].currentTime : 0;
         STEMS.forEach(s => {
           if (stemAudio[s]) {
@@ -2907,7 +3652,7 @@
       clearVU();
     }
 
-    // Timecode update driven by the reference stem
+    // Reference stem drives scrub bar & timecode
     setInterval(() => {
       if (!isPlaying || !referenceStem || !stemAudio[referenceStem]) return;
       const cur = stemAudio[referenceStem].currentTime || 0;
@@ -2915,10 +3660,8 @@
       document.getElementById('scrubFill').style.width = ((cur / dur) * 100) + '%';
       document.getElementById('timecode').innerText = fmtTime(cur);
 
-      // Live dynamic portion automation
       checkPortionAutomation(cur);
 
-      // Auto-stop at end
       if (cur >= dur - 0.05) stopPlayback();
     }, 80);
 
@@ -2988,13 +3731,13 @@
       }
     }
 
-    // ── VU Meters ──
+    // ── VU Meters (Real-time with fallback) ──
     function startVULoop() {
       if (!isPlaying) return;
       STEMS.forEach(stem => {
         let level = 0;
         const effectiveGain = (muted[stem] || (soloStem && soloStem !== stem)) ? 0 : volumes[stem];
-        
+
         if (effectiveGain === 0) {
           drawVU(stem, 0);
           return;
@@ -3010,11 +3753,9 @@
             sumVal += data[i];
           }
           const avgVal = sumVal / data.length;
-          // Combine peak (for bass/kicks) with average (for sustained pads)
           const rawLevel = (peakVal * 0.7 + avgVal * 0.3) / 255.0;
           level = rawLevel * effectiveGain;
         } else {
-          // Fallback simulation when Web Audio analyser not active
           level = effectiveGain * (0.35 + 0.45 * Math.sin(Date.now() * 0.012 + stem.charCodeAt(0) * 3));
         }
         level = Math.max(0, Math.min(1, level));
@@ -3031,8 +3772,8 @@
         bar.className = 'vu-bar';
         if (i < lit) {
           const h = (i / count) * count;
-          if (h < 4) bar.style.height = (6 + level * 40) + 'px';
-          else bar.style.height = (4 + level * 30) + 'px';
+          if (h < 4) bar.style.height = (6 + level * 36) + 'px';
+          else bar.style.height = (4 + level * 28) + 'px';
           if (i < 4) bar.classList.add('g');
           else if (i < 6) bar.classList.add('y');
           else bar.classList.add('r');

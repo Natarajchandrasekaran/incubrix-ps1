@@ -508,5 +508,48 @@ class TestNatifyAssistant:
         assert data["action"]["payload"]["tempo_bpm"] == 128
         assert data["action"]["payload"]["duration_seconds"] == 20.0
 
+    def test_natify_voiceover_command(self, client):
+        resp = client.post(
+            "/api/v1/natify/chat",
+            json={"message": "generate a male senior voiceover saying 'Long ago, stories were told around fires'"},
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["action"]["type"] == "GENERATE_VOICE"
+        assert data["action"]["payload"]["gender"] == "male"
+        assert data["action"]["payload"]["age_category"] == "senior"
+
+
+class TestVoiceoverEndpoint:
+    """Tests for POST /api/v1/voice/generate AI voiceover generation."""
+
+    def test_voice_generate_female_young_adult(self, client):
+        payload = {
+            "text": "Welcome to IncuBrix AI background music engine.",
+            "gender": "female",
+            "age_category": "young_adult",
+        }
+        resp = client.post("/api/v1/voice/generate", json=payload)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "audio_url" in data
+        assert data["gender"] == "female"
+        assert data["age_category"] == "young_adult"
+        assert data["duration_seconds"] > 0
+
+    def test_voice_generate_male_senior(self, client):
+        payload = {
+            "text": "Every legendary journey begins with a single bold step.",
+            "gender": "male",
+            "age_category": "senior",
+        }
+        resp = client.post("/api/v1/voice/generate", json=payload)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["gender"] == "male"
+        assert data["age_category"] == "senior"
+        assert "Christopher" in data["voice_name"]
+
+
 
 

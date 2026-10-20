@@ -42,6 +42,10 @@ from app.models.schemas import (
     NatifyResponse,
     RemixRequest,
     RemixResponse,
+    VoiceAgeCategory,
+    VoiceGender,
+    VoiceGenerateRequest,
+    VoiceGenerateResponse,
 )
 
 # ─── Structured logging ───
@@ -682,6 +686,102 @@ async def remix_track_portions(request: RemixRequest):
     )
 
 
+# ─── AI Voiceover Generation Endpoint (Male/Female across All Ages) ───
+
+VOICE_MAP = {
+    ("female", "child"): ("en-US-AnaNeural", "Ana (Child)"),
+    ("female", "young_adult"): ("en-US-EmmaNeural", "Emma (Young Adult)"),
+    ("female", "middle_aged"): ("en-US-JennyNeural", "Jenny (Professional)"),
+    ("female", "senior"): ("en-US-AriaNeural", "Aria (Senior Storyteller)"),
+    ("male", "child"): ("en-GB-MaisieNeural", "Maisie (Child)"),
+    ("male", "young_adult"): ("en-US-AndrewNeural", "Andrew (Young Adult)"),
+    ("male", "middle_aged"): ("en-US-BrianNeural", "Brian (Professional)"),
+    ("male", "senior"): ("en-US-ChristopherNeural", "Christopher (Senior Storyteller)"),
+}
+
+
+@app.post(
+    "/api/v1/voice/generate",
+    tags=["AI Voiceover"],
+    summary="Generate AI Voiceover Script Audio with Male/Female & Age Options",
+    response_model=VoiceGenerateResponse,
+)
+async def generate_voiceover(req: VoiceGenerateRequest):
+    """
+    Generate studio-grade neural speech for video voiceovers.
+    Supports Male & Female voices across Kid, Young Adult, Professional, and Senior categories.
+    Outputs ready-to-duck audio synchronized with background stems.
+    """
+    gender_key = req.gender.value.lower()
+    age_key = req.age_category.value.lower()
+
+    voice_tag, display_name = VOICE_MAP.get(
+        (gender_key, age_key),
+        ("en-US-EmmaNeural", "Emma (Young Adult)")
+    )
+
+    rate = req.rate
+    pitch = req.pitch
+    if age_key == "senior":
+        if gender_key == "female" and pitch == "+0Hz":
+            pitch = "-4Hz"
+            rate = "-8%" if rate == "+0%" else rate
+        elif gender_key == "male" and pitch == "+0Hz":
+            pitch = "-5Hz"
+            rate = "-6%" if rate == "+0%" else rate
+    elif age_key == "child":
+        if gender_key == "male" and pitch == "+0Hz":
+            pitch = "+5Hz"
+            rate = "+5%" if rate == "+0%" else rate
+
+    voice_id = str(uuid.uuid4())
+    out_dir = _output_dir / "voices" / voice_id
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_file = out_dir / "voice.mp3"
+
+    try:
+        import edge_tts
+        import soundfile as sf
+
+        communicate = edge_tts.Communicate(text=req.text, voice=voice_tag, rate=rate, pitch=pitch)
+        await communicate.save(str(out_file))
+
+        info = sf.info(str(out_file))
+        duration = float(info.duration)
+    except Exception as exc:
+        logger.error("voiceover_generation_failed", error=str(exc))
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": {
+                    "code": "VOICE_GENERATION_FAILED",
+                    "message": f"Speech generation error: {str(exc)}",
+                    "retryable": True,
+                }
+            },
+        )
+
+    audio_url = f"/output/voices/{voice_id}/voice.mp3"
+    logger.info(
+        "voiceover_generated",
+        voice_id=voice_id,
+        voice_name=display_name,
+        duration_s=duration,
+        gender=gender_key,
+        age=age_key,
+    )
+
+    return VoiceGenerateResponse(
+        voice_id=voice_id,
+        audio_url=audio_url,
+        text=req.text,
+        gender=gender_key,
+        age_category=age_key,
+        voice_name=display_name,
+        duration_seconds=round(duration, 2),
+    )
+
+
 # ─── Natify AI Assistant Endpoint ───
 
 @app.post(
@@ -751,12 +851,43 @@ async def natify_chat(msg: NatifyMessage):
                 suggestions=["Full energy buildup", "Drums max in drop", "Export WAV"]
             )
 
-    # 3. Voice recording / overdubbing
-    if any(k in text for k in ["record", "mic", "microphone", "sing", "voiceover", "voice"]):
+    # 3. AI Voiceover generation or microphone recording
+    if any(k in text for k in ["voiceover", "voice over", "ai voice", "speak", "tts", "read", "narrat"]):
+        gender = "female"
+        if any(w in text for w in ["male", "man", "boy", "guy"]):
+            gender = "male"
+
+        age = "young_adult"
+        if any(w in text for w in ["kid", "child", "cartoon", "baby"]):
+            age = "child"
+        elif any(w in text for w in ["senior", "elder", "old", "wise", "grandfather", "grandmother"]):
+            age = "senior"
+        elif any(w in text for w in ["middle", "professional", "business", "corporate", "formal"]):
+            age = "middle_aged"
+
+        # Check if there is quote text or script
+        import re
+        quotes = re.findall(r'["\'](.*?)["\']', msg.message)
+        script_text = quotes[0] if quotes else "Welcome to IncuBrix AI Studio! Watch how background music and speech blend seamlessly."
+
+        return NatifyResponse(
+            reply=f"Generating an AI voiceover ({gender.title()}, {age.replace('_', ' ').title()}) for: '{script_text}' 🎙️",
+            action=NatifyAction(
+                type="GENERATE_VOICE",
+                payload={
+                    "text": script_text,
+                    "gender": gender,
+                    "age_category": age
+                }
+            ),
+            suggestions=["Auto-duck music during voice", "Change to Male Senior voice", "Render mix with voiceover"]
+        )
+
+    if any(k in text for k in ["record", "mic", "microphone", "sing"]):
         return NatifyResponse(
             reply="Opening the Voiceover Recording studio! Click the red Record button to capture your microphone audio directly over the background track. 🎙️",
             action=NatifyAction(type="START_VOICE", payload={}),
-            suggestions=["Upload voice file", "Auto-duck music during voice", "Download mix with voice"]
+            suggestions=["Generate AI voiceover instead", "Upload voice file", "Auto-duck music during voice"]
         )
 
     # 4. Download / Export audio instructions
