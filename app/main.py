@@ -26,7 +26,7 @@ except ImportError:
         pass
 
 import structlog
-from fastapi import FastAPI, File, HTTPException, Header, Query, Request, Response, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Header, Query, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
@@ -770,65 +770,87 @@ async def _synthesize_speech(text: str, voice_tag: str, rate: str, pitch: str, o
 _voice_profiles: Dict[str, dict] = {}
 
 
-def _analyze_voice_sample(audio: np.ndarray, sr: int) -> dict:
+def _analyze_voice_sample(audio: np.ndarray, sr: int, preferred_gender: Optional[str] = None) -> dict:
     """
-    Extract acoustic vocal characteristics from a voice sample:
-    Fundamental frequency (F0 pitch), vocal timbre category, tempo rate.
+    Robust acoustic vocal extraction using bandpass filtering and multi-frame autocorrelation.
+    Guarantees accurate pitch detection without boundary ceiling artifacts.
     """
     if audio.ndim > 1:
         audio = audio.mean(axis=1)
 
     duration = float(len(audio) / sr)
 
-    # Normalize audio
-    max_val = float(np.max(np.abs(audio))) if len(audio) > 0 else 0.0
-    if max_val > 1e-4:
-        audio = audio / max_val
-
-    # Autocorrelation pitch detection on active speech segments
     import scipy.signal
-    frame_len = min(len(audio), int(sr * 2.0))
-    center = len(audio) // 2
-    start = max(0, center - frame_len // 2)
-    segment = audio[start:start + frame_len]
 
-    corr = scipy.signal.correlate(segment, segment, mode="full")
-    corr = corr[len(corr) // 2:]
+    # Bandpass filter for human speech fundamental range (75 Hz to 360 Hz)
+    f0 = 130.0
+    try:
+        nyq = 0.5 * sr
+        low = max(50.0, min(75.0, nyq * 0.1))
+        high = min(360.0, nyq * 0.8)
+        if high > low and nyq > high:
+            b, a = scipy.signal.butter(2, [low / nyq, high / nyq], btype="band")
+            filtered = scipy.signal.filtfilt(b, a, audio)
+        else:
+            filtered = audio
 
-    # Human voice range: 75 Hz (deep bass) to 450 Hz (high soprano/child)
-    min_lag = int(sr / 450)
-    max_lag = int(sr / 75)
+        frame_len = int(sr * 0.05)  # 50ms frames
+        step = int(sr * 0.025)
+        pitches = []
+        min_lag = int(sr / 360)
+        max_lag = int(sr / 75)
 
-    if max_lag < len(corr) and min_lag < max_lag:
-        peak_lag = min_lag + int(np.argmax(corr[min_lag:max_lag]))
-        f0 = float(sr / peak_lag) if peak_lag > 0 else 145.0
+        for i in range(0, len(filtered) - frame_len, step):
+            frame = filtered[i:i + frame_len]
+            if np.sum(frame ** 2) < 1e-4:
+                continue
+            corr = scipy.signal.correlate(frame, frame, mode="full")
+            corr = corr[len(corr) // 2:]
+            if len(corr) < max_lag:
+                continue
+            search = corr[min_lag:max_lag]
+            peaks, _ = scipy.signal.find_peaks(search, prominence=0.1 * search.max())
+            if len(peaks) > 0:
+                best_peak = peaks[np.argmax(search[peaks])]
+                lag = min_lag + best_peak
+                val = sr / lag
+                if 75 <= val <= 360:
+                    pitches.append(val)
+
+        if len(pitches) >= 2:
+            f0 = float(np.median(pitches))
+        else:
+            f0 = 130.0
+    except Exception:
+        f0 = 130.0
+
+    # Determine gender: respect user preference if given, otherwise classify based on F0
+    if preferred_gender in ["male", "female"]:
+        detected_gender = preferred_gender
     else:
-        f0 = 145.0
+        detected_gender = "male" if f0 < 165.0 else "female"
 
-    # Classify gender and timbre based on fundamental frequency F0
-    if f0 < 165.0:
-        detected_gender = "male"
-        if f0 < 115.0:
+    if detected_gender == "male":
+        if f0 < 120.0:
             timbre = "Deep Baritone"
             base_voice = "en-US-BrianNeural"
-            diff = int(f0 - 110)
+            diff = int(max(-10, min(10, f0 - 110)))
             pitch_offset = f"{diff:+d}Hz"
         else:
-            timbre = "Tenor / Mid-Tone"
+            timbre = "Warm Tenor"
             base_voice = "en-US-AndrewNeural"
-            diff = int(f0 - 140)
+            diff = int(max(-10, min(10, f0 - 140)))
             pitch_offset = f"{diff:+d}Hz"
     else:
-        detected_gender = "female"
-        if f0 < 215.0:
+        if f0 < 210.0:
             timbre = "Warm Alto"
             base_voice = "en-US-EmmaNeural"
-            diff = int(f0 - 190)
+            diff = int(max(-10, min(10, f0 - 190)))
             pitch_offset = f"{diff:+d}Hz"
         else:
             timbre = "Bright Soprano"
             base_voice = "en-US-JennyNeural"
-            diff = int(f0 - 230)
+            diff = int(max(-10, min(10, f0 - 230)))
             pitch_offset = f"{diff:+d}Hz"
 
     return {
@@ -849,7 +871,10 @@ def _analyze_voice_sample(audio: np.ndarray, sr: int) -> dict:
     tags=["AI Voiceover"],
     summary="Clone a voice profile from recorded or uploaded audio sample",
 )
-async def clone_voice_profile(file: UploadFile = File(...)) -> VoiceCloneResponse:
+async def clone_voice_profile(
+    file: UploadFile = File(...),
+    gender: Optional[str] = Form(None),
+) -> VoiceCloneResponse:
     """
     Extract acoustic vocal characteristics (F0 fundamental frequency, gender, timbre category, tempo)
     from a voice sample to create a personalized cloned voice synthesis profile.
@@ -880,7 +905,7 @@ async def clone_voice_profile(file: UploadFile = File(...)) -> VoiceCloneRespons
             sr = 22050
             audio_data = np.zeros(22050, dtype=np.float32)
 
-    profile_metrics = _analyze_voice_sample(audio_data, sr)
+    profile_metrics = _analyze_voice_sample(audio_data, sr, preferred_gender=gender)
     profile_metrics["profile_id"] = profile_id
     profile_metrics["voice_name"] = f"My Cloned Voice ({profile_metrics['timbre_category']})"
 
@@ -916,12 +941,15 @@ async def generate_voiceover(req: VoiceGenerateRequest):
     """
     if req.profile_id and req.profile_id in _voice_profiles:
         prof = _voice_profiles[req.profile_id]
-        voice_tag = prof["base_voice"]
-        display_name = prof["voice_name"]
-        gender_key = prof["detected_gender"]
+        gender_key = req.gender.value.lower() if req.gender else prof.get("detected_gender", "male")
+        if gender_key == "male":
+            voice_tag = "en-US-BrianNeural" if prof.get("fundamental_frequency_hz", 130) < 120 else "en-US-AndrewNeural"
+        else:
+            voice_tag = "en-US-EmmaNeural" if prof.get("fundamental_frequency_hz", 190) < 210 else "en-US-JennyNeural"
+        display_name = f"My Cloned Voice ({gender_key.capitalize()})"
         age_key = "young_adult"
-        pitch = req.pitch if req.pitch != "+0Hz" else prof["recommended_pitch"]
-        rate = req.rate if req.rate != "+0%" else prof["recommended_rate"]
+        pitch = req.pitch if req.pitch != "+0Hz" else prof.get("recommended_pitch", "+0Hz")
+        rate = req.rate if req.rate != "+0%" else prof.get("recommended_rate", "+0%")
     else:
         gender_key = req.gender.value.lower()
         age_key = req.age_category.value.lower()

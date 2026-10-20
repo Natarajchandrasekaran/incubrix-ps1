@@ -2225,6 +2225,15 @@
               </span>
               <span id="cloneStatusBadge" style="font-size: 10px; font-weight: 700; color: var(--text-muted); padding: 2px 7px; border-radius: 4px; background: rgba(255,255,255,0.05);">No Sample Yet</span>
             </div>
+            <!-- Gender Selector for Cloned Voice -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 11.5px; color: var(--text-secondary); font-weight: 600;">Speaker Gender:</span>
+              <div style="display: flex; gap: 4px; background: var(--bg-card); border-radius: 20px; padding: 2px; border: 1px solid var(--border-primary);">
+                <button type="button" class="pill-btn highlight" id="btnCloneGenderMale" onclick="setCloneGender('male')" style="padding: 3px 12px; font-size: 11px; border-radius: 16px;">👨 Male</button>
+                <button type="button" class="pill-btn" id="btnCloneGenderFemale" onclick="setCloneGender('female')" style="padding: 3px 12px; font-size: 11px; border-radius: 16px;">👩 Female</button>
+              </div>
+            </div>
+
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <button type="button" class="btn-secondary" id="btnRecordSample" onclick="toggleSampleRecording()" style="flex: 1; min-width: 130px; padding: 7px 10px; font-size: 11.5px;">
                 <span class="rec-dot" id="cloneRecDot" style="display: inline-block;"></span>
@@ -2855,6 +2864,29 @@
     let cloneChunks = [];
     let isRecordingSample = false;
     let sampleTimer = null;
+    let cloneGender = 'male'; // Default male profile
+
+    function setCloneGender(g) {
+      cloneGender = g;
+      const btnM = document.getElementById('btnCloneGenderMale');
+      const btnF = document.getElementById('btnCloneGenderFemale');
+      if (btnM) btnM.classList.toggle('highlight', g === 'male');
+      if (btnF) btnF.classList.toggle('highlight', g === 'female');
+      if (currentClonedProfile) {
+        currentClonedProfile.detected_gender = g;
+        currentClonedProfile.base_voice = g === 'male' ? 'en-US-AndrewNeural' : 'en-US-EmmaNeural';
+        currentClonedProfile.voice_name = `My Cloned Voice (${g === 'male' ? 'Male Tenor' : 'Female Alto'})`;
+        const descEl = document.getElementById('clonedVoiceDesc');
+        if (descEl) descEl.innerText = `${g.toUpperCase()} · ${g === 'male' ? 'Warm Tenor' : 'Warm Alto'} (${currentClonedProfile.fundamental_frequency_hz || 135} Hz)`;
+        const disp = document.getElementById('selectedVoiceNameDisplay');
+        if (disp && selectedVoice.id === 'cloned') disp.innerText = currentClonedProfile.voice_name;
+        const infoBox = document.getElementById('cloneProfileInfo');
+        if (infoBox) {
+          infoBox.innerHTML = `<strong>✨ Voice Profile:</strong> ${g.toUpperCase()} · ${g === 'male' ? 'Warm Tenor' : 'Warm Alto'} (${currentClonedProfile.fundamental_frequency_hz || 135} Hz pitch)`;
+        }
+        logActivity(`Cloned voice switched to: ${g === 'male' ? '👨 Male' : '👩 Female'} profile!`, 'ok');
+      }
+    }
 
     async function toggleSampleRecording() {
       if (isRecordingSample) {
@@ -2920,6 +2952,7 @@
 
       const fd = new FormData();
       fd.append('file', blob, filename);
+      fd.append('gender', cloneGender);
 
       try {
         const resp = await fetch('/api/v1/voice/clone', {
@@ -2932,6 +2965,14 @@
         }
         const data = await resp.json();
         currentClonedProfile = data;
+
+        if (data.detected_gender) {
+          cloneGender = data.detected_gender;
+          const btnM = document.getElementById('btnCloneGenderMale');
+          const btnF = document.getElementById('btnCloneGenderFemale');
+          if (btnM) btnM.classList.toggle('highlight', cloneGender === 'male');
+          if (btnF) btnF.classList.toggle('highlight', cloneGender === 'female');
+        }
 
         if (statusBadge) {
           statusBadge.innerText = 'Active ✓';
@@ -3038,7 +3079,7 @@
       try {
         const reqBody = {
           text: text,
-          gender: selectedVoice.gender,
+          gender: selectedVoice.id === 'cloned' ? cloneGender : selectedVoice.gender,
           age_category: selectedVoice.age,
           rate: rateVal,
           pitch: pitchVal
