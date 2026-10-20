@@ -1020,7 +1020,8 @@
       background: var(--bg-input);
       border: 1px solid var(--border-primary);
       border-radius: var(--radius-sm);
-      max-height: 140px;
+      min-height: 110px;
+      max-height: 190px;
       overflow-y: auto;
       padding: 8px 10px;
       font-size: 11.5px;
@@ -2085,14 +2086,6 @@
         </div>
       </div>
       <div class="header-right">
-        <a href="/docs" target="_blank" class="header-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          API Docs
-        </a>
-        <a href="https://github.com/Natarajchandrasekaran/incubrix-ps1" target="_blank" class="header-link">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          Source Code
-        </a>
         <div class="theme-switcher">
           <button class="theme-pill active" id="pill-dark" onclick="setTheme('dark')">🌙 Dark</button>
           <button class="theme-pill" id="pill-light" onclick="setTheme('light')">☀️ Light</button>
@@ -2199,6 +2192,21 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <span id="btnUploadText">Upload and Analyze</span>
           </button>
+
+          <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-primary);">
+            <div style="display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-secondary);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              <span><strong>Duration Sync:</strong> Analyzes tempo &amp; snaps seamlessly to target bars</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-secondary);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              <span><strong>EBU R128:</strong> Automatic broadcast normalization to -16.0 LUFS</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-secondary);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              <span><strong>Stem Separation:</strong> Isolates Drums, Bass, Melody &amp; Harmony parts</span>
+            </div>
+          </div>
         </div>
 
         <!-- TAB 3: AI VOICEOVER GENERATOR (NEW) -->
@@ -2421,63 +2429,6 @@
               </a>
             </div>
           </div>
-        </div>
-
-        <!-- VOICEOVER & AUDIO RECORDING TRACK -->
-        <div class="card" id="voiceoverCard">
-          <div class="card-title">
-            <span class="card-title-left">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-              Voiceover &amp; Speech Studio
-            </span>
-            <span class="card-badge" id="voiceStatusBadge">Auto-Ducking</span>
-          </div>
-          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;line-height:1.45;">
-            Record your voice live, upload audio, or load generated AI speech. Voice synchronizes during playback and auto-ducks the background music by -12 dB.
-          </p>
-
-          <div class="voice-controls-row">
-            <button class="btn-record" id="btnVoiceRecord" onclick="toggleVoiceRecording()">
-              <span class="rec-dot"></span>
-              <span id="btnVoiceRecordText">Record Voice</span>
-            </button>
-            <span class="voice-timecode" id="voiceRecTime">00:00.0</span>
-
-            <label class="btn-voice-upload" title="Upload audio file (.wav, .mp3)">
-              <input type="file" id="voiceFileInput" accept="audio/*" style="display:none;" onchange="handleVoiceFileUpload(this.files)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <span>Upload Voice</span>
-            </label>
-
-            <button class="btn-voice-upload" id="btnClearVoice" onclick="clearVoiceTrack()" style="display:none;color:var(--danger);border-color:var(--danger-soft);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-              <span>Clear Voice</span>
-            </button>
-
-            <button type="button" class="btn-voice-upload" id="btnCloneFromTrack" onclick="cloneFromCurrentVoiceTrack()" style="border-color:var(--border-accent);color:var(--accent);font-weight:700;">
-              <span>✨ Use as Cloned Voice</span>
-            </button>
-          </div>
-
-          <div class="voice-preview-box" id="voicePreviewBox" style="display:none;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-              <span style="font-size:11.5px;font-weight:700;color:var(--text-primary);" id="voiceTrackLabel">🎙️ Voice Track Loaded</span>
-              <span style="font-size:11px;color:var(--accent);font-weight:700;" id="voiceDurationDisplay">0.0s</span>
-            </div>
-            <audio id="voiceAudioPlayer" controls style="width:100%;height:32px;border-radius:4px;margin-bottom:6px;"></audio>
-            <div class="voice-settings-row">
-              <div style="display:flex;align-items:center;gap:8px;flex:1;">
-                <span style="font-size:11px;font-weight:600;color:var(--text-muted);">Voice Level:</span>
-                <input type="range" id="voiceVolumeSlider" min="0" max="1.5" step="0.05" value="1.0" style="flex:1;" oninput="setVoiceVolume(this.value)">
-                <span style="font-size:11px;font-weight:700;color:var(--accent);" id="voiceVolumeDisplay">100%</span>
-              </div>
-            </div>
-          </div>
-
-          <label class="checkbox-row" style="margin-top:8px;margin-bottom:0;">
-            <input type="checkbox" id="chkAutoDuck" checked>
-            <span>Auto-duck music during voiceover (-12 dB)</span>
-          </label>
         </div>
 
         <!-- ACTIVITY LOG -->
@@ -2767,6 +2718,63 @@
             </a>
           </div>
         </div>
+
+        <!-- VOICEOVER & AUDIO RECORDING TRACK (STEM #5) -->
+        <div class="card" id="voiceoverCard">
+          <div class="card-title">
+            <span class="card-title-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              🎙️ Vocal &amp; Voiceover Track
+            </span>
+            <span class="card-badge" id="voiceStatusBadge">Auto-Ducking (-12 dB)</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;line-height:1.45;">
+            Record your voice live, upload audio, or load generated AI speech. Voice synchronizes during playback and auto-ducks the background music by -12 dB.
+          </p>
+
+          <div class="voice-controls-row">
+            <button class="btn-record" id="btnVoiceRecord" onclick="toggleVoiceRecording()">
+              <span class="rec-dot"></span>
+              <span id="btnVoiceRecordText">Record Voice</span>
+            </button>
+            <span class="voice-timecode" id="voiceRecTime">00:00.0</span>
+
+            <label class="btn-voice-upload" title="Upload audio file (.wav, .mp3)">
+              <input type="file" id="voiceFileInput" accept="audio/*" style="display:none;" onchange="handleVoiceFileUpload(this.files)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Upload Voice</span>
+            </label>
+
+            <button class="btn-voice-upload" id="btnClearVoice" onclick="clearVoiceTrack()" style="display:none;color:var(--danger);border-color:var(--danger-soft);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+              <span>Clear Voice</span>
+            </button>
+
+            <button type="button" class="btn-voice-upload" id="btnCloneFromTrack" onclick="cloneFromCurrentVoiceTrack()" style="border-color:var(--border-accent);color:var(--accent);font-weight:700;">
+              <span>✨ Use as Cloned Voice</span>
+            </button>
+          </div>
+
+          <div class="voice-preview-box" id="voicePreviewBox" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+              <span style="font-size:11.5px;font-weight:700;color:var(--text-primary);" id="voiceTrackLabel">🎙️ Voice Track Loaded</span>
+              <span style="font-size:11px;color:var(--accent);font-weight:700;" id="voiceDurationDisplay">0.0s</span>
+            </div>
+            <audio id="voiceAudioPlayer" controls style="width:100%;height:32px;border-radius:4px;margin-bottom:6px;"></audio>
+            <div class="voice-settings-row">
+              <div style="display:flex;align-items:center;gap:8px;flex:1;">
+                <span style="font-size:11px;font-weight:600;color:var(--text-muted);">Voice Level:</span>
+                <input type="range" id="voiceVolumeSlider" min="0" max="1.5" step="0.05" value="1.0" style="flex:1;" oninput="setVoiceVolume(this.value)">
+                <span style="font-size:11px;font-weight:700;color:var(--accent);" id="voiceVolumeDisplay">100%</span>
+              </div>
+            </div>
+          </div>
+
+          <label class="checkbox-row" style="margin-top:8px;margin-bottom:0;">
+            <input type="checkbox" id="chkAutoDuck" checked>
+            <span>Auto-duck music during voiceover (-12 dB)</span>
+          </label>
+        </div>
       </div>
     </div>
 
@@ -2774,6 +2782,17 @@
     <div class="footer">
       <div><span class="status-dot"></span>Engine Online &mdash; Powered by AI Music Generation</div>
       <div>Built by <strong>Nataraj Chandrasekaran</strong> &middot; <a href="https://www.psgtech.edu" target="_blank">PSG College of Technology</a> &middot; 2027</div>
+      <div style="display:flex;gap:14px;align-items:center;">
+        <a href="/docs" target="_blank" style="color:var(--text-muted);display:inline-flex;align-items:center;gap:5px;font-size:11.5px;text-decoration:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          OpenAPI 3.1 Docs
+        </a>
+        <span style="color:var(--border-primary);opacity:0.6;">&bull;</span>
+        <a href="https://github.com/Natarajchandrasekaran/incubrix-ps1" target="_blank" style="color:var(--text-muted);display:inline-flex;align-items:center;gap:5px;font-size:11.5px;text-decoration:none;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          Source Code
+        </a>
+      </div>
     </div>
   </div>
 
