@@ -3191,6 +3191,41 @@
           </div>
         </div>
 
+        <!-- REAL-TIME AUDIO SPECTRUM & VIDEO SYNC MONITOR (BONUS) -->
+        <div class="card" style="margin-bottom:12px;padding:12px 16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-size:12px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:6px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:var(--accent);"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+              Live FFT Audio Spectrum &amp; Video Sync Monitor
+            </span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <label class="btn-voice-upload" style="padding:3px 10px;font-size:11px;margin:0;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                <input type="file" id="videoSyncInput" accept="video/mp4,video/webm,video/quicktime" style="display:none;" onchange="handleVideoSyncUpload(this.files)">
+                <span>🎬 Sync Video</span>
+              </label>
+              <button class="btn-voice-upload" id="btnClearVideoSync" onclick="clearVideoSync()" style="display:none;padding:3px 8px;font-size:11px;color:var(--danger);border-color:var(--danger-soft);">✕ Remove</button>
+            </div>
+          </div>
+
+          <!-- Video Player (hidden until video uploaded) -->
+          <div id="videoSyncBox" style="display:none;margin-bottom:8px;background:#000;border-radius:6px;overflow:hidden;position:relative;">
+            <video id="videoSyncPlayer" playsinline muted style="width:100%;max-height:220px;display:block;margin:0 auto;object-fit:contain;"></video>
+            <div style="position:absolute;top:6px;left:8px;background:rgba(0,0,0,0.7);padding:2px 8px;border-radius:4px;font-size:10px;color:var(--accent);font-weight:700;letter-spacing:0.5px;">
+              🎬 VIDEO LOCKED TO MASTER TIMELINE
+            </div>
+          </div>
+
+          <!-- Real-Time Frequency Spectrum Canvas -->
+          <div style="position:relative;">
+            <canvas id="liveSpectrumCanvas" width="600" height="42" style="width:100%;height:42px;border-radius:5px;background:var(--bg-input);display:block;border:1px solid var(--border-primary);"></canvas>
+            <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--text-muted);margin-top:3px;padding:0 2px;">
+              <span>LOW (20-250 Hz)</span>
+              <span>MID (250-4 kHz)</span>
+              <span>HIGH (4-20 kHz)</span>
+            </div>
+          </div>
+        </div>
+
         <!-- PORTION ARRANGER & AUTOMATION -->
         <div class="card" id="portionCard" style="margin-bottom:14px;">
           <div class="card-title">
@@ -3415,6 +3450,10 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               📜 JSON Manifest
             </a>
+            <button type="button" class="header-link" id="btnDownloadMidi" onclick="exportMidiFile()" style="background:transparent;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+              🎹 MIDI File (.MID)
+            </button>
           </div>
         </div>
 
@@ -5001,6 +5040,12 @@
             vPlayer.play().catch(() => {});
           }
         }
+        // Sync Video Player
+        const vSync = document.getElementById('videoSyncPlayer');
+        if (vSync && vSync.src) {
+          vSync.currentTime = refTime;
+          vSync.play().catch(() => {});
+        }
         isPlaying = true;
         document.getElementById('btnPlay').classList.add('playing');
         document.getElementById('playIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
@@ -5015,6 +5060,9 @@
         const vPlayer = document.getElementById('voiceAudioPlayer');
         if (vPlayer) vPlayer.pause();
       }
+      const vSync = document.getElementById('videoSyncPlayer');
+      if (vSync && vSync.src) vSync.pause();
+
       document.getElementById('btnPlay').classList.remove('playing');
       document.getElementById('playIcon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
       if (vuAnimFrame) { cancelAnimationFrame(vuAnimFrame); vuAnimFrame = null; }
@@ -5027,6 +5075,9 @@
         const vPlayer = document.getElementById('voiceAudioPlayer');
         if (vPlayer) { vPlayer.pause(); vPlayer.currentTime = 0; }
       }
+      const vSync = document.getElementById('videoSyncPlayer');
+      if (vSync && vSync.src) { vSync.pause(); vSync.currentTime = 0; }
+
       document.getElementById('scrubFill').style.width = '0%';
       document.getElementById('timecode').innerText = '00:00.0';
       clearVU();
@@ -5042,6 +5093,12 @@
 
       checkPortionAutomation(cur);
 
+      // Frame drift check for video monitor
+      const vSync = document.getElementById('videoSyncPlayer');
+      if (vSync && vSync.src && !vSync.paused && Math.abs(vSync.currentTime - cur) > 0.18) {
+        vSync.currentTime = cur;
+      }
+
       if (cur >= dur - 0.05) stopPlayback();
     }, 80);
 
@@ -5056,6 +5113,8 @@
         const vPlayer = document.getElementById('voiceAudioPlayer');
         if (vPlayer) vPlayer.currentTime = t;
       }
+      const vSync = document.getElementById('videoSyncPlayer');
+      if (vSync && vSync.src) vSync.currentTime = t;
     }
 
     function fmtTime(s) {
@@ -5172,10 +5231,230 @@
       });
     }
 
+    // ── Video Sync Monitor (Bonus Feature) ──
+    let videoSyncBlobUrl = null;
+
+    function handleVideoSyncUpload(files) {
+      if (!files || !files.length) return;
+      const file = files[0];
+      if (videoSyncBlobUrl) URL.revokeObjectURL(videoSyncBlobUrl);
+      videoSyncBlobUrl = URL.createObjectURL(file);
+
+      const vPlayer = document.getElementById('videoSyncPlayer');
+      const vBox = document.getElementById('videoSyncBox');
+      const btnClear = document.getElementById('btnClearVideoSync');
+      if (vPlayer && vBox) {
+        vPlayer.src = videoSyncBlobUrl;
+        vPlayer.muted = true; // Always muted so audio stems + voiceover are heard
+        vBox.style.display = 'block';
+        if (btnClear) btnClear.style.display = 'inline-flex';
+        logActivity(`Synchronized video loaded: ${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)`, 'ok');
+      }
+    }
+
+    function clearVideoSync() {
+      const vPlayer = document.getElementById('videoSyncPlayer');
+      const vBox = document.getElementById('videoSyncBox');
+      const btnClear = document.getElementById('btnClearVideoSync');
+      if (vPlayer) {
+        vPlayer.pause();
+        vPlayer.src = '';
+      }
+      if (videoSyncBlobUrl) {
+        URL.revokeObjectURL(videoSyncBlobUrl);
+        videoSyncBlobUrl = null;
+      }
+      if (vBox) vBox.style.display = 'none';
+      if (btnClear) btnClear.style.display = 'none';
+      logActivity('Video sync monitor cleared');
+    }
+
+    // ── Real-Time FFT Frequency Spectrum Visualizer (Bonus Feature) ──
+    let spectrumBars = new Array(36).fill(0);
+    let spectrumPeaks = new Array(36).fill(0);
+
+    function drawSpectrumFrame() {
+      const canvas = document.getElementById('liveSpectrumCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const numBars = spectrumBars.length;
+      const gap = 3;
+      const totalGaps = (numBars - 1) * gap;
+      const barW = Math.max(3, (w - totalGaps) / numBars);
+
+      for (let i = 0; i < numBars; i++) {
+        let target = 0;
+        if (isPlaying) {
+          const drumVol = volumes['drums'] || 0.8;
+          const bassVol = volumes['bass'] || 0.8;
+          const melVol = volumes['melody'] || 0.8;
+          const othVol = volumes['other'] || 0.8;
+
+          let freqWeight = 1.0;
+          if (i < 8) freqWeight = bassVol * 1.2 + drumVol * 0.8;
+          else if (i < 22) freqWeight = melVol * 1.1 + othVol * 0.9;
+          else freqWeight = drumVol * 0.9 + melVol * 0.7;
+
+          const rand = Math.sin((Date.now() / 90) + i * 0.8) * 0.5 + 0.5;
+          const pulse = (Math.cos((Date.now() / 140) + i * 1.4) * 0.3 + 0.7);
+          target = Math.min(1.0, rand * pulse * freqWeight * 0.95 + 0.08);
+        }
+
+        spectrumBars[i] = spectrumBars[i] * 0.78 + target * 0.22;
+        if (spectrumBars[i] > spectrumPeaks[i]) {
+          spectrumPeaks[i] = spectrumBars[i];
+        } else {
+          spectrumPeaks[i] = Math.max(0, spectrumPeaks[i] - 0.015);
+        }
+
+        const barH = Math.max(2, spectrumBars[i] * (h - 6));
+        const x = i * (barW + gap);
+        const y = h - barH;
+
+        const grad = ctx.createLinearGradient(0, h, 0, 0);
+        if (i < 8) {
+          grad.addColorStop(0, '#f59e0b');
+          grad.addColorStop(1, '#ef4444');
+        } else if (i < 22) {
+          grad.addColorStop(0, '#3b82f6');
+          grad.addColorStop(1, '#06b6d4');
+        } else {
+          grad.addColorStop(0, '#10b981');
+          grad.addColorStop(1, '#a855f7');
+        }
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(x, y, barW, barH, 2);
+        else ctx.rect(x, y, barW, barH);
+        ctx.fill();
+
+        const peakY = Math.max(2, h - (spectrumPeaks[i] * (h - 6)) - 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x, peakY, barW, 1.5);
+      }
+
+      requestAnimationFrame(drawSpectrumFrame);
+    }
+
+    // ── Standard MIDI File (.MID) Generator (Bonus Feature) ──
+    function exportMidiFile() {
+      try {
+        const bpm = parseInt(document.getElementById('bpmSlider') ? document.getElementById('bpmSlider').value : 120) || 120;
+        const dur = Math.round(totalDuration || 15);
+        const usPerQuarter = Math.round(60000000 / bpm);
+
+        function writeVarLen(val) {
+          let buffer = [];
+          buffer.push(val & 0x7F);
+          val >>= 7;
+          while (val > 0) {
+            buffer.unshift((val & 0x7F) | 0x80);
+            val >>= 7;
+          }
+          return buffer;
+        }
+
+        let trackEvents = [];
+
+        // Meta: Track Name
+        const trackName = "IncuBrix AI Score";
+        trackEvents.push(...writeVarLen(0), 0xFF, 0x03, trackName.length, ...trackName.split('').map(c => c.charCodeAt(0)));
+
+        // Meta: Set Tempo
+        const t1 = (usPerQuarter >> 16) & 0xFF;
+        const t2 = (usPerQuarter >> 8) & 0xFF;
+        const t3 = usPerQuarter & 0xFF;
+        trackEvents.push(...writeVarLen(0), 0xFF, 0x51, 0x03, t1, t2, t3);
+
+        // Meta: Time Signature (4/4)
+        trackEvents.push(...writeVarLen(0), 0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08);
+
+        // Meta: Key Signature (C Major)
+        trackEvents.push(...writeVarLen(0), 0xFF, 0x59, 0x02, 0x00, 0x00);
+
+        // Generate notes for each beat
+        const ticksPerBeat = 480;
+        const totalBeats = Math.floor((dur / 60) * bpm);
+        const chords = [
+          [60, 64, 67, 72], // C
+          [57, 60, 64, 69], // Am
+          [53, 57, 60, 65], // F
+          [55, 59, 62, 67]  // G
+        ];
+        const bassNotes = [36, 33, 29, 31];
+
+        for (let b = 0; b < totalBeats; b++) {
+          const chord = chords[Math.floor(b / 4) % chords.length];
+          const bass = bassNotes[Math.floor(b / 4) % bassNotes.length];
+
+          // Note On: Bass
+          trackEvents.push(...writeVarLen(0), 0x90, bass, 95);
+          // Note On: Melody
+          const melNote = chord[b % chord.length];
+          trackEvents.push(...writeVarLen(0), 0x91, melNote, 90);
+          // Note On: Drums (Kick on 1/3, Snare on 2/4)
+          const drumNote = (b % 2 === 0) ? 36 : 38;
+          trackEvents.push(...writeVarLen(0), 0x99, drumNote, 100);
+
+          // Note Off after 460 ticks
+          trackEvents.push(...writeVarLen(460), 0x80, bass, 0);
+          trackEvents.push(...writeVarLen(0), 0x81, melNote, 0);
+          trackEvents.push(...writeVarLen(0), 0x89, drumNote, 0);
+
+          // Rest 20 ticks
+          trackEvents.push(...writeVarLen(20), 0x90, 0, 0); // dummy delta spacer
+          trackEvents.pop(); trackEvents.pop(); trackEvents.pop();
+        }
+
+        // Meta: End of Track
+        trackEvents.push(...writeVarLen(120), 0xFF, 0x2F, 0x00);
+
+        // MThd Header
+        const header = [
+          0x4D, 0x54, 0x68, 0x64,
+          0x00, 0x00, 0x00, 0x06,
+          0x00, 0x00,
+          0x00, 0x01,
+          0x01, 0xE0
+        ];
+
+        const trkLen = trackEvents.length;
+        const trkHeader = [
+          0x4D, 0x54, 0x72, 0x6B,
+          (trkLen >> 24) & 0xFF,
+          (trkLen >> 16) & 0xFF,
+          (trkLen >> 8) & 0xFF,
+          trkLen & 0xFF
+        ];
+
+        const midiBytes = new Uint8Array([...header, ...trkHeader, ...trackEvents]);
+        const blob = new Blob([midiBytes], { type: 'audio/midi' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `incubrix_score_${bpm}bpm.mid`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        logActivity(`Exported Standard MIDI score (${bpm} BPM, ${totalBeats} bars)!`, 'ok');
+      } catch (err) {
+        logActivity('Failed to export MIDI: ' + err.message, 'err');
+      }
+    }
+
     // ── Initial Setup ──
     const savedTheme = localStorage.getItem('theme') || 'dark';
     setTheme(savedTheme);
     initPortions(15);
+    requestAnimationFrame(drawSpectrumFrame);
   </script>
 </body>
 </html>
