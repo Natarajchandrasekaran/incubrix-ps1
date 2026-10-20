@@ -2444,6 +2444,10 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
               <span>Clear Voice</span>
             </button>
+
+            <button type="button" class="btn-voice-upload" id="btnCloneFromTrack" onclick="cloneFromCurrentVoiceTrack()" style="border-color:var(--border-accent);color:var(--accent);font-weight:700;">
+              <span>✨ Use as Cloned Voice</span>
+            </button>
           </div>
 
           <div class="voice-preview-box" id="voicePreviewBox" style="display:none;">
@@ -3015,12 +3019,18 @@
       const pitchVal = formatPitch(document.getElementById('voicePitchSlider') ? document.getElementById('voicePitchSlider').value : 0);
 
       if (selectedVoice.id === 'cloned' && !currentClonedProfile) {
-        logActivity('Please record or upload a voice sample first to activate your cloned voice.', 'warn');
-        btn.disabled = false;
-        if (spinner) spinner.style.display = 'none';
-        if (icon) icon.style.display = 'inline-block';
-        if (txt) txt.innerText = 'Generate Voiceover';
-        return;
+        if (voiceBlob) {
+          logActivity('Detected your recorded voice! Auto-extracting vocal profile...', 'ok');
+          await uploadVoiceSampleBlob(voiceBlob, 'my_recording.wav');
+        }
+        if (!currentClonedProfile) {
+          logActivity('Please record or upload a voice sample first to activate your cloned voice.', 'warn');
+          btn.disabled = false;
+          if (spinner) spinner.style.display = 'none';
+          if (icon) icon.style.display = 'inline-block';
+          if (txt) txt.innerText = 'Generate Voiceover';
+          return;
+        }
       }
 
       logActivity(`Synthesizing speech with ${selectedVoice.name} (${selectedVoice.category})...`);
@@ -3497,6 +3507,9 @@
           await decodeVoiceBlob(voiceBlob);
           logActivity('Voice recording saved (' + (voiceBuffer ? voiceBuffer.duration.toFixed(1) + 's' : 'loaded') + ')', 'ok');
 
+          // Auto-extract cloned voice profile from recording
+          uploadVoiceSampleBlob(voiceBlob, 'live_recording.wav');
+
           stream.getTracks().forEach(track => track.stop());
         };
 
@@ -3545,6 +3558,25 @@
 
       await decodeVoiceBlob(file);
       logActivity('Voice file uploaded: ' + file.name, 'ok');
+
+      // Auto-extract cloned voice profile from uploaded file
+      uploadVoiceSampleBlob(file, file.name);
+    }
+
+    async function cloneFromCurrentVoiceTrack() {
+      if (!voiceBlob) {
+        logActivity('Please record or upload a voice track first.', 'warn');
+        return;
+      }
+      logActivity('Extracting cloned vocal profile from your recording...', 'ok');
+      await uploadVoiceSampleBlob(voiceBlob, 'track_recording.wav');
+      switchMode('voice');
+      selectVoice('cloned');
+      const scriptInput = document.getElementById('voiceScriptInput');
+      if (scriptInput) {
+        scriptInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        scriptInput.focus();
+      }
     }
 
     async function decodeVoiceBlob(blob) {
