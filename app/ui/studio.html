@@ -3640,6 +3640,27 @@
       document.getElementById('filePreview').style.display = 'flex';
       document.getElementById('btnUpload').disabled = false;
       logActivity('Selected: ' + selectedFile.name + ' (' + (selectedFile.size/1024).toFixed(0) + ' KB)');
+
+      // Immediate browser-side duration auto-detection
+      try {
+        const audioObj = new Audio();
+        const objUrl = URL.createObjectURL(selectedFile);
+        audioObj.src = objUrl;
+        audioObj.onloadedmetadata = () => {
+          const d = Math.round(audioObj.duration);
+          if (d && !isNaN(d)) {
+            const durSlider = document.getElementById('durationSlider');
+            if (durSlider) {
+              if (durSlider.max < d) durSlider.max = Math.ceil(d);
+              durSlider.value = Math.min(120, d);
+            }
+            updateDuration(Math.min(120, d));
+            document.getElementById('fileSizeDisplay').innerText = (selectedFile.size / (1024*1024)).toFixed(1) + ' MB · ' + d + 's';
+            logActivity('Track duration auto-detected: ' + d + 's');
+          }
+          URL.revokeObjectURL(objUrl);
+        };
+      } catch(e) {}
     }
 
     const dz = document.getElementById('dropzoneBox');
