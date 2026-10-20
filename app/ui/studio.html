@@ -2874,7 +2874,7 @@
       if (btnF) btnF.classList.toggle('highlight', g === 'female');
       if (currentClonedProfile) {
         currentClonedProfile.detected_gender = g;
-        currentClonedProfile.base_voice = g === 'male' ? 'en-US-AndrewNeural' : 'en-US-EmmaNeural';
+        currentClonedProfile.base_voice = g === 'male' ? 'en-IN-PrabhatNeural' : 'en-IN-NeerjaNeural';
         currentClonedProfile.voice_name = `My Cloned Voice (${g === 'male' ? 'Male Tenor' : 'Female Alto'})`;
         const descEl = document.getElementById('clonedVoiceDesc');
         if (descEl) descEl.innerText = `${g.toUpperCase()} · ${g === 'male' ? 'Warm Tenor' : 'Warm Alto'} (${currentClonedProfile.fundamental_frequency_hz || 135} Hz)`;
