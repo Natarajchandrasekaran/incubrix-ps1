@@ -2216,6 +2216,28 @@
             <textarea id="voiceScriptInput" rows="3" placeholder="Paste your video script, dialogue, or promotional narration here...">Welcome to IncuBrix AI Studio! Transform your video productions with intelligent background music and studio-grade voice narration synchronized automatically.</textarea>
           </div>
 
+          <!-- VOICE CLONING (RECORD OR UPLOAD SAMPLE) -->
+          <div class="field" style="margin-bottom: 12px; background: var(--bg-input); border: 1px dashed var(--border-accent); border-radius: var(--radius-sm); padding: 10px 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px; color: var(--accent);"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                Clone Your Own Voice
+              </span>
+              <span id="cloneStatusBadge" style="font-size: 10px; font-weight: 700; color: var(--text-muted); padding: 2px 7px; border-radius: 4px; background: rgba(255,255,255,0.05);">No Sample Yet</span>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="btn-secondary" id="btnRecordSample" onclick="toggleSampleRecording()" style="flex: 1; min-width: 130px; padding: 7px 10px; font-size: 11.5px;">
+                <span class="rec-dot" id="cloneRecDot" style="display: inline-block;"></span>
+                <span id="cloneRecBtnText">🎙️ Record Sample (4s)</span>
+              </button>
+              <label class="btn-secondary" style="flex: 1; min-width: 130px; padding: 7px 10px; font-size: 11.5px; cursor: pointer; text-align: center; margin: 0; display: inline-flex; align-items: center; justify-content: center; gap: 5px;">
+                📁 Upload Voice File
+                <input type="file" id="cloneFileInput" accept="audio/*" style="display: none;" onchange="handleVoiceSampleUpload(this.files)">
+              </label>
+            </div>
+            <div id="cloneProfileInfo" style="display: none; margin-top: 8px; font-size: 11px; color: var(--success); background: var(--success-soft); border: 1px solid var(--success); border-radius: 5px; padding: 6px 10px; line-height: 1.4;"></div>
+          </div>
+
           <!-- 8 Voice Selection Cards Grid -->
           <div class="field" style="margin-bottom: 10px;">
             <div class="field-label">
@@ -2326,6 +2348,20 @@
                     <span class="voice-category">Senior</span>
                   </div>
                   <div class="voice-desc">Authoritative, deep</div>
+                </div>
+              </div>
+
+              <!-- Cloned Voice Card (User Sample) -->
+              <div class="voice-card" id="cardClonedVoice" data-voice-id="cloned" onclick="selectVoice('cloned')" style="grid-column: 1 / -1; border-color: rgba(245, 158, 11, 0.45); background: rgba(245, 158, 11, 0.04);">
+                <div class="voice-avatar" style="background: var(--accent-gradient); border-color: var(--accent);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" style="width: 18px; height: 18px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="voice-info">
+                  <div class="voice-name-row">
+                    <span class="voice-name" style="color: var(--accent);">✨ My Cloned Voice</span>
+                    <span class="voice-category" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border-accent);">CUSTOM PROFILE</span>
+                  </div>
+                  <div class="voice-desc" id="clonedVoiceDesc">Record or upload sample above to activate personalized cloned speech</div>
                 </div>
               </div>
             </div>
@@ -2804,11 +2840,115 @@
       { id: 'maisie', name: 'Maisie', gender: 'male', age: 'child', category: 'Male Child', desc: 'Young, energetic' },
       { id: 'andrew', name: 'Andrew', gender: 'male', age: 'young_adult', category: 'Male Young Adult', desc: 'Warm, authentic' },
       { id: 'brian', name: 'Brian', gender: 'male', age: 'middle_aged', category: 'Male Professional', desc: 'Approachable, sincere' },
-      { id: 'christopher', name: 'Christopher', gender: 'male', age: 'senior', category: 'Male Senior', desc: 'Authoritative, deep' }
+      { id: 'christopher', name: 'Christopher', gender: 'male', age: 'senior', category: 'Male Senior', desc: 'Authoritative, deep' },
+      { id: 'cloned', name: 'My Cloned Voice', gender: 'female', age: 'young_adult', category: 'Custom Profile', desc: 'Cloned from voice sample' }
     ];
 
     let selectedVoice = AI_VOICES[1]; // Default: Emma
     let lastGeneratedVoiceData = null;
+    let currentClonedProfile = null;
+    let cloneRecorder = null;
+    let cloneChunks = [];
+    let isRecordingSample = false;
+    let sampleTimer = null;
+
+    async function toggleSampleRecording() {
+      if (isRecordingSample) {
+        stopSampleRecording();
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        cloneChunks = [];
+        cloneRecorder = new MediaRecorder(stream);
+        cloneRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) cloneChunks.push(e.data); };
+        cloneRecorder.onstop = async () => {
+          stream.getTracks().forEach(t => t.stop());
+          const blob = new Blob(cloneChunks, { type: 'audio/wav' });
+          uploadVoiceSampleBlob(blob, 'mic_sample.wav');
+        };
+        cloneRecorder.start();
+        isRecordingSample = true;
+        document.getElementById('cloneRecBtnText').innerText = '⏹️ Stop Recording (Speaking...)';
+        document.getElementById('btnRecordSample').classList.add('recording');
+        logActivity('Recording voice sample... please speak clearly for 3-4 seconds.');
+
+        let secondsLeft = 4;
+        sampleTimer = setInterval(() => {
+          secondsLeft--;
+          if (secondsLeft <= 0) {
+            clearInterval(sampleTimer);
+            if (isRecordingSample) stopSampleRecording();
+          } else {
+            const btnTxt = document.getElementById('cloneRecBtnText');
+            if (btnTxt) btnTxt.innerText = `⏹️ Stop (${secondsLeft}s left)`;
+          }
+        }, 1000);
+      } catch (err) {
+        logActivity('Microphone access error: ' + err.message, 'err');
+      }
+    }
+
+    function stopSampleRecording() {
+      if (sampleTimer) clearInterval(sampleTimer);
+      if (cloneRecorder && cloneRecorder.state !== 'inactive') {
+        cloneRecorder.stop();
+      }
+      isRecordingSample = false;
+      const btnTxt = document.getElementById('cloneRecBtnText');
+      if (btnTxt) btnTxt.innerText = '🎙️ Record Sample (4s)';
+      const btnEl = document.getElementById('btnRecordSample');
+      if (btnEl) btnEl.classList.remove('recording');
+    }
+
+    async function handleVoiceSampleUpload(files) {
+      if (!files || !files.length) return;
+      const file = files[0];
+      logActivity(`Uploading voice sample: ${file.name} (${(file.size/1024).toFixed(0)} KB)...`);
+      await uploadVoiceSampleBlob(file, file.name);
+    }
+
+    async function uploadVoiceSampleBlob(blob, filename) {
+      const statusBadge = document.getElementById('cloneStatusBadge');
+      const infoBox = document.getElementById('cloneProfileInfo');
+      if (statusBadge) statusBadge.innerText = 'Extracting Profile...';
+      logActivity('Analyzing acoustic characteristics of voice sample...');
+
+      const fd = new FormData();
+      fd.append('file', blob, filename);
+
+      try {
+        const resp = await fetch('/api/v1/voice/clone', {
+          method: 'POST',
+          body: fd
+        });
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData.detail || 'Voice analysis failed');
+        }
+        const data = await resp.json();
+        currentClonedProfile = data;
+
+        if (statusBadge) {
+          statusBadge.innerText = 'Active ✓';
+          statusBadge.style.color = 'var(--success)';
+          statusBadge.style.background = 'var(--success-soft)';
+        }
+        if (infoBox) {
+          infoBox.style.display = 'block';
+          infoBox.innerHTML = `<strong>✨ Voice Profile Extracted:</strong> ${data.detected_gender.toUpperCase()} · ${data.timbre_category} (${data.fundamental_frequency_hz} Hz pitch)`;
+        }
+        const descEl = document.getElementById('clonedVoiceDesc');
+        if (descEl) descEl.innerText = `${data.detected_gender.toUpperCase()} · ${data.timbre_category} (${data.fundamental_frequency_hz} Hz)`;
+
+        // Automatically select the cloned voice
+        selectVoice('cloned');
+        logActivity(data.message, 'ok');
+      } catch (err) {
+        if (statusBadge) statusBadge.innerText = 'Error';
+        logActivity('Voice sample analysis error: ' + err.message, 'err');
+      }
+    }
 
     function selectVoice(id) {
       const found = AI_VOICES.find(v => v.id === id);
@@ -2874,19 +3014,33 @@
       const rateVal = formatRate(document.getElementById('voiceRateSlider') ? document.getElementById('voiceRateSlider').value : 0);
       const pitchVal = formatPitch(document.getElementById('voicePitchSlider') ? document.getElementById('voicePitchSlider').value : 0);
 
+      if (selectedVoice.id === 'cloned' && !currentClonedProfile) {
+        logActivity('Please record or upload a voice sample first to activate your cloned voice.', 'warn');
+        btn.disabled = false;
+        if (spinner) spinner.style.display = 'none';
+        if (icon) icon.style.display = 'inline-block';
+        if (txt) txt.innerText = 'Generate Voiceover';
+        return;
+      }
+
       logActivity(`Synthesizing speech with ${selectedVoice.name} (${selectedVoice.category})...`);
 
       try {
+        const reqBody = {
+          text: text,
+          gender: selectedVoice.gender,
+          age_category: selectedVoice.age,
+          rate: rateVal,
+          pitch: pitchVal
+        };
+        if (selectedVoice.id === 'cloned' && currentClonedProfile) {
+          reqBody.profile_id = currentClonedProfile.profile_id;
+        }
+
         const resp = await fetch('/api/v1/voice/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            text: text,
-            gender: selectedVoice.gender,
-            age_category: selectedVoice.age,
-            rate: rateVal,
-            pitch: pitchVal
-          })
+          body: JSON.stringify(reqBody)
         });
 
         if (!resp.ok) {

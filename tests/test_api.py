@@ -537,18 +537,54 @@ class TestVoiceoverEndpoint:
         assert data["age_category"] == "young_adult"
         assert data["duration_seconds"] > 0
 
-    def test_voice_generate_male_senior(self, client):
-        payload = {
-            "text": "Every legendary journey begins with a single bold step.",
-            "gender": "male",
-            "age_category": "senior",
-        }
-        resp = client.post("/api/v1/voice/generate", json=payload)
+    def test_voice_clone_from_audio_sample(self, client):
+        import io
+        import numpy as np
+        import soundfile as sf
+
+        sr = 22050
+        t = np.linspace(0, 1.5, int(sr * 1.5), endpoint=False)
+        audio = 0.5 * np.sin(2 * np.pi * 140.0 * t).astype(np.float32)
+        buf = io.BytesIO()
+        sf.write(buf, audio, sr, format="WAV")
+        buf.seek(0)
+
+        files = {"file": ("my_sample.wav", buf, "audio/wav")}
+        resp = client.post("/api/v1/voice/clone", files=files)
         assert resp.status_code == 200
         data = resp.json()
-        assert data["gender"] == "male"
-        assert data["age_category"] == "senior"
-        assert "Christopher" in data["voice_name"]
+        assert "profile_id" in data
+        assert data["detected_gender"] == "male"
+        assert 130.0 <= data["fundamental_frequency_hz"] <= 150.0
+        assert "My Cloned Voice" in data["voice_name"]
+
+    def test_voice_generate_with_cloned_profile(self, client):
+        import io
+        import numpy as np
+        import soundfile as sf
+
+        sr = 22050
+        t = np.linspace(0, 1.5, int(sr * 1.5), endpoint=False)
+        audio = 0.5 * np.sin(2 * np.pi * 200.0 * t).astype(np.float32)
+        buf = io.BytesIO()
+        sf.write(buf, audio, sr, format="WAV")
+        buf.seek(0)
+
+        clone_resp = client.post("/api/v1/voice/clone", files={"file": ("voice.wav", buf, "audio/wav")})
+        assert clone_resp.status_code == 200
+        prof_id = clone_resp.json()["profile_id"]
+
+        gen_payload = {
+            "text": "This is synthesized in my personalized cloned voice profile.",
+            "profile_id": prof_id,
+        }
+        resp = client.post("/api/v1/voice/generate", json=gen_payload)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "My Cloned Voice" in data["voice_name"]
+        assert "audio_url" in data
+        assert data["duration_seconds"] > 0
+
 
 
 

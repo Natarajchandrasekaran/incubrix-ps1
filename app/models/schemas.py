@@ -297,6 +297,7 @@ class VoiceGenerateRequest(BaseModel):
     age_category: VoiceAgeCategory = Field(default=VoiceAgeCategory.YOUNG_ADULT)
     rate: str = Field(default="+0%", description="Speaking speed adjustment, e.g. +10% or -10%")
     pitch: str = Field(default="+0Hz", description="Voice pitch adjustment, e.g. +5Hz or -5Hz")
+    profile_id: Optional[str] = Field(default=None, description="Optional cloned voice profile ID")
 
 
 class VoiceGenerateResponse(BaseModel):
@@ -307,4 +308,18 @@ class VoiceGenerateResponse(BaseModel):
     age_category: str
     voice_name: str
     duration_seconds: float
+
+
+class VoiceCloneResponse(BaseModel):
+    profile_id: str
+    detected_gender: str
+    fundamental_frequency_hz: float
+    timbre_category: str
+    speaking_rate_wpm: float
+    recommended_pitch: str
+    recommended_rate: str
+    voice_name: str
+    sample_duration_seconds: float
+    message: str
+
 
