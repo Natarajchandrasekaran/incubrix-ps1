@@ -2920,6 +2920,16 @@
         logActivity(`AI Voiceover synthesized successfully (${data.duration_seconds}s)!`, 'ok');
       } catch (err) {
         logActivity('Voiceover generation error: ' + err.message, 'err');
+        // Client-side Web Speech fallback for immediate playback
+        if (window.speechSynthesis) {
+          try {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.pitch = selectedVoice.age === 'senior' ? 0.75 : (selectedVoice.age === 'child' ? 1.35 : 1.0);
+            utter.rate = 1.0;
+            window.speechSynthesis.speak(utter);
+            logActivity('Played speech via client-side audio engine fallback.', 'ok');
+          } catch(e) {}
+        }
       } finally {
         btn.disabled = false;
         if (spinner) spinner.style.display = 'none';

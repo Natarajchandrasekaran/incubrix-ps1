@@ -3,6 +3,7 @@ fastapi==0.115.6
 uvicorn[standard]==0.34.0
 pydantic==2.10.4
 python-multipart==0.0.19
+edge-tts>=7.0.0
 
 # Background Jobs
 celery==5.4.0
@@ -32,5 +33,4 @@ pytest-asyncio==0.25.0
 python-dotenv==1.0.1
 pyyaml==6.0.2
 structlog==24.4.0
-edge-tts>=7.0.0
 
