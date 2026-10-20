@@ -2071,6 +2071,475 @@
     [data-theme="midnight"] ::selection {
       color: #060c18;
     }
+
+    /* ============================================
+       PAGE NAVIGATION: DASHBOARD & WORKSPACE VIEWS
+       ============================================ */
+    .view-page {
+      display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .view-page.active-view {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================
+       DASHBOARD INTRO HUB STYLES
+       ============================================ */
+    .dashboard-hero {
+      text-align: center;
+      padding: 32px 24px 28px;
+      margin-bottom: 24px;
+      background: radial-gradient(circle at 50% 0%, var(--accent-soft) 0%, transparent 70%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-primary);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .dashboard-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--border-accent);
+      color: var(--accent);
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+    }
+
+    .dashboard-title {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .dashboard-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto 22px;
+      line-height: 1.5;
+    }
+
+    /* Live Studio Metric Stats */
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .stat-box:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      font-size: 20px;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      border: 1px solid var(--border-accent);
+      flex-shrink: 0;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-val {
+      font-size: 12.5px;
+      color: var(--text-primary);
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    /* ============================================
+       INTERACTIVE CHOICE CARDS WITH UNIQUE ANIMATIONS
+       ============================================ */
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .workflow-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .workflow-card:hover {
+      transform: translateY(-6px) scale(1.015);
+      border-color: var(--accent);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 24px var(--accent-glow);
+    }
+
+    .workflow-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent-gradient);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .workflow-card:hover::before {
+      opacity: 1;
+    }
+
+    .wf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .wf-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      transition: transform 0.3s ease;
+    }
+
+    .workflow-card:hover .wf-icon-box {
+      transform: scale(1.12) rotate(-4deg);
+    }
+
+    .wf-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--border-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .wf-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .wf-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+
+    .wf-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.25s;
+    }
+
+    .workflow-card:hover .wf-btn {
+      background: var(--accent-gradient);
+      color: #000;
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    /* ============================================
+       UNIQUE GRASPING ANIMATIONS FOR EACH CARD
+       ============================================ */
+
+    /* Animation 1: Dancing Equalizer Bars (Music Composer) */
+    .anim-eq-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 32px;
+      margin-bottom: 14px;
+      padding: 4px 8px;
+      background: rgba(0,0,0,0.18);
+      border-radius: 6px;
+    }
+    .anim-eq-bar {
+      width: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+      animation: eqDance 1.2s ease-in-out infinite alternate;
+    }
+    .anim-eq-bar:nth-child(1) { height: 30%; animation-delay: 0.1s; }
+    .anim-eq-bar:nth-child(2) { height: 75%; animation-delay: 0.3s; }
+    .anim-eq-bar:nth-child(3) { height: 50%; animation-delay: 0.2s; }
+    .anim-eq-bar:nth-child(4) { height: 90%; animation-delay: 0.5s; }
+    .anim-eq-bar:nth-child(5) { height: 60%; animation-delay: 0.4s; }
+    .anim-eq-bar:nth-child(6) { height: 100%; animation-delay: 0.15s; }
+    .anim-eq-bar:nth-child(7) { height: 40%; animation-delay: 0.35s; }
+    .anim-eq-bar:nth-child(8) { height: 70%; animation-delay: 0.25s; }
+
+    @keyframes eqDance {
+      0% { height: 20%; opacity: 0.6; }
+      50% { height: 95%; opacity: 1; }
+      100% { height: 35%; opacity: 0.7; }
+    }
+
+    /* Animation 2: Splitting Stem Waves (Stem Splitter) */
+    .anim-stems-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      height: 32px;
+      margin-bottom: 14px;
+      justify-content: center;
+      padding: 4px 8px;
+      background: rgba(0,0,0,0.18);
+      border-radius: 6px;
+    }
+    .anim-stem-line {
+      height: 3px;
+      border-radius: 2px;
+      animation: stemPulse 2s ease-in-out infinite;
+    }
+    .stem-line-drums { background: #f59e0b; width: 85%; animation-delay: 0s; }
+    .stem-line-bass { background: #3b82f6; width: 65%; animation-delay: 0.3s; }
+    .stem-line-melody { background: #10b981; width: 95%; animation-delay: 0.6s; }
+    .stem-line-harmony { background: #8b5cf6; width: 75%; animation-delay: 0.9s; }
+
+    @keyframes stemPulse {
+      0%, 100% { transform: scaleX(0.7); opacity: 0.7; }
+      50% { transform: scaleX(1); opacity: 1; }
+    }
+
+    /* Animation 3: Expanding Voice Radar Ripples (Voiceover & Cloning) */
+    .anim-voice-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      margin-bottom: 14px;
+      position: relative;
+      background: rgba(0,0,0,0.18);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .voice-radar-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid var(--accent);
+      animation: radarExpand 2.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+    }
+    .voice-radar-circle:nth-child(1) { width: 14px; height: 14px; animation-delay: 0s; }
+    .voice-radar-circle:nth-child(2) { width: 14px; height: 14px; animation-delay: 0.7s; }
+    .voice-radar-circle:nth-child(3) { width: 14px; height: 14px; animation-delay: 1.4s; }
+    .voice-radar-core {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+      z-index: 2;
+    }
+
+    @keyframes radarExpand {
+      0% { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(3.4); opacity: 0; }
+    }
+
+    /* Animation 4: Peak VU Meter Bar (Master DAW Console) */
+    .anim-vu-container {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      height: 32px;
+      margin-bottom: 14px;
+      justify-content: center;
+      padding: 4px 8px;
+      background: rgba(0,0,0,0.18);
+      border-radius: 6px;
+    }
+    .anim-vu-track {
+      height: 8px;
+      background: var(--bg-hover);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .anim-vu-fill-l {
+      height: 100%;
+      width: 80%;
+      background: linear-gradient(90deg, #10b981 60%, #f59e0b 85%, #ef4444 100%);
+      animation: vuBounce 1.4s ease-in-out infinite alternate;
+    }
+    .anim-vu-fill-r {
+      height: 100%;
+      width: 65%;
+      background: linear-gradient(90deg, #10b981 60%, #f59e0b 85%, #ef4444 100%);
+      animation: vuBounce 1.7s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes vuBounce {
+      0% { width: 35%; }
+      40% { width: 85%; }
+      70% { width: 60%; }
+      100% { width: 95%; }
+    }
+
+    /* ============================================
+       WIZARD STEPPER (NEXT NEXT NEXT NAVIGATION)
+       ============================================ */
+    .wizard-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 8px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 20px;
+      transition: all 0.2s;
+    }
+
+    .step-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-primary);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+
+    .step-item.active .step-num {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .step-item.active .step-label {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .step-item.completed .step-num {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .step-connector {
+      flex: 1;
+      height: 2px;
+      background: var(--border-primary);
+      margin: 0 6px;
+      min-width: 12px;
+    }
+
+    .step-guide-box {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: var(--accent-soft);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
   </style>
 </head>
 <body>
@@ -2086,6 +2555,10 @@
         </div>
       </div>
       <div class="header-right">
+        <button class="pill-btn highlight" id="btnViewToggle" onclick="toggleMainView()" style="display:flex;align-items:center;gap:6px;padding:6px 14px;font-size:12px;font-weight:700;border-radius:20px;cursor:pointer;">
+          <span id="viewToggleIcon">🎛️</span>
+          <span id="viewToggleText">Studio DAW</span>
+        </button>
         <div class="theme-switcher">
           <button class="theme-pill active" id="pill-dark" onclick="setTheme('dark')">🌙 Dark</button>
           <button class="theme-pill" id="pill-light" onclick="setTheme('light')">☀️ Light</button>
@@ -2093,6 +2566,206 @@
         </div>
       </div>
     </header>
+
+    <!-- ============================================
+         VIEW 1: DASHBOARD & WORKFLOW HUB (INTRO PAGE)
+         ============================================ -->
+    <div class="view-page active-view" id="viewDashboard">
+      <div class="dashboard-hero">
+        <div class="dashboard-badge">
+          <span class="status-dot"></span>
+          IncuBrix AI Audio Engine &bull; Version 2.4 &bull; Broadcast Standard
+        </div>
+        <h1 class="dashboard-title">What would you like to create today?</h1>
+        <p class="dashboard-subtitle">
+          Intelligent background music synthesis, stem separation, and neural voice cloning for next-generation video productions.
+        </p>
+
+        <!-- Live Studio Dashboard Metrics -->
+        <div class="dashboard-stats">
+          <div class="stat-box">
+            <div class="stat-icon">🎛️</div>
+            <div>
+              <div class="stat-label">Audio Engine</div>
+              <div class="stat-val">Online &bull; 48 kHz Graph</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">📊</div>
+            <div>
+              <div class="stat-label">Target Loudness</div>
+              <div class="stat-val">-16.0 LUFS (EBU R128)</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🎼</div>
+            <div>
+              <div class="stat-label">Stem Splitter</div>
+              <div class="stat-val">4 True Demucs Stems</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🎙️</div>
+            <div>
+              <div class="stat-label">Voice Cloning</div>
+              <div class="stat-val">Pitch &amp; Timbre Formants</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resume Active Workspace Banner -->
+      <div id="resumeTrackBanner" style="display:none;margin-bottom:20px;padding:12px 18px;background:var(--accent-soft);border:1px solid var(--border-accent);border-radius:var(--radius);align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">🎵</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text-primary);" id="resumeTrackTitle">Track active in studio</div>
+            <div style="font-size:11.5px;color:var(--text-secondary);" id="resumeTrackSub">Click to continue mixing and arranging in the DAW</div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="switchToStudioView()" style="padding:7px 16px;font-size:12px;">Resume Studio ➔</button>
+      </div>
+
+      <!-- 4 WORKFLOW CHOICE CARDS WITH UNIQUE GRASPING ANIMATIONS -->
+      <div class="workflow-grid">
+
+        <!-- Card 1: AI Music Composer -->
+        <div class="workflow-card" onclick="launchWorkflow('create')">
+          <div>
+            <div class="wf-header">
+              <div class="wf-icon-box" style="color:#f59e0b;background:rgba(245,158,11,0.1);">🎵</div>
+              <span class="wf-badge">Step 1: Compose</span>
+            </div>
+            <div class="wf-title">AI Music Composer</div>
+            <!-- Unique Animation 1: Dancing Equalizer Bars -->
+            <div class="anim-eq-container">
+              <div class="anim-eq-bar"></div>
+              <div class="anim-eq-bar"></div>
+              <div class="anim-eq-bar"></div>
+              <div class="anim-eq-bar"></div>
+              <div class="anim-eq-bar"></div>
+              <div class="anim-eq-bar"></div>
+              <div class="anim-eq-bar"></div>
+              <div class="anim-eq-bar"></div>
+            </div>
+            <p class="wf-desc">
+              Describe your video scene, mood, and genre. Generates tempo-locked, broadcast-normalized background music in seconds.
+            </p>
+          </div>
+          <div class="wf-btn">
+            <span>Start Composing</span>
+            <span>➔</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Audio Analyzer & Stem Splitter -->
+        <div class="workflow-card" onclick="launchWorkflow('upload')">
+          <div>
+            <div class="wf-header">
+              <div class="wf-icon-box" style="color:#3b82f6;background:rgba(59,130,246,0.1);">📁</div>
+              <span class="wf-badge">Step 1: Upload</span>
+            </div>
+            <div class="wf-title">Upload &amp; Split Stems</div>
+            <!-- Unique Animation 2: Splitting Stem Waves -->
+            <div class="anim-stems-container">
+              <div class="anim-stem-line stem-line-drums"></div>
+              <div class="anim-stem-line stem-line-bass"></div>
+              <div class="anim-stem-line stem-line-melody"></div>
+              <div class="anim-stem-line stem-line-harmony"></div>
+            </div>
+            <p class="wf-desc">
+              Drop any audio file to inspect loudness, sync durations, and isolate Drums, Bass, Melody, and Harmony stems.
+            </p>
+          </div>
+          <div class="wf-btn">
+            <span>Upload &amp; Separate</span>
+            <span>➔</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Neural Voiceover & Voice Cloning -->
+        <div class="workflow-card" onclick="launchWorkflow('voice')">
+          <div>
+            <div class="wf-header">
+              <div class="wf-icon-box" style="color:#10b981;background:rgba(16,185,129,0.1);">🎙️</div>
+              <span class="wf-badge">Step 1: Voice</span>
+            </div>
+            <div class="wf-title">Voiceover &amp; Voice Cloning</div>
+            <!-- Unique Animation 3: Expanding Voice Radar Ripples -->
+            <div class="anim-voice-container">
+              <div class="voice-radar-circle"></div>
+              <div class="voice-radar-circle"></div>
+              <div class="voice-radar-circle"></div>
+              <div class="voice-radar-core"></div>
+            </div>
+            <p class="wf-desc">
+              Clone your vocal pitch and timbre from a 4s recording, or narrate scripts with 8 studio neural voices with auto-ducking.
+            </p>
+          </div>
+          <div class="wf-btn">
+            <span>Clone Voice &amp; Narrate</span>
+            <span>➔</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Master 5-Channel DAW & Arranger -->
+        <div class="workflow-card" onclick="launchWorkflow('mixer')">
+          <div>
+            <div class="wf-header">
+              <div class="wf-icon-box" style="color:#8b5cf6;background:rgba(139,92,246,0.1);">🎚️</div>
+              <span class="wf-badge">Step 1: DAW</span>
+            </div>
+            <div class="wf-title">Master DAW Console</div>
+            <!-- Unique Animation 4: Peak VU Meter Bar -->
+            <div class="anim-vu-container">
+              <div class="anim-vu-track"><div class="anim-vu-fill-l"></div></div>
+              <div class="anim-vu-track"><div class="anim-vu-fill-r"></div></div>
+            </div>
+            <p class="wf-desc">
+              Full multi-track production: dynamic portion arrangement, stem solo/mute, vocal auto-ducking (-12 dB), and WAV export.
+            </p>
+          </div>
+          <div class="wf-btn">
+            <span>Open Mixing Console</span>
+            <span>➔</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================
+         VIEW 2: STUDIO WORKSPACE & STEP WIZARD
+         ============================================ -->
+    <div class="view-page" id="viewStudio">
+
+      <!-- WIZARD STEPPER (NEXT NEXT NEXT PROGRESS BAR) -->
+      <div class="wizard-stepper" id="wizardStepper">
+        <button class="step-item" id="stepBtn1" onclick="navigateToDashboard()" title="Return to Dashboard">
+          <span class="step-num">1</span>
+          <span class="step-label">Workflow Hub</span>
+        </button>
+        <div class="step-connector"></div>
+        <button class="step-item active" id="stepBtn2" onclick="setStudioStep(2)">
+          <span class="step-num">2</span>
+          <span class="step-label" id="step2Label">Compose / Upload</span>
+        </button>
+        <div class="step-connector"></div>
+        <button class="step-item" id="stepBtn3" onclick="setStudioStep(3)">
+          <span class="step-num">3</span>
+          <span class="step-label">Portion Arranger</span>
+        </button>
+        <div class="step-connector"></div>
+        <button class="step-item" id="stepBtn4" onclick="setStudioStep(4)">
+          <span class="step-num">4</span>
+          <span class="step-label">5-Stem Mixer</span>
+        </button>
+        <div class="step-connector"></div>
+        <button class="step-item" id="stepBtn5" onclick="setStudioStep(5)">
+          <span class="step-num">5</span>
+          <span class="step-label">Master Export</span>
+        </button>
+      </div>
 
     <!-- MODE TABS (3-way) -->
     <div class="mode-tabs">
@@ -2157,6 +2830,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             <span id="btnGenText">Create Music</span>
           </button>
+
+          <!-- Step 2 Guide: Next to Arranger -->
+          <div class="step-guide-box" id="guideAfterCompose" style="display:none;margin-top:12px;padding:10px 14px;background:var(--accent-soft);border:1px solid var(--border-accent);border-radius:var(--radius-sm);justify-content:space-between;align-items:center;">
+            <span style="font-size:11.5px;color:var(--text-primary);font-weight:700;">🎵 Track ready! Proceed to timeline</span>
+            <button type="button" class="btn-primary" onclick="proceedToStep(3)" style="padding:5px 12px;font-size:11px;">Next: Portion Arranger ➔</button>
+          </div>
         </div>
 
         <!-- TAB 2: UPLOAD & ANALYZE MODE -->
@@ -2206,6 +2885,12 @@
               <span style="color:var(--accent);font-weight:700;">✓</span>
               <span><strong>Stem Separation:</strong> Isolates Drums, Bass, Melody &amp; Harmony parts</span>
             </div>
+          </div>
+
+          <!-- Step 2 Guide: Next to Arranger -->
+          <div class="step-guide-box" id="guideAfterUpload" style="display:none;margin-top:12px;padding:10px 14px;background:var(--accent-soft);border:1px solid var(--border-accent);border-radius:var(--radius-sm);justify-content:space-between;align-items:center;">
+            <span style="font-size:11.5px;color:var(--text-primary);font-weight:700;">📁 Stems separated! Proceed to timeline</span>
+            <button type="button" class="btn-primary" onclick="proceedToStep(3)" style="padding:5px 12px;font-size:11px;">Next: Portion Arranger ➔</button>
           </div>
         </div>
 
@@ -2429,6 +3114,12 @@
               </a>
             </div>
           </div>
+
+          <!-- Step 2 Guide: Next to 5-Stem Mixer -->
+          <div class="step-guide-box" id="guideAfterVoice" style="display:none;margin-top:12px;padding:10px 14px;background:var(--accent-soft);border:1px solid var(--border-accent);border-radius:var(--radius-sm);justify-content:space-between;align-items:center;">
+            <span style="font-size:11.5px;color:var(--text-primary);font-weight:700;">🎙️ Voiceover ready! Proceed to mixer</span>
+            <button type="button" class="btn-primary" onclick="proceedToStep(4)" style="padding:5px 12px;font-size:11px;">Next: 5-Stem Mixer ➔</button>
+          </div>
         </div>
 
         <!-- ACTIVITY LOG -->
@@ -2451,7 +3142,7 @@
       <!-- RIGHT COLUMN: RESULTS, TRANSPORT, ARRANGER, MIXER -->
       <div>
         <!-- METRICS HUD -->
-        <div class="card">
+        <div class="card" id="hudCard">
           <div class="card-title">
             <span class="card-title-left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
@@ -2595,11 +3286,19 @@
                 <span>Bakes dynamic portion levels across all sections into broadcast WAV</span>
               </div>
             </div>
+
+            <!-- Step 3 Guide: Next to 5-Stem Mixer -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid var(--border-primary);">
+              <span style="font-size:11.5px;color:var(--text-secondary);">Section arrangement complete?</span>
+              <button type="button" class="btn-secondary" onclick="proceedToStep(4)" style="padding:6px 14px;font-size:11.5px;font-weight:700;color:var(--accent);border-color:var(--border-accent);">
+                Next: 5-Stem Mixer ➔
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- 4-CHANNEL STEM MIXER -->
-        <div class="card">
+        <div class="card" id="mixerCard">
           <div class="card-title">
             <span class="card-title-left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 6h20M2 18h20"/></svg>
@@ -2774,9 +3473,18 @@
             <input type="checkbox" id="chkAutoDuck" checked>
             <span>Auto-duck music during voiceover (-12 dB)</span>
           </label>
+
+          <!-- Step 4 Guide: Next to Master Export -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid var(--border-primary);">
+            <span style="font-size:11.5px;color:var(--text-secondary);">Levels balanced &amp; vocal ducking verified?</span>
+            <button type="button" class="btn-secondary" onclick="proceedToStep(5)" style="padding:6px 14px;font-size:11.5px;font-weight:700;color:var(--accent);border-color:var(--border-accent);">
+              Next: Master Export &amp; Quality ➔
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </div> <!-- end #viewStudio -->
 
     <!-- FOOTER -->
     <div class="footer">
@@ -2861,6 +3569,146 @@
         if (el) el.classList.toggle('active', t === theme);
       });
       logActivity('Switched theme to ' + (theme === 'dark' ? '🌙 Dark' : theme === 'light' ? '☀️ Light' : '🌌 Cyber Neon'));
+    }
+
+    // ── View Navigation & Wizard Stepper System ──
+    let currentView = 'dashboard';
+    let currentStudioStep = 1;
+
+    function toggleMainView() {
+      if (currentView === 'dashboard') {
+        switchToStudioView();
+      } else {
+        navigateToDashboard();
+      }
+    }
+
+    function navigateToDashboard() {
+      currentView = 'dashboard';
+      const dash = document.getElementById('viewDashboard');
+      const stud = document.getElementById('viewStudio');
+      if (dash) dash.classList.add('active-view');
+      if (stud) stud.classList.remove('active-view');
+      
+      const vIcon = document.getElementById('viewToggleIcon');
+      const vText = document.getElementById('viewToggleText');
+      if (vIcon) vIcon.textContent = '🎛️';
+      if (vText) vText.textContent = 'Studio DAW';
+
+      // Check if audio track is active
+      const hasAudio = !!(audioPlayer && audioPlayer.src && audioPlayer.src !== window.location.href);
+      const resBanner = document.getElementById('resumeTrackBanner');
+      if (resBanner) resBanner.style.display = hasAudio ? 'flex' : 'none';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      logActivity('Returned to Workflow Hub');
+    }
+
+    function switchToStudioView() {
+      currentView = 'studio';
+      const dash = document.getElementById('viewDashboard');
+      const stud = document.getElementById('viewStudio');
+      if (dash) dash.classList.remove('active-view');
+      if (stud) stud.classList.add('active-view');
+
+      const vIcon = document.getElementById('viewToggleIcon');
+      const vText = document.getElementById('viewToggleText');
+      if (vIcon) vIcon.textContent = '🏠';
+      if (vText) vText.textContent = 'Hub';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function launchWorkflow(type) {
+      switchToStudioView();
+      if (type === 'create') {
+        switchMode('create');
+        setStudioStep(2);
+        const l = document.getElementById('step2Label');
+        if (l) l.textContent = 'Music Composer';
+        const d = document.getElementById('deckCreate');
+        if (d) {
+          d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          d.classList.add('highlight-pulse');
+          setTimeout(() => d.classList.remove('highlight-pulse'), 1200);
+        }
+      } else if (type === 'upload') {
+        switchMode('upload');
+        setStudioStep(2);
+        const l = document.getElementById('step2Label');
+        if (l) l.textContent = 'Audio Analyzer';
+        const d = document.getElementById('deckUpload');
+        if (d) {
+          d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          d.classList.add('highlight-pulse');
+          setTimeout(() => d.classList.remove('highlight-pulse'), 1200);
+        }
+      } else if (type === 'voice') {
+        switchMode('voice');
+        setStudioStep(2);
+        const l = document.getElementById('step2Label');
+        if (l) l.textContent = 'Voiceover Studio';
+        const d = document.getElementById('deckVoice');
+        if (d) {
+          d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          d.classList.add('highlight-pulse');
+          setTimeout(() => d.classList.remove('highlight-pulse'), 1200);
+        }
+      } else if (type === 'mixer') {
+        setStudioStep(4);
+        const m = document.getElementById('mixerCard');
+        if (m) {
+          m.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          m.classList.add('highlight-pulse');
+          setTimeout(() => m.classList.remove('highlight-pulse'), 1200);
+        }
+      }
+    }
+
+    function setStudioStep(stepNum) {
+      currentStudioStep = stepNum;
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById('stepBtn' + i);
+        if (!btn) continue;
+        btn.classList.toggle('active', i === stepNum);
+        btn.classList.toggle('completed', i < stepNum);
+      }
+
+      if (stepNum === 1) {
+        navigateToDashboard();
+        return;
+      }
+
+      if (stepNum === 2) {
+        const leftCol = document.querySelector('.studio-grid > div:first-child');
+        if (leftCol) leftCol.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (stepNum === 3) {
+        const pCard = document.getElementById('portionCard');
+        if (pCard) {
+          pCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          pCard.classList.add('highlight-pulse');
+          setTimeout(() => pCard.classList.remove('highlight-pulse'), 1200);
+        }
+      } else if (stepNum === 4) {
+        const mCard = document.getElementById('mixerCard');
+        if (mCard) {
+          mCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          mCard.classList.add('highlight-pulse');
+          setTimeout(() => mCard.classList.remove('highlight-pulse'), 1200);
+        }
+      } else if (stepNum === 5) {
+        const hud = document.getElementById('hudCard');
+        if (hud) {
+          hud.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          hud.classList.add('highlight-pulse');
+          setTimeout(() => hud.classList.remove('highlight-pulse'), 1200);
+        }
+      }
+    }
+
+    function proceedToStep(nextStep) {
+      switchToStudioView();
+      setStudioStep(nextStep);
     }
 
     // ── AI Voiceover State & Models ──
@@ -3185,6 +4033,9 @@
         await decodeVoiceBlob(blob);
 
         logActivity(`Voice track loaded (${voiceBuffer ? voiceBuffer.duration.toFixed(1) + 's' : 'ready'}) with auto-ducking!`, 'ok');
+
+        const gVoice = document.getElementById('guideAfterVoice');
+        if (gVoice) gVoice.style.display = 'flex';
 
         const vCard = document.getElementById('voiceoverCard');
         if (vCard) {
@@ -4030,6 +4881,14 @@
       initPortions(totalDuration);
       stemsReady = true;
       togglePlayback();
+
+      // Show Next Step guide & update resume banner
+      const gComp = document.getElementById('guideAfterCompose');
+      if (gComp) gComp.style.display = 'flex';
+      const resTitle = document.getElementById('resumeTrackTitle');
+      if (resTitle) resTitle.textContent = `Generated Track (${totalDuration.toFixed(1)}s)`;
+      const resBanner = document.getElementById('resumeTrackBanner');
+      if (resBanner) resBanner.style.display = 'flex';
     }
 
     function onAnalysisDone(d) {
@@ -4061,6 +4920,14 @@
       initPortions(totalDuration);
       stemsReady = true;
       togglePlayback();
+
+      // Show Next Step guide & update resume banner
+      const gUp = document.getElementById('guideAfterUpload');
+      if (gUp) gUp.style.display = 'flex';
+      const resTitle = document.getElementById('resumeTrackTitle');
+      if (resTitle) resTitle.textContent = `Analyzed Audio (${totalDuration.toFixed(1)}s)`;
+      const resBanner = document.getElementById('resumeTrackBanner');
+      if (resBanner) resBanner.style.display = 'flex';
     }
 
     function showMetrics(lufs, peak, dur, diff) {
