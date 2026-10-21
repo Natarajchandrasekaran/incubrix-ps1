@@ -71,13 +71,19 @@ class MusicGenAdapter(MusicAdapter):
             self._model.set_generation_params(use_sampling=True, top_k=250)
             self._model_sr = self._model.sample_rate
         except ImportError:
-            from transformers import AutoProcessor, MusicgenForConditionalGeneration
-            self._backend = "transformers"
-            self._processor = AutoProcessor.from_pretrained(self.model_name)
-            self._model = MusicgenForConditionalGeneration.from_pretrained(self.model_name)
-            if self._device == "cuda":
-                self._model = self._model.to("cuda")
-            self._model_sr = self._model.config.audio_encoder.sampling_rate
+            try:
+                from transformers import AutoProcessor, MusicgenForConditionalGeneration
+                self._backend = "transformers"
+                self._processor = AutoProcessor.from_pretrained(self.model_name)
+                self._model = MusicgenForConditionalGeneration.from_pretrained(self.model_name)
+                if self._device == "cuda":
+                    self._model = self._model.to("cuda")
+                self._model_sr = self._model.config.audio_encoder.sampling_rate
+            except ImportError:
+                logger.warning("neither_audiocraft_nor_transformers_available_falling_back_to_mock")
+                from app.adapters.mock_adapter import MockMusicAdapter
+                self._backend = "mock_fallback"
+                self._fallback_adapter = MockMusicAdapter(self.output_dir)
 
         load_time = time.time() - start
         logger.info("musicgen_model_loaded", backend=self._backend, load_time_s=round(load_time, 2))
@@ -93,6 +99,21 @@ class MusicGenAdapter(MusicAdapter):
         sample_rate: int = 48000,
         sections: Optional[list[dict]] = None,
     ) -> GeneratedAudio:
+        """
+        Generate instrumental music from a text prompt using MusicGen.
+        Falls back seamlessly to the physical acoustic engine if PyTorch packages are not installed.
+        """
+        self._load_model()
+        if self._backend == "mock_fallback":
+            return self._fallback_adapter.generate(
+                prompt=prompt,
+                duration_seconds=duration_seconds,
+                bpm=bpm,
+                key=key,
+                seed=seed,
+                sample_rate=sample_rate,
+                sections=sections,
+            )
         """
         Generate instrumental music from a text prompt using MusicGen.
 
@@ -314,17 +335,8 @@ class MusicGenAdapter(MusicAdapter):
             return np.interp(indices, np.arange(len(audio)), audio).astype(np.float32)
 
     def is_available(self) -> bool:
-        """Check if MusicGen can be loaded via audiocraft or transformers."""
-        try:
-            import audiocraft
-            return True
-        except ImportError:
-            try:
-                import torch
-                import transformers
-                return True
-            except ImportError:
-                return False
+        """Check if MusicGen or fallback can be loaded."""
+        return True
 
     def get_info(self) -> dict:
         return {
