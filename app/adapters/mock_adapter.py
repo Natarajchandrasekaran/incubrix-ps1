@@ -22,78 +22,105 @@ from app.adapters.base import GeneratedAudio, MusicAdapter
 # ─── Acoustic Physical Modeling Instruments ───
 
 def _synthesize_piano_chord(freqs: list[float], duration_s: float, sr: int = 48000, rng: Optional[np.random.RandomState] = None) -> np.ndarray:
-    """Acoustic grand piano model: Felt hammer impact + harmonic series + dual-string unison detune."""
+    """Acoustic grand piano model: Felt hammer strike + inharmonic string dispersion + wooden soundboard resonance."""
     if rng is None:
         rng = np.random.RandomState(42)
     n_samples = int(duration_s * sr)
     t = np.arange(n_samples) / sr
     chord = np.zeros(n_samples, dtype=np.float32)
 
+    # Piano string stiffness inharmonicity factor B
+    B = 0.00035
+    partials = [
+        (1.0, 0.62, 1.8),
+        (2.0, 0.36, 2.8),
+        (3.0, 0.22, 3.9),
+        (4.0, 0.13, 5.4),
+        (5.0, 0.07, 7.0),
+        (6.0, 0.03, 8.8),
+    ]
+
     for f in freqs:
-        # 1. Felt hammer strike transient
-        hammer = (rng.uniform(-0.06, 0.06, n_samples) * np.exp(-t * 85)).astype(np.float32)
-        # 2. Harmonic series with natural high-frequency damping
+        # 1. Felt hammer contact transient
+        hammer = (rng.uniform(-0.05, 0.05, n_samples) * np.exp(-t * 90)).astype(np.float32)
+        # 2. Inharmonic partials with dual-string unison detuning
         tone = np.zeros(n_samples, dtype=np.float32)
-        partials = [
-            (1.0, 0.55, 2.0),
-            (2.0, 0.32, 3.2),
-            (3.0, 0.18, 4.5),
-            (4.0, 0.10, 6.0),
-            (5.0, 0.05, 7.8),
-            (6.0, 0.03, 9.5),
-        ]
         for mult, amp, decay in partials:
-            # String A (fundamental) + String B (slight unison detune for rich chorusing)
-            string_a = np.sin(2 * np.pi * (f * mult) * t) * np.exp(-t * decay)
-            string_b = np.sin(2 * np.pi * (f * mult * 1.0018) * t) * np.exp(-t * decay)
+            f_inharm = (mult * f) * np.sqrt(1.0 + B * (mult ** 2))
+            string_a = np.sin(2 * np.pi * f_inharm * t) * np.exp(-t * decay)
+            string_b = np.sin(2 * np.pi * (f_inharm * 1.0016) * t) * np.exp(-t * decay)
             tone += (amp * (string_a + 0.7 * string_b)).astype(np.float32)
 
         chord += hammer + tone
 
-    return chord * 0.35
+    # 3. Wooden soundboard resonance (body formant peak at 520 Hz)
+    try:
+        b, a = signal.iirpeak(520.0, 2.2, sr)
+        body = signal.lfilter(b, a, chord).astype(np.float32)
+        out = (0.76 * chord + 0.24 * body) * 0.35
+    except Exception:
+        out = chord * 0.35
+
+    return np.tanh(1.22 * out).astype(np.float32)
 
 
 def _synthesize_bowed_strings(freqs: list[float], duration_s: float, sr: int = 48000) -> np.ndarray:
-    """Orchestral string ensemble model: Slow bowing attack + 3-voice unison chorus + 5.5Hz vibrato."""
+    """Orchestral string ensemble model: Expressive bowing attack + 3-voice unison chorus + 280Hz cello body cavity formant."""
     n_samples = int(duration_s * sr)
     t = np.arange(n_samples) / sr
     strings = np.zeros(n_samples, dtype=np.float32)
 
-    # Expressive bowing envelope (250ms crescendo, smooth release)
-    attack = np.minimum(t / 0.25, 1.0)
+    # Expressive bowing envelope (280ms crescendo, smooth release)
+    attack = np.minimum(t / 0.28, 1.0)
     release = np.minimum((duration_s - t) / 0.35, 1.0)
     envelope = (attack * release).astype(np.float32)
 
-    # Natural vibrato LFO (5.5 Hz) with slight intensity ramp
-    vibrato = (1.0 + 0.014 * np.sin(2 * np.pi * 5.5 * t) * np.minimum(t / 0.4, 1.0)).astype(np.float32)
+    # Natural vibrato LFO (5.2 Hz) with gradual intensity ramp
+    vibrato = (1.0 + 0.015 * np.sin(2 * np.pi * 5.2 * t) * np.minimum(t / 0.35, 1.0)).astype(np.float32)
 
     for f in freqs:
-        # Multi-voice chorus (3 players per section)
-        p1 = np.sin(2 * np.pi * (f * vibrato) * t) + 0.45 * np.sin(4 * np.pi * (f * vibrato) * t)
-        p2 = np.sin(2 * np.pi * (f * 1.0022 * vibrato) * t) + 0.35 * np.sin(4 * np.pi * (f * 1.0022 * vibrato) * t)
-        p3 = np.sin(2 * np.pi * (f * 0.9978 * vibrato) * t) + 0.35 * np.sin(4 * np.pi * (f * 0.9978 * vibrato) * t)
+        # Multi-voice chorus (3 players per section) with warm harmonics
+        p1 = np.sin(2 * np.pi * (f * vibrato) * t) + 0.48 * np.sin(4 * np.pi * (f * vibrato) * t) + 0.22 * np.sin(6 * np.pi * (f * vibrato) * t)
+        p2 = np.sin(2 * np.pi * (f * 1.0022 * vibrato) * t) + 0.38 * np.sin(4 * np.pi * (f * 1.0022 * vibrato) * t)
+        p3 = np.sin(2 * np.pi * (f * 0.9978 * vibrato) * t) + 0.38 * np.sin(4 * np.pi * (f * 0.9978 * vibrato) * t)
         strings += ((p1 + p2 + p3) * envelope).astype(np.float32)
 
-    return strings * 0.12
+    # Cello/violin wooden body cavity resonance at 280 Hz
+    try:
+        b, a = signal.iirpeak(280.0, 2.0, sr)
+        body = signal.lfilter(b, a, strings).astype(np.float32)
+        res = (0.75 * strings + 0.25 * body) * 0.12
+    except Exception:
+        res = strings * 0.12
+
+    return np.tanh(1.2 * res).astype(np.float32)
 
 
 def _karplus_strong_guitar(freq: float, duration_s: float, sr: int = 48000, rng: Optional[np.random.RandomState] = None) -> np.ndarray:
-    """Karplus-Strong physical plucked string model (nylon/steel acoustic guitar)."""
+    """Karplus-Strong physical plucked string model with wooden soundbox Helmholtz resonance at 110 Hz."""
     if rng is None:
         rng = np.random.RandomState(42)
     n_samples = int(duration_s * sr)
     period = max(2, int(sr / max(20.0, freq)))
     # Initial noise burst for pluck transient
-    ring = rng.uniform(-0.8, 0.8, period).astype(np.float32)
+    ring = rng.uniform(-0.85, 0.85, period).astype(np.float32)
     output = np.zeros(n_samples, dtype=np.float32)
     output[:period] = ring
 
-    decay = 0.993
+    decay = 0.994
     for i in range(period, n_samples):
         # Low-pass filter averaging adjacent string samples
         output[i] = 0.5 * (output[i - period] + output[i - period - 1]) * decay
 
-    return output
+    # Guitar wooden body Helmholtz resonance at 110 Hz
+    try:
+        b, a = signal.iirpeak(110.0, 2.5, sr)
+        body = signal.lfilter(b, a, output).astype(np.float32)
+        res = (0.8 * output + 0.2 * body) * 0.35
+    except Exception:
+        res = output * 0.35
+
+    return np.tanh(1.18 * res).astype(np.float32)
 
 
 def _apply_studio_reverb(audio: np.ndarray, sr: int = 48000, room_decay: float = 0.8, rng: Optional[np.random.RandomState] = None) -> np.ndarray:
@@ -391,19 +418,31 @@ class MockMusicAdapter(MusicAdapter):
                 drums[pos:s_len] += noise * env
 
         else:
-            # Acoustic Pop / Driving Rock / Confident Corporate
+            # Studio Acoustic Pop / Driving Rock / Confident Corporate
             for pos in range(0, num_samples, beat_samples):
                 b_num = (pos // beat_samples) % 4
-                # Kick on 1 and 3
+                # Multi-layer acoustic kick on 1 and 3 (pitch-envelope drop + beater transient)
                 if b_num in (0, 2):
-                    k_len = min(pos + int(0.07 * sample_rate), num_samples)
+                    k_len = min(pos + int(0.12 * sample_rate), num_samples)
                     kt = np.arange(k_len - pos) / sample_rate
-                    drums[pos:k_len] += (0.35 * np.sin(2 * np.pi * 85 * kt) * np.exp(-kt * 26)).astype(np.float32)
-                # Snare / Clap on 2 and 4
+                    f_sweep = 48.0 + 95.0 * np.exp(-kt * 32.0)
+                    body = 0.40 * np.sin(2 * np.pi * f_sweep * kt) * np.exp(-kt * 18.0)
+                    beater = rng.uniform(-0.08, 0.08, len(kt)) * np.exp(-kt * 95.0)
+                    drums[pos:k_len] += (body + beater).astype(np.float32)
+                # Multi-layer acoustic snare on 2 and 4 (wooden shell resonance + metal wire sizzle)
                 if b_num in (1, 3):
-                    s_len = min(pos + int(0.1 * sample_rate), num_samples)
+                    s_len = min(pos + int(0.16 * sample_rate), num_samples)
                     st = np.arange(s_len - pos) / sample_rate
-                    drums[pos:s_len] += (rng.uniform(-0.18, 0.18, len(st)) * np.exp(-st * 32)).astype(np.float32)
+                    shell = 0.22 * np.sin(2 * np.pi * 185.0 * st) * np.exp(-st * 26.0)
+                    wires = rng.uniform(-0.18, 0.18, len(st)) * np.exp(-st * 22.0)
+                    drums[pos:s_len] += (shell + wires).astype(np.float32)
+                # Studio acoustic hi-hat on eighth-note upbeat
+                hh_pos = pos + beat_samples // 2
+                if hh_pos < num_samples:
+                    h_len = min(hh_pos + int(0.025 * sample_rate), num_samples)
+                    ht = np.arange(h_len - hh_pos) / sample_rate
+                    metal = rng.uniform(-0.06, 0.06, len(ht)) * np.exp(-ht * 80.0)
+                    drums[hh_pos:h_len] += metal.astype(np.float32)
 
         # ── 3. Acoustic Bass Synthesis ──
         for bar_idx, bar_pos in enumerate(range(0, num_samples, bar_samples)):
