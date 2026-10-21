@@ -4671,26 +4671,41 @@
       logActivity('Natify executed: ' + action.type, 'ok');
 
       if (action.type === 'CREATE_MUSIC') {
+        switchToStudioView();
+        setStudioStep(2);
         switchMode('create');
         if (action.payload && action.payload.prompt) {
           document.getElementById('promptInput').value = action.payload.prompt;
         }
-        if (action.payload && action.payload.duration_s) {
-          document.getElementById('durationSlider').value = action.payload.duration_s;
-          updateDuration(action.payload.duration_s);
+        const dur = (action.payload && (action.payload.duration_seconds || action.payload.duration_s)) || 15;
+        const durSlider = document.getElementById('durationSlider');
+        if (durSlider) {
+          durSlider.value = dur;
+          if (typeof updateDuration === 'function') updateDuration(dur);
+        }
+        const bpm = (action.payload && (action.payload.tempo_bpm || action.payload.bpm));
+        const bpmSlider = document.getElementById('bpmSlider');
+        if (bpm && bpmSlider) {
+          bpmSlider.value = bpm;
+          if (typeof updateBpm === 'function') updateBpm(bpm);
         }
         startGeneration();
       } else if (action.type === 'SET_PORTION') {
+        switchToStudioView();
+        setStudioStep(3);
         const profile = (action.payload && action.payload.profile) || 'drumsMaxBassMin';
         applyPortionProfile(profile);
       } else if (action.type === 'SET_THEME') {
         const theme = (action.payload && action.payload.theme) || 'midnight';
         setTheme(theme);
       } else if (action.type === 'START_VOICE') {
+        switchToStudioView();
+        switchMode('voice');
         if (!isVoiceRecording) {
           toggleVoiceRecording();
         }
       } else if (action.type === 'GENERATE_VOICE') {
+        switchToStudioView();
         switchMode('voice');
         if (action.payload && action.payload.text) {
           const sIn = document.getElementById('voiceScriptInput');
