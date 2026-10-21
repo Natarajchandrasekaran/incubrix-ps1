@@ -37,11 +37,16 @@ class MusicGenAdapter(MusicAdapter):
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self._model = None
         self._processor = None
+        self._backend = None
+        self._model_sr = 32000
 
         # Auto-detect device
         if device is None:
-            import torch
-            self._device = "cuda" if torch.cuda.is_available() else "cpu"
+            try:
+                import torch
+                self._device = "cuda" if torch.cuda.is_available() else "cpu"
+            except ImportError:
+                self._device = "cpu"
         else:
             self._device = device
 
@@ -52,20 +57,30 @@ class MusicGenAdapter(MusicAdapter):
         )
 
     def _load_model(self):
-        """Lazy-load the MusicGen model."""
+        """Lazy-load the MusicGen model via audiocraft or transformers."""
         if self._model is not None:
             return
 
         logger.info("loading_musicgen_model", model=self.model_name)
         start = time.time()
 
-        from audiocraft.models import MusicGen
-
-        self._model = MusicGen.get_pretrained(self.model_name)
-        self._model.set_generation_params(use_sampling=True, top_k=250)
+        try:
+            from audiocraft.models import MusicGen
+            self._backend = "audiocraft"
+            self._model = MusicGen.get_pretrained(self.model_name)
+            self._model.set_generation_params(use_sampling=True, top_k=250)
+            self._model_sr = self._model.sample_rate
+        except ImportError:
+            from transformers import AutoProcessor, MusicgenForConditionalGeneration
+            self._backend = "transformers"
+            self._processor = AutoProcessor.from_pretrained(self.model_name)
+            self._model = MusicgenForConditionalGeneration.from_pretrained(self.model_name)
+            if self._device == "cuda":
+                self._model = self._model.to("cuda")
+            self._model_sr = self._model.config.audio_encoder.sampling_rate
 
         load_time = time.time() - start
-        logger.info("musicgen_model_loaded", load_time_s=round(load_time, 2))
+        logger.info("musicgen_model_loaded", backend=self._backend, load_time_s=round(load_time, 2))
 
     def generate(
         self,
@@ -125,18 +140,25 @@ class MusicGenAdapter(MusicAdapter):
             )
         else:
             # Single generation
-            # Generate slightly longer to allow musical ending
-            gen_duration = min(duration_seconds + 2.0, 300.0)
-            self._model.set_generation_params(duration=gen_duration)
-
-            with torch.no_grad():
-                wav = self._model.generate([instrumental_prompt])
-
-            # wav shape: [batch, channels, samples]
-            audio = wav[0, 0].cpu().numpy()
+            if self._backend == "transformers":
+                inputs = self._processor(text=[instrumental_prompt], padding=True, return_tensors="pt")
+                if self._device == "cuda":
+                    inputs = {k: v.to("cuda") for k, v in inputs.items()}
+                # 50 tokens per second of audio
+                tokens = int(min(duration_seconds + 1.5, 300.0) * 50)
+                with torch.no_grad():
+                    wav = self._model.generate(**inputs, max_new_tokens=tokens)
+                audio = wav[0, 0].cpu().numpy()
+            else:
+                # audiocraft generation
+                gen_duration = min(duration_seconds + 2.0, 300.0)
+                self._model.set_generation_params(duration=gen_duration)
+                with torch.no_grad():
+                    wav = self._model.generate([instrumental_prompt])
+                audio = wav[0, 0].cpu().numpy()
 
         # Resample if needed (MusicGen outputs at 32kHz)
-        model_sr = self._model.sample_rate
+        model_sr = getattr(self, "_model_sr", 32000)
         if model_sr != sample_rate:
             audio = self._resample(audio, model_sr, sample_rate)
 
@@ -292,12 +314,17 @@ class MusicGenAdapter(MusicAdapter):
             return np.interp(indices, np.arange(len(audio)), audio).astype(np.float32)
 
     def is_available(self) -> bool:
-        """Check if MusicGen can be loaded."""
+        """Check if MusicGen can be loaded via audiocraft or transformers."""
         try:
             import audiocraft
             return True
         except ImportError:
-            return False
+            try:
+                import torch
+                import transformers
+                return True
+            except ImportError:
+                return False
 
     def get_info(self) -> dict:
         return {
