@@ -3,7 +3,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-26%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-40%20passed-brightgreen.svg)]()
 
 > IncuBrix 2027 Graduate Hiring Assessment — Problem Statement 1 (Software Engineering)  
 > Candidate: **Nataraj Chandrasekaran** (PSG College of Technology, Coimbatore)  
@@ -221,6 +221,27 @@ The runner:
 
 ---
 
-## 8. License
+## 8. Suno AI-Style & Multi-Modal Capabilities
+
+Beyond the core brief requirements, the engine features interactive multi-modal creation:
+- **Image-to-BGM Engine (`POST /api/v1/music/image-to-prompt`)**: Upload any thumbnail, cover art, or scene image to automatically analyze color temperature, brightness, and saturation to generate a tailored music prompt, tempo, and mood.
+- **9 Multi-Genre Synthesis Engines**:
+  - 🏢 **Corporate Upbeat**: C Major, bright bells, driving acoustic pop drums.
+  - 🎬 **Cinematic Drama**: D Minor, orchestral strings, heavy taiko impacts.
+  - ☕ **Lo-Fi Study**: F Major 7, Rhodes electric piano, dusty boom-bap drums.
+  - 🚀 **Tech / EDM**: A Minor, 4-on-the-floor kick, rolling 16th saw bass.
+  - 🎙️ **Podcast Bed**: G Major, subtle piano, low-distraction groove.
+  - 🎷 **Jazz Swing**: Bb Mixolydian, walking upright bass, brushed swing cymbals.
+  - 🎸 **Acoustic Folk**: G Major, fingerpicked guitar, soft shaker.
+  - 🌌 **Ambient Space**: C Lydian, slow evolving filter pad drones, deep sub.
+  - 🎤 **Hip-Hop / Trap**: E minor, 808 sub kick, triplet hats, dark stabs.
+  - 🤘 **Heavy Rock**: E minor power chords with distortion overtones, fast riffs.
+- **Real-Time 36-Band FFT Visualizer**: Hardware-accelerated canvas spectrum animation.
+- **Frame-Synced Video Monitor**: Locks video preview to DAW stem timeline.
+- **Standard MIDI Exporter**: Direct DAW integration (.MID format).
+
+---
+
+## 9. License
 
 This repository and all custom code are released under the **MIT License**. Third-party libraries and pretrained weights (MusicGen, Demucs) are licensed under permissive open-source licenses (MIT/BSD/Apache 2.0).
