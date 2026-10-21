@@ -590,22 +590,40 @@ async def image_to_music_prompt(file: UploadFile = File(...)):
     an optimal music prompt, recommended genre, tempo, and mood.
     """
     import io
-    from PIL import Image
+    try:
+        from PIL import Image
+    except ImportError:
+        import subprocess, sys
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "Pillow", "--quiet"])
+            from PIL import Image
+        except Exception:
+            Image = None
 
     content = await file.read()
     if not content:
         raise HTTPException(status_code=400, detail="Empty image file received.")
 
     try:
-        img = Image.open(io.BytesIO(content)).convert("RGB")
-        img.thumbnail((120, 120))
+        if Image is not None:
+            img = Image.open(io.BytesIO(content)).convert("RGB")
+            img.thumbnail((120, 120))
+            arr = np.array(img, dtype=np.float32)
+            r_mean = float(np.mean(arr[:, :, 0]))
+            g_mean = float(np.mean(arr[:, :, 1]))
+            b_mean = float(np.mean(arr[:, :, 2]))
+        else:
+            # Fallback byte sampling if PIL is unavailable
+            sample_bytes = content[max(0, len(content)//2 - 1500) : min(len(content), len(content)//2 + 1500)]
+            if len(sample_bytes) >= 3:
+                vals = np.frombuffer(sample_bytes, dtype=np.uint8)
+                r_mean = float(np.mean(vals[0::3]))
+                g_mean = float(np.mean(vals[1::3]))
+                b_mean = float(np.mean(vals[2::3]))
+            else:
+                r_mean, g_mean, b_mean = 128.0, 128.0, 128.0
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to decode image: {e}")
-
-    arr = np.array(img, dtype=np.float32)
-    r_mean = float(np.mean(arr[:, :, 0]))
-    g_mean = float(np.mean(arr[:, :, 1]))
-    b_mean = float(np.mean(arr[:, :, 2]))
 
     hex_color = f"#{int(r_mean):02x}{int(g_mean):02x}{int(b_mean):02x}"
     brightness = float((0.299 * r_mean + 0.587 * g_mean + 0.114 * b_mean) / 255.0)
