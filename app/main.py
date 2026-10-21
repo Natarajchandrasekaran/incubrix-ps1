@@ -577,6 +577,117 @@ async def analyze_uploaded_audio(
     }
 
 
+# ─── Image to BGM / Prompt Endpoint ───
+
+@app.post(
+    "/api/v1/music/image-to-prompt",
+    tags=["Music AI"],
+    summary="Analyze uploaded image color & mood to auto-generate matching music prompt",
+)
+async def image_to_music_prompt(file: UploadFile = File(...)):
+    """
+    Analyzes an uploaded image's color palette, luminance, and warmth to synthesize
+    an optimal music prompt, recommended genre, tempo, and mood.
+    """
+    import io
+    from PIL import Image
+
+    content = await file.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="Empty image file received.")
+
+    try:
+        img = Image.open(io.BytesIO(content)).convert("RGB")
+        img.thumbnail((120, 120))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to decode image: {e}")
+
+    arr = np.array(img, dtype=np.float32)
+    r_mean = float(np.mean(arr[:, :, 0]))
+    g_mean = float(np.mean(arr[:, :, 1]))
+    b_mean = float(np.mean(arr[:, :, 2]))
+
+    hex_color = f"#{int(r_mean):02x}{int(g_mean):02x}{int(b_mean):02x}"
+    brightness = float((0.299 * r_mean + 0.587 * g_mean + 0.114 * b_mean) / 255.0)
+    warmth = float((r_mean - b_mean) / 255.0)
+    max_c = float(np.max([r_mean, g_mean, b_mean]))
+    min_c = float(np.min([r_mean, g_mean, b_mean]))
+    saturation = float((max_c - min_c) / (max_c + 1e-5))
+
+    # Mood & genre classification based on visual harmony
+    if g_mean > r_mean + 15 and g_mean > b_mean + 10:
+        genre = "acoustic"
+        mood = "Organic & Peaceful"
+        bpm = 100
+        duration = 20
+        suggested_prompt = "Warm organic acoustic folk guitar fingerpicking with gentle campfire rhythm"
+    elif warmth > 0.2 and brightness > 0.55:
+        genre = "corporate"
+        mood = "Upbeat & Inspiring"
+        bpm = 120
+        duration = 15
+        suggested_prompt = "Upbeat corporate showcase with energetic acoustic guitar and warm synth pads"
+    elif warmth > 0.2 and brightness <= 0.55:
+        genre = "rock"
+        mood = "Intense & Driving"
+        bpm = 140
+        duration = 15
+        suggested_prompt = "Heavy rock band with power guitar riffs, driving bass, and punchy drums"
+    elif warmth < -0.12 and brightness < 0.45:
+        genre = "hiphop"
+        mood = "Dark & Urban"
+        bpm = 90
+        duration = 20
+        suggested_prompt = "Dark hip-hop trap beat with heavy 808 sub bass, snappy snares, and triplet hats"
+    elif warmth < -0.08 and brightness >= 0.45:
+        genre = "ambient"
+        mood = "Ethereal & Atmospheric"
+        bpm = 60
+        duration = 30
+        suggested_prompt = "Ethereal ambient atmospheric drone with space meditation pads and gentle swell"
+    elif saturation < 0.18:
+        genre = "lofi"
+        mood = "Mellow & Nostalgic"
+        bpm = 78
+        duration = 20
+        suggested_prompt = "Chill lo-fi study beat with mellow electric piano, soft vinyl crackle, and warm bass"
+    elif r_mean > 130 and g_mean > 100 and b_mean < 90:
+        genre = "jazz"
+        mood = "Sophisticated & Smooth"
+        bpm = 108
+        duration = 20
+        suggested_prompt = "Smooth jazz with walking upright bass, brushed swing drums, and mellow saxophone"
+    elif brightness > 0.6:
+        genre = "tech"
+        mood = "High-Energy & Futuristic"
+        bpm = 126
+        duration = 15
+        suggested_prompt = "High energy tech promo with fast electronic synths, punchy kick, and driving bass"
+    else:
+        genre = "cinematic"
+        mood = "Dramatic & Epic"
+        bpm = 84
+        duration = 20
+        suggested_prompt = "Cinematic dramatic strings building to an inspiring climax with orchestral brass"
+
+    return {
+        "success": True,
+        "filename": file.filename,
+        "suggested_prompt": suggested_prompt,
+        "suggested_genre": genre,
+        "suggested_bpm": bpm,
+        "suggested_duration": duration,
+        "detected_mood": mood,
+        "color_analysis": {
+            "dominant_hex": hex_color,
+            "brightness": round(brightness, 3),
+            "warmth": round(warmth, 3),
+            "saturation": round(saturation, 3),
+            "rgb": [int(r_mean), int(g_mean), int(b_mean)],
+        },
+    }
+
+
 # ─── Portion-Based Stem Automation & Remix Endpoint ───
 
 @app.post(

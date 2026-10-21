@@ -586,6 +586,64 @@ class TestVoiceoverEndpoint:
         assert data["duration_seconds"] > 0
 
 
+class TestImageToBgmEndpoint:
+    """Tests for Image-to-BGM visual mood & prompt analysis endpoint."""
+
+    def test_image_to_prompt_warm_image(self, client):
+        import io
+        from PIL import Image
+
+        img = Image.new("RGB", (60, 60), color=(230, 60, 30))
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        buf.seek(0)
+
+        resp = client.post(
+            "/api/v1/music/image-to-prompt",
+            files={"file": ("photo.png", buf.getvalue(), "image/png")},
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["success"] is True
+        assert "suggested_prompt" in data
+        assert data["suggested_genre"] in ["rock", "corporate"]
+        assert "color_analysis" in data
+        assert data["color_analysis"]["dominant_hex"].startswith("#")
+
+    def test_image_to_prompt_green_nature_image(self, client):
+        import io
+        from PIL import Image
+
+        img = Image.new("RGB", (60, 60), color=(40, 190, 50))
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        buf.seek(0)
+
+        resp = client.post(
+            "/api/v1/music/image-to-prompt",
+            files={"file": ("forest.png", buf.getvalue(), "image/png")},
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["suggested_genre"] == "acoustic"
+        assert "Organic" in data["detected_mood"]
+
+
+class TestExpandedGenres:
+    """Tests for new genres: Jazz, Acoustic, Ambient, Hip-Hop, Rock."""
+
+    def test_new_genres_generate_valid_audio(self, tmp_path):
+        from app.adapters.mock_adapter import MockMusicAdapter
+        adapter = MockMusicAdapter(output_dir=tmp_path)
+
+        genres = ["jazz", "acoustic", "ambient", "hip-hop", "rock"]
+        for g in genres:
+            res = adapter.generate(prompt=f"A vibrant {g} piece", duration_seconds=3)
+            assert res.audio_path.exists()
+            assert res.model_name == f"mock-{g.replace('-', '')}-engine"
+
+
+
 
 
 

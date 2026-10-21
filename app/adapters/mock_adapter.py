@@ -5,7 +5,8 @@ Integration Standard: tests run with no API keys.
 
 Composes distinctly different instruments, tempos, rhythms, chord progressions,
 and melodic scales depending on whether the prompt asks for Corporate,
-Cinematic, Lo-Fi, Electronic/Tech, or Podcast music.
+Cinematic, Lo-Fi, Electronic/Tech, Podcast, Jazz, Acoustic, Ambient,
+Hip-Hop, or Rock music.
 """
 from __future__ import annotations
 
@@ -79,6 +80,31 @@ class MockMusicAdapter(MusicAdapter):
             target_bpm = bpm or 94
             scale = [196.0, 220.0, 246.9, 261.6, 293.7, 329.6, 369.9, 392.0] # G Major
             chord_roots = [98.0, 123.5, 130.8, 146.8]   # G, Bm, C, D
+        elif any(w in p_lower for w in ["jazz", "swing", "blues", "bebop", "saxophone", "trumpet", "smooth"]):
+            genre = "jazz"
+            target_bpm = bpm or 108
+            scale = [233.1, 261.6, 293.7, 311.1, 349.2, 392.0, 415.3, 466.2] # Bb Mixolydian
+            chord_roots = [116.5, 130.8, 146.8, 155.6]  # Bb7, C7, Dm7, Eb
+        elif any(w in p_lower for w in ["acoustic", "folk", "country", "guitar", "campfire", "unplugged", "fingerpick"]):
+            genre = "acoustic"
+            target_bpm = bpm or 100
+            scale = [196.0, 220.0, 246.9, 261.6, 293.7, 329.6, 369.9, 392.0] # G Major
+            chord_roots = [98.0, 130.8, 146.8, 110.0]   # G, C, D, Am
+        elif any(w in p_lower for w in ["ambient", "space", "atmospheric", "ethereal", "drone", "meditation", "nature"]):
+            genre = "ambient"
+            target_bpm = bpm or 60
+            scale = [261.6, 293.7, 329.6, 370.0, 392.0, 440.0, 493.9, 523.3] # C Lydian
+            chord_roots = [130.8, 146.8, 164.8, 196.0]  # C, D, E, G
+        elif any(w in p_lower for w in ["hip-hop", "hiphop", "rap", "trap", "boom bap", "urban", "beat"]):
+            genre = "hiphop"
+            target_bpm = bpm or 90
+            scale = [164.8, 196.0, 220.0, 246.9, 293.7, 329.6, 392.0, 440.0] # E minor pentatonic
+            chord_roots = [82.4, 110.0, 130.8, 98.0]    # Em, Am, C, G
+        elif any(w in p_lower for w in ["rock", "punk", "grunge", "power", "heavy", "metal", "band"]):
+            genre = "rock"
+            target_bpm = bpm or 140
+            scale = [164.8, 196.0, 220.0, 246.9, 293.7, 329.6, 392.0, 440.0] # E minor
+            chord_roots = [82.4, 110.0, 130.8, 146.8]   # Em, Am, C, D
         else:
             # Default / Corporate Upbeat
             genre = "corporate"
@@ -148,6 +174,97 @@ class MockMusicAdapter(MusicAdapter):
                         noise = np.random.uniform(-0.15, 0.15, len(st)).astype(np.float32)
                         drums[s_pos:s_end] += (noise * np.exp(-st * 25) + 0.15 * np.sin(2 * np.pi * 180 * st) * np.exp(-st * 30)).astype(np.float32)
 
+        elif genre == "jazz":
+            # Brushed swing ride cymbal with ghost snare notes
+            for pos in range(0, num_samples, beat_samples):
+                # Ride cymbal shimmer on every beat
+                r_end = min(pos + int(0.15 * sample_rate), num_samples)
+                rt = np.arange(r_end - pos) / sample_rate
+                ride = np.random.uniform(-0.08, 0.08, len(rt)).astype(np.float32)
+                drums[pos:r_end] += (ride * np.exp(-rt * 12)).astype(np.float32)
+                # Swung offbeat hat
+                swing_pos = pos + int(beat_samples * 0.66)
+                if swing_pos < num_samples:
+                    sw_end = min(swing_pos + int(0.05 * sample_rate), num_samples)
+                    swt = np.arange(sw_end - swing_pos) / sample_rate
+                    drums[swing_pos:sw_end] += (np.random.uniform(-0.06, 0.06, len(swt)) * np.exp(-swt * 40)).astype(np.float32)
+                # Light kick on beats 1 and 3
+                beat_num = (pos // beat_samples) % 4
+                if beat_num in (0, 2):
+                    k_end = min(pos + int(0.07 * sample_rate), num_samples)
+                    kt = np.arange(k_end - pos) / sample_rate
+                    drums[pos:k_end] += (0.2 * np.sin(2 * np.pi * 65 * kt) * np.exp(-kt * 25)).astype(np.float32)
+
+        elif genre == "acoustic":
+            # Soft shaker + light kick, very minimal
+            for pos in range(0, num_samples, beat_samples):
+                # Gentle kick on 1 and 3
+                beat_num = (pos // beat_samples) % 4
+                if beat_num in (0, 2):
+                    k_end = min(pos + int(0.05 * sample_rate), num_samples)
+                    kt = np.arange(k_end - pos) / sample_rate
+                    drums[pos:k_end] += (0.18 * np.sin(2 * np.pi * 75 * kt) * np.exp(-kt * 35)).astype(np.float32)
+                # Soft shaker on every 8th note
+                for sub in range(2):
+                    sh_pos = pos + sub * (beat_samples // 2)
+                    if sh_pos < num_samples:
+                        sh_end = min(sh_pos + int(0.03 * sample_rate), num_samples)
+                        sht = np.arange(sh_end - sh_pos) / sample_rate
+                        drums[sh_pos:sh_end] += (np.random.uniform(-0.05, 0.05, len(sht)) * np.exp(-sht * 60)).astype(np.float32)
+
+        elif genre == "ambient":
+            # No traditional drums — just subtle textural noise swells
+            swell_len = bar_samples * 2
+            for pos in range(0, num_samples, swell_len):
+                s_end = min(pos + swell_len, num_samples)
+                st = np.arange(s_end - pos) / sample_rate
+                noise_swell = np.random.uniform(-0.03, 0.03, len(st)).astype(np.float32)
+                env = np.sin(np.pi * np.linspace(0, 1, len(st))).astype(np.float32)
+                drums[pos:s_end] += noise_swell * env
+
+        elif genre == "hiphop":
+            # 808 sub kick + trap hi-hats with triplet rolls
+            for bar_pos in range(0, num_samples, bar_samples):
+                # Heavy 808 kick on beat 1
+                k_end = min(bar_pos + int(0.25 * sample_rate), num_samples)
+                kt = np.arange(k_end - bar_pos) / sample_rate
+                drums[bar_pos:k_end] += (0.4 * np.sin(2 * np.pi * (120 * np.exp(-kt * 20) + 40) * kt) * np.exp(-kt * 8)).astype(np.float32)
+                # Snare on 2 and 4
+                for b_idx in [1, 3]:
+                    s_pos = bar_pos + b_idx * beat_samples
+                    if s_pos < num_samples:
+                        s_end = min(s_pos + int(0.1 * sample_rate), num_samples)
+                        st = np.arange(s_end - s_pos) / sample_rate
+                        drums[s_pos:s_end] += (np.random.uniform(-0.25, 0.25, len(st)) * np.exp(-st * 20)).astype(np.float32)
+                # Triplet hi-hats (3 per beat)
+                triplet_step = beat_samples // 3
+                for tp in range(bar_pos, min(bar_pos + bar_samples, num_samples), triplet_step):
+                    h_end = min(tp + int(0.02 * sample_rate), num_samples)
+                    ht = np.arange(h_end - tp) / sample_rate
+                    drums[tp:h_end] += (np.random.uniform(-0.1, 0.1, len(ht)) * np.exp(-ht * 80)).astype(np.float32)
+
+        elif genre == "rock":
+            # Driving kick-snare with crash cymbals and fast 8th-note hats
+            for pos in range(0, num_samples, beat_samples):
+                beat_num = (pos // beat_samples) % 4
+                # Kick on 1 and 3
+                if beat_num in (0, 2):
+                    k_end = min(pos + int(0.07 * sample_rate), num_samples)
+                    kt = np.arange(k_end - pos) / sample_rate
+                    drums[pos:k_end] += (0.38 * np.sin(2 * np.pi * 90 * kt) * np.exp(-kt * 28)).astype(np.float32)
+                # Heavy snare on 2 and 4
+                if beat_num in (1, 3):
+                    s_end = min(pos + int(0.12 * sample_rate), num_samples)
+                    st = np.arange(s_end - pos) / sample_rate
+                    drums[pos:s_end] += (0.15 * np.sin(2 * np.pi * 200 * st) * np.exp(-st * 18) + np.random.uniform(-0.2, 0.2, len(st)).astype(np.float32) * np.exp(-st * 22)).astype(np.float32)
+                # 8th note hats
+                for sub in range(2):
+                    h_pos = pos + sub * (beat_samples // 2)
+                    if h_pos < num_samples:
+                        h_end = min(h_pos + int(0.03 * sample_rate), num_samples)
+                        ht = np.arange(h_end - h_pos) / sample_rate
+                        drums[h_pos:h_end] += (np.random.uniform(-0.12, 0.12, len(ht)) * np.exp(-ht * 55)).astype(np.float32)
+
         else:
             # Corporate & Podcast: clean acoustic pop beat with tambourine / claps
             for pos in range(0, num_samples, beat_samples):
@@ -196,6 +313,49 @@ class MockMusicAdapter(MusicAdapter):
                         w_bass = (0.28 * np.sin(2 * np.pi * (root_f * 0.75) * nt) * np.exp(-nt * 3.5)).astype(np.float32)
                         bass[note_p:n_end] += w_bass
 
+            elif genre == "jazz":
+                # Walking bass: quarter notes stepping through chord tones
+                walk_notes = [root_f * 0.5, root_f * 0.63, root_f * 0.75, root_f * 0.5 * 1.5]
+                for b_idx, b_pos in enumerate(range(bar_pos, b_end, beat_samples)):
+                    if b_pos < num_samples:
+                        n_end = min(b_pos + int(beat_samples * 0.85), num_samples)
+                        nt = np.arange(n_end - b_pos) / sample_rate
+                        wf = walk_notes[b_idx % 4]
+                        bass[b_pos:n_end] += (0.3 * np.sin(2 * np.pi * wf * nt) * np.exp(-nt * 4.0)).astype(np.float32)
+
+            elif genre == "acoustic":
+                # Fingerpicked root-fifth pattern
+                for b_idx, b_pos in enumerate(range(bar_pos, b_end, beat_samples)):
+                    if b_pos < num_samples:
+                        n_end = min(b_pos + int(beat_samples * 0.7), num_samples)
+                        nt = np.arange(n_end - b_pos) / sample_rate
+                        pitch = root_f * 0.5 if b_idx % 2 == 0 else root_f * 0.75
+                        bass[b_pos:n_end] += (0.22 * np.sin(2 * np.pi * pitch * nt) * np.exp(-nt * 5.0)).astype(np.float32)
+
+            elif genre == "ambient":
+                # Deep sub drone across entire bar
+                bt = np.arange(bar_len) / sample_rate
+                sub = (0.2 * np.sin(2 * np.pi * (root_f * 0.25) * bt) * (0.7 + 0.3 * np.sin(2 * np.pi * 0.15 * bt))).astype(np.float32)
+                bass[bar_pos:b_end] += sub
+
+            elif genre == "hiphop":
+                # 808 sustained sub bass on beats 1 and 3
+                for b_step in [0, beat_samples * 2]:
+                    note_p = bar_pos + b_step
+                    if note_p < num_samples:
+                        n_end = min(note_p + beat_samples * 2, num_samples)
+                        nt = np.arange(n_end - note_p) / sample_rate
+                        bass[note_p:n_end] += (0.35 * np.sin(2 * np.pi * (root_f * 0.5) * nt) * np.exp(-nt * 2.0)).astype(np.float32)
+
+            elif genre == "rock":
+                # Driving 8th note power bass
+                step = beat_samples // 2
+                for s_pos in range(bar_pos, b_end, step):
+                    if s_pos < num_samples:
+                        s_end = min(s_pos + int(step * 0.8), num_samples)
+                        st = np.arange(s_end - s_pos) / sample_rate
+                        bass[s_pos:s_end] += (0.3 * np.sin(2 * np.pi * (root_f * 0.5) * st) * np.exp(-st * 8.0)).astype(np.float32)
+
             else:
                 # Corporate: Bouncy root-fifth groove
                 for step_idx, step_p in enumerate(range(bar_pos, b_end, beat_samples)):
@@ -229,6 +389,50 @@ class MockMusicAdapter(MusicAdapter):
                 # Rhodes bell-like decay
                 decay = np.exp(-ht * 2.0).astype(np.float32)
                 harmony[bar_pos:h_end] += chord_audio * decay
+
+            elif genre == "jazz":
+                # Rich 7th/9th voicings with gentle tremolo
+                chord_audio = np.zeros_like(ht, dtype=np.float32)
+                for mult in [1.0, 1.26, 1.498, 1.78, 2.24]:  # root, 3rd, 5th, 7th, 9th
+                    chord_audio += (0.05 * np.sin(2 * np.pi * (root_f * 1.5 * mult) * ht)).astype(np.float32)
+                tremolo = (0.85 + 0.15 * np.sin(2 * np.pi * 3.5 * ht)).astype(np.float32)
+                harmony[bar_pos:h_end] += chord_audio * np.exp(-ht * 1.5).astype(np.float32) * tremolo
+
+            elif genre == "acoustic":
+                # Warm strummed triads with gentle attack
+                chord_audio = np.zeros_like(ht, dtype=np.float32)
+                for mult in [1.0, 1.26, 1.498, 2.0]:
+                    chord_audio += (0.07 * np.sin(2 * np.pi * (root_f * 2 * mult) * ht)).astype(np.float32)
+                env = np.minimum(ht * 8, 1.0).astype(np.float32) * np.exp(-ht * 0.8).astype(np.float32)
+                harmony[bar_pos:h_end] += chord_audio * env
+
+            elif genre == "ambient":
+                # Evolving pad with slow filter sweep
+                chord_audio = np.zeros_like(ht, dtype=np.float32)
+                for mult in [1.0, 1.498, 2.0, 2.997]:
+                    phase = np.random.uniform(0, 2 * np.pi)
+                    chord_audio += (0.06 * np.sin(2 * np.pi * (root_f * mult) * ht + phase)).astype(np.float32)
+                swell = np.sin(np.pi * np.linspace(0, 1, len(ht))).astype(np.float32)
+                harmony[bar_pos:h_end] += chord_audio * swell
+
+            elif genre == "hiphop":
+                # Dark minor stabs on beat 1 with decay
+                stab_end = min(bar_pos + beat_samples * 2, num_samples)
+                stab_len = stab_end - bar_pos
+                st = np.arange(stab_len) / sample_rate
+                stab = np.zeros(stab_len, dtype=np.float32)
+                for mult in [1.0, 1.189, 1.498]:  # minor triad
+                    stab += (0.08 * np.sin(2 * np.pi * (root_f * 2 * mult) * st)).astype(np.float32)
+                harmony[bar_pos:stab_end] += stab * np.exp(-st * 3.0).astype(np.float32)
+
+            elif genre == "rock":
+                # Power chords (root + fifth) with distortion-like overtones
+                chord_audio = np.zeros_like(ht, dtype=np.float32)
+                for mult in [1.0, 1.498, 2.0, 2.997]:
+                    chord_audio += (0.09 * np.sin(2 * np.pi * (root_f * 2 * mult) * ht)).astype(np.float32)
+                # Clip for distortion effect
+                chord_audio = np.clip(chord_audio * 2.5, -0.25, 0.25).astype(np.float32)
+                harmony[bar_pos:h_end] += chord_audio
 
             elif genre == "tech":
                 # Supersaw sidechained synth chords on every beat
@@ -287,6 +491,69 @@ class MockMusicAdapter(MusicAdapter):
                     f_idx = (s_idx * 2) % len(scale)
                     lead_f = scale[f_idx] * 1.5
                     lead = (0.14 * np.sin(2 * np.pi * lead_f * mt) * np.exp(-mt * 4.0)).astype(np.float32)
+                    melody[s_pos:s_end] += lead
+
+        elif genre == "jazz":
+            # Chromatic bebop runs with swung timing
+            step_len = int(beat_samples * 0.66)
+            for s_idx, s_pos in enumerate(range(0, num_samples, step_len)):
+                if s_idx % 5 != 0:  # leave gaps
+                    s_end = min(s_pos + int(step_len * 0.7), num_samples)
+                    mt = np.arange(s_end - s_pos) / sample_rate
+                    f_idx = (s_idx * 3 + 1) % len(scale)
+                    lead_f = scale[f_idx] * 1.5
+                    vibrato = 1.0 + 0.015 * np.sin(2 * np.pi * 6 * mt)
+                    lead = (0.12 * np.sin(2 * np.pi * (lead_f * vibrato) * mt) * np.exp(-mt * 6.0)).astype(np.float32)
+                    melody[s_pos:s_end] += lead
+
+        elif genre == "acoustic":
+            # Simple fingerpicked melody on every other beat
+            step_len = beat_samples
+            pattern = [0, 4, 2, 5, 3, 7, 4, 0]
+            for s_idx, s_pos in enumerate(range(0, num_samples, step_len)):
+                if s_idx % 2 == 0:
+                    s_end = min(s_pos + int(step_len * 0.8), num_samples)
+                    mt = np.arange(s_end - s_pos) / sample_rate
+                    f_idx = pattern[s_idx % len(pattern)]
+                    lead_f = scale[f_idx] * 2.0
+                    lead = (0.11 * np.sin(2 * np.pi * lead_f * mt) * np.exp(-mt * 5.0)).astype(np.float32)
+                    melody[s_pos:s_end] += lead
+
+        elif genre == "ambient":
+            # Very slow evolving tones with long tails
+            step_len = bar_samples * 2
+            for s_idx, s_pos in enumerate(range(0, num_samples, step_len)):
+                s_end = min(s_pos + step_len, num_samples)
+                mt = np.arange(s_end - s_pos) / sample_rate
+                f_idx = (s_idx * 2) % len(scale)
+                lead_f = scale[f_idx]
+                env = np.sin(np.pi * np.linspace(0, 1, len(mt))).astype(np.float32)
+                lead = (0.1 * np.sin(2 * np.pi * lead_f * mt) * env).astype(np.float32)
+                melody[s_pos:s_end] += lead
+
+        elif genre == "hiphop":
+            # Dark catchy top-line, sparse notes
+            step_len = beat_samples
+            for s_idx, s_pos in enumerate(range(0, num_samples, step_len)):
+                if s_idx % 4 in (0, 2, 3):
+                    s_end = min(s_pos + int(step_len * 0.5), num_samples)
+                    mt = np.arange(s_end - s_pos) / sample_rate
+                    f_idx = (s_idx * 2) % len(scale)
+                    lead_f = scale[f_idx] * 1.5
+                    lead = (0.1 * np.sin(2 * np.pi * lead_f * mt) * np.exp(-mt * 7.0)).astype(np.float32)
+                    melody[s_pos:s_end] += lead
+
+        elif genre == "rock":
+            # Fast pentatonic riffs
+            step_len = beat_samples // 4
+            pattern = [0, 3, 4, 3, 0, 4, 7, 4]
+            for s_idx, s_pos in enumerate(range(0, num_samples, step_len)):
+                if s_idx % 3 != 2:
+                    s_end = min(s_pos + int(step_len * 0.7), num_samples)
+                    mt = np.arange(s_end - s_pos) / sample_rate
+                    f_idx = pattern[s_idx % len(pattern)]
+                    lead_f = scale[f_idx] * 2.0
+                    lead = (0.14 * np.sin(2 * np.pi * lead_f * mt) * np.exp(-mt * 12)).astype(np.float32)
                     melody[s_pos:s_end] += lead
 
         else:
@@ -355,7 +622,7 @@ class MockMusicAdapter(MusicAdapter):
         return {
             "name": "MockMusicAdapter",
             "version": "3.0.0",
-            "description": "Composes genre-tailored multi-track music (Cinematic, Lo-Fi, Tech, Corporate, Podcast) with real stem separation.",
+            "description": "Composes genre-tailored multi-track music (Cinematic, Lo-Fi, Tech, Corporate, Podcast, Jazz, Acoustic, Ambient, Hip-Hop, Rock) with real stem separation.",
             "license": "MIT",
             "cost_per_minute": 0.0,
         }
