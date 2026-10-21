@@ -4985,7 +4985,9 @@
       }
       initPortions(totalDuration);
       stemsReady = true;
-      togglePlayback();
+      setTimeout(() => {
+        if (!isPlaying) togglePlayback();
+      }, 250);
 
       // Show Next Step guide & update resume banner
       const gComp = document.getElementById('guideAfterCompose');
@@ -5024,7 +5026,9 @@
       }
       initPortions(totalDuration);
       stemsReady = true;
-      togglePlayback();
+      setTimeout(() => {
+        if (!isPlaying) togglePlayback();
+      }, 250);
 
       // Show Next Step guide & update resume banner
       const gUp = document.getElementById('guideAfterUpload');
@@ -5059,6 +5063,7 @@
       if (!stemAudio[n]) {
         stemAudio[n] = new Audio();
         stemAudio[n].crossOrigin = 'anonymous';
+        stemAudio[n].preload = 'auto';
       }
       stemAudio[n].src = url;
       stemAudio[n].load();
@@ -5237,8 +5242,18 @@
     }
 
     // ── VU Meters (Real-time with fallback) ──
+    let lastVuTime = 0;
+    const vuBarsCache = {};
+
     function startVULoop() {
       if (!isPlaying) return;
+      const now = performance.now();
+      if (now - lastVuTime < 33) {
+        vuAnimFrame = requestAnimationFrame(startVULoop);
+        return;
+      }
+      lastVuTime = now;
+
       STEMS.forEach(stem => {
         let level = 0;
         const effectiveGain = (muted[stem] || (soloStem && soloStem !== stem)) ? 0 : volumes[stem];
@@ -5252,16 +5267,12 @@
           const data = new Uint8Array(stemAnalyser[stem].frequencyBinCount);
           stemAnalyser[stem].getByteFrequencyData(data);
           let peakVal = 0;
-          let sumVal = 0;
           for (let i = 0; i < data.length; i++) {
             if (data[i] > peakVal) peakVal = data[i];
-            sumVal += data[i];
           }
-          const avgVal = sumVal / data.length;
-          const rawLevel = (peakVal * 0.7 + avgVal * 0.3) / 255.0;
-          level = rawLevel * effectiveGain;
+          level = (peakVal / 255.0) * effectiveGain;
         } else {
-          level = effectiveGain * (0.35 + 0.45 * Math.sin(Date.now() * 0.012 + stem.charCodeAt(0) * 3));
+          level = effectiveGain * (0.35 + 0.45 * Math.sin(now * 0.012 + stem.charCodeAt(0) * 3));
         }
         level = Math.max(0, Math.min(1, level));
         drawVU(stem, level);
@@ -5270,27 +5281,30 @@
     }
 
     function drawVU(stem, level) {
-      const bars = document.querySelectorAll('#vu-' + stem + ' .vu-bar');
+      if (!vuBarsCache[stem]) {
+        vuBarsCache[stem] = Array.from(document.querySelectorAll('#vu-' + stem + ' .vu-bar'));
+      }
+      const bars = vuBarsCache[stem];
       const count = bars.length;
       const lit = Math.round(level * count);
-      bars.forEach((bar, i) => {
-        bar.className = 'vu-bar';
+      for (let i = 0; i < count; i++) {
+        const bar = bars[i];
         if (i < lit) {
-          const h = (i / count) * count;
-          if (h < 4) bar.style.height = (6 + level * 36) + 'px';
-          else bar.style.height = (4 + level * 28) + 'px';
-          if (i < 4) bar.classList.add('g');
-          else if (i < 6) bar.classList.add('y');
-          else bar.classList.add('r');
+          bar.className = 'vu-bar ' + (i < 4 ? 'g' : (i < 6 ? 'y' : 'r'));
+          bar.style.height = (6 + level * 36) + 'px';
         } else {
+          bar.className = 'vu-bar';
           bar.style.height = '4px';
         }
-      });
+      }
     }
 
     function clearVU() {
       STEMS.forEach(stem => {
-        document.querySelectorAll('#vu-' + stem + ' .vu-bar').forEach(b => {
+        if (!vuBarsCache[stem]) {
+          vuBarsCache[stem] = Array.from(document.querySelectorAll('#vu-' + stem + ' .vu-bar'));
+        }
+        vuBarsCache[stem].forEach(b => {
           b.className = 'vu-bar';
           b.style.height = '4px';
         });
@@ -5339,7 +5353,15 @@
     let spectrumBars = new Array(36).fill(0);
     let spectrumPeaks = new Array(36).fill(0);
 
+    let lastSpectrumTime = 0;
     function drawSpectrumFrame() {
+      const now = performance.now();
+      if (now - lastSpectrumTime < 33) {
+        requestAnimationFrame(drawSpectrumFrame);
+        return;
+      }
+      lastSpectrumTime = now;
+
       const canvas = document.getElementById('liveSpectrumCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
